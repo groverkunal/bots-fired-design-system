@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Security Audit (High+)
+        run: npm audit --audit-level=high
+
+      - name: Build (If Entrypoint Exists)
+        run: |
+          if [ -f index.html ]; then
+            npm run build
+          else
+            echo "Skipping build: index.html not present in repository."
+          fi
