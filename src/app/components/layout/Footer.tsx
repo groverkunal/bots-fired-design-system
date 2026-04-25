@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router";
 import { Flame, Linkedin, Twitter, Youtube, Mail } from "lucide-react";
+import { BFLogoSVG } from "../ds/BFLogoSVG";
 
 export function Footer() {
   return (
@@ -8,7 +9,7 @@ export function Footer() {
       <div className="max-w-6xl mx-auto px-6 py-16">
         <div className="grid gap-10 md:grid-cols-4">
           <div className="md:col-span-2 space-y-4">
-            <span style={{ fontFamily: "Barlow Condensed, sans-serif", fontWeight: 800, fontStyle: "italic", fontSize: "28px", color: "#EEF2F8" }}>BOTS <span style={{ color: "#E8541A" }}>FIRED</span></span>
+            <BFLogoSVG variant="wordmark" theme="white" width={145} />
             <p className="text-sm leading-relaxed max-w-xs" style={{ color: "#8FA5C8" }}>AI clarity for the people who decide. Weekly insights, deep conversations, and executive education on artificial intelligence.</p>
             <div className="flex gap-3">
               {[Linkedin, Twitter, Youtube, Mail].map((Icon, i) => (

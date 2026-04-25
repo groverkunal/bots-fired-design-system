@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu, X, Flame } from "lucide-react";
+import { BFLogoSVG } from "../ds/BFLogoSVG";
 
 // NOTE: Logo asset must be imported from figma:asset or your local /src/imports/ folder
 // import logo from "figma:asset/Gemini_Generated_Image_8us1f28us1f28us1.png";
@@ -35,8 +36,7 @@ export function Navbar() {
       }`}>
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 shrink-0">
-            {/* Replace with: <img src={logo} alt="BOTS FIRED" className="h-8" /> */}
-            <span style={{ fontFamily: "Barlow Condensed, sans-serif", fontWeight: 800, fontStyle: "italic", fontSize: "24px", color: "#1C2E5E" }}>BOTS <span style={{ color: "#E8541A" }}>FIRED</span></span>
+            <BFLogoSVG variant="wordmark" theme="color" width={115} />
           </Link>
           <nav className="hidden md:flex items-center gap-1">
             {links.map(({ to, label }) => {

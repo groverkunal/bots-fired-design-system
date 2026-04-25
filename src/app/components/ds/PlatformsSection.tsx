@@ -104,7 +104,7 @@ function MobileAppScreens() {
         </div>
         {/* Nav */}
         <div className="bg-white px-4 py-2 flex items-center justify-between border-b border-[#E8E6E0]">
-          <span style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "16px", fontWeight: 800, fontStyle: "italic", color: "#1C2E5E" }}>BOTS FIRED</span>
+          <BFLogoSVG variant="wordmark" theme="color" width={70} />
           <div className="w-5 h-5 rounded-full overflow-hidden bg-[#EEF2F8]">
             <div className="w-full h-full flex items-center justify-center text-[8px] font-bold text-[#1C2E5E]">AC</div>
           </div>

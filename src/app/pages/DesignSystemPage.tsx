@@ -8,6 +8,7 @@ import { PlatformsSection } from "../components/ds/PlatformsSection";
 import { TypographySystem } from "../components/ds/TypographySystem";
 import { ColorSystem } from "../components/ds/ColorSystem";
 import { VerificationTests } from "../components/ds/VerificationTests";
+import { BFLogoSVG } from "../components/ds/BFLogoSVG";
 import { HandwrittenNote } from "../components/shared/HandwrittenNote";
 
 const sections = [
@@ -88,7 +89,7 @@ export function DesignSystemPage() {
                 <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#162244] text-[#8FA5C8] text-[10px] font-semibold uppercase tracking-widest mb-3">
                   <Palette size={10} /> Design System v2.0
                 </span>
-                <h1 style={{ color: "#EEF2F8" }} className="mb-1">BOTS FIRED</h1>
+                <div className="mb-1"><BFLogoSVG variant="wordmark" theme="white" width={170} /></div>
                 <h2 style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "clamp(1.5rem,3vw,2.2rem)", fontWeight: 600, color: "#4A66A0" }}>Brand &amp; Design System</h2>
                 <HandwrittenNote size="md" color="#F5A030" rotate={-1} className="mt-2 block">Complete. Consistent. Built for Leaders.</HandwrittenNote>
               </div>

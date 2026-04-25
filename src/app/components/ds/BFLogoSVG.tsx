@@ -59,6 +59,37 @@ function FlamePath({ theme = "color" }: { theme?: string }) {
   );
 }
 
+/* ── Tight separator flame for BOTS [fire] FIRED lockup ── */
+function SeparatorFlame({ theme = "color" }: { theme?: string }) {
+  const outer = theme === "white" ? "#FFFFFF" : theme === "mono" ? "#333" : theme === "outline" ? "none" : BF_FIRE;
+  const inner = theme === "white" ? "rgba(255,255,255,0.6)" : theme === "mono" ? "#666" : theme === "outline" ? "none" : BF_GOLD;
+  const starA = theme === "white" ? "#FFFFFF" : theme === "mono" ? "#555" : BF_GOLD;
+  const starB = theme === "white" ? "rgba(255,255,255,0.8)" : theme === "mono" ? "#777" : BF_AMBER;
+  const stroke = (theme === "sketch" || theme === "outline") ? (theme === "white" ? "#fff" : BF_FIRE) : "none";
+  const sw = (theme === "sketch" || theme === "outline") ? "2.2" : "0";
+
+  return (
+    <g>
+      <path
+        d="M32 72 C32 72 8 56 14 34 C18 20 28 12 28 12 C28 12 24 24 32 30 C32 30 36 8 48 2 C48 2 42 24 52 36 C60 46 56 62 48 70 C44 64 40 60 32 72Z"
+        fill={outer}
+        stroke={stroke}
+        strokeWidth={sw}
+        strokeLinejoin="round"
+      />
+      <path
+        d="M32 70 C32 70 20 56 26 44 C29 36 34 30 34 30 C34 30 31 40 36 44 C40 34 46 50 40 62 C38 58 36 56 32 70Z"
+        fill={inner}
+        stroke={theme === "sketch" ? BF_AMBER : "none"}
+        strokeWidth={theme === "sketch" ? "1.3" : "0"}
+      />
+      {/* Exactly two stars */}
+      <path d="M56 14 L58 10 L60 14 L58 18 Z" fill={starA} transform="rotate(45 58 14)" opacity="0.95" />
+      <path d="M52 30 L53.2 27.6 L55.6 30 L53.2 32.4 Z" fill={starB} transform="rotate(45 53.2 30)" opacity="0.95" />
+    </g>
+  );
+}
+
 /* ── Sketch filter ── */
 function SketchFilter({ id }: { id: string }) {
   return (
@@ -101,27 +132,29 @@ export function BFLogoSVG({ variant = "full", theme = "color", width = 280, clas
 
   if (variant === "wordmark") {
     return (
-      <svg width={width * 0.8} viewBox="0 0 260 48" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} filter={filterAttr}>
+      <svg width={width * 0.8} viewBox="0 0 320 56" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} filter={filterAttr}>
         {theme === "sketch" && <SketchFilter id={filterId} />}
-        <text x="0" y="38" fontFamily="Barlow Condensed, sans-serif" fontWeight="800" fontStyle="italic" fontSize="44" fill={navy} letterSpacing="2">BOTS</text>
-        <text x="140" y="38" fontFamily="Barlow Condensed, sans-serif" fontWeight="800" fontStyle="italic" fontSize="44" fill={fire} letterSpacing="2">FIRED</text>
+        <text x="0" y="44" fontFamily="Barlow Condensed, sans-serif" fontWeight="700" fontStyle="italic" fontSize="52" fill={navy} letterSpacing="1.2">BOTS</text>
+        <g transform="translate(114, -2) scale(0.58)">
+          <SeparatorFlame theme={theme} />
+        </g>
+        <text x="168" y="44" fontFamily="Barlow Condensed, sans-serif" fontWeight="700" fontStyle="italic" fontSize="52" fill={navy} letterSpacing="1.2">FIRED</text>
       </svg>
     );
   }
 
   /* full / default */
   return (
-    <svg width={width} viewBox="0 0 340 80" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} filter={filterAttr}>
+    <svg width={width} viewBox="0 0 360 86" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} filter={filterAttr}>
       {theme === "sketch" && <SketchFilter id={filterId} />}
-      <FlamePath theme={theme} />
-      {/* BOTS */}
-      <text x="72" y="36" fontFamily="Barlow Condensed, sans-serif" fontWeight="800" fontStyle="italic" fontSize="38" fill={navy} letterSpacing="2">BOTS</text>
-      {/* dot separator */}
-      <circle cx="198" cy="26" r="3" fill={amber} />
-      {/* FIRED */}
-      <text x="208" y="36" fontFamily="Barlow Condensed, sans-serif" fontWeight="800" fontStyle="italic" fontSize="38" fill={fire} letterSpacing="2">FIRED</text>
+      {/* Tight BOTS [fire] FIRED lockup */}
+      <text x="12" y="42" fontFamily="Barlow Condensed, sans-serif" fontWeight="700" fontStyle="italic" fontSize="44" fill={navy} letterSpacing="1.4">BOTS</text>
+      <g transform="translate(108, 0) scale(0.56)">
+        <SeparatorFlame theme={theme} />
+      </g>
+      <text x="166" y="42" fontFamily="Barlow Condensed, sans-serif" fontWeight="700" fontStyle="italic" fontSize="44" fill={navy} letterSpacing="1.4">FIRED</text>
       {/* Tagline */}
-      <text x="72" y="58" fontFamily="Inter, sans-serif" fontWeight="400" fontSize="12" fill={amber} letterSpacing="3">AI FOR LEADERS</text>
+      <text x="12" y="70" fontFamily="Inter, sans-serif" fontWeight="400" fontSize="12" fill={amber} letterSpacing="3">AI FOR LEADERS</text>
     </svg>
   );
 }
