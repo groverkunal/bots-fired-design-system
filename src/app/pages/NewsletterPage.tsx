@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
-import { ArrowRight, Search, Flame, BookOpen, Clock } from "lucide-react";
+import { ArrowRight, Search, Flame, BookOpen, Clock, Tag } from "lucide-react";
 import { HandwrittenNote } from "../components/shared/HandwrittenNote";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "../components/shared/AnimatedSection";
 
@@ -16,7 +16,17 @@ const issues = [
 ];
 
 const tags = ["All", "Strategy", "Governance", "Finance", "Leadership", "Ethics", "Talent", "Regulatory", "Fundamentals"];
-const tagColors: Record<string, string> = { Strategy: "#EEF2F8", Governance: "#F0F4FF", Finance: "#F0FDF4", Leadership: "#FFF8EC", Ethics: "#FEF3C7", Talent: "#FDF4FF", Regulatory: "#FFF1F2", Fundamentals: "#F0FDFA" };
+
+const tagColors: Record<string, string> = {
+  Strategy: "#EEF2F8",
+  Governance: "#F0F4FF",
+  Finance: "#F0FDF4",
+  Leadership: "#FFF8EC",
+  Ethics: "#FEF3C7",
+  Talent: "#FDF4FF",
+  Regulatory: "#FFF1F2",
+  Fundamentals: "#F0FDFA",
+};
 
 export function NewsletterPage() {
   const [activeTag, setActiveTag] = useState("All");
@@ -34,16 +44,20 @@ export function NewsletterPage() {
 
   return (
     <div className="min-h-screen bg-[#FAFAF8] pt-24">
+      {/* Header */}
       <div className="bg-white border-b border-[#E8E6E0]">
         <div className="max-w-6xl mx-auto px-6 py-16">
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EEF2F8] text-[#1C2E5E] text-xs font-semibold uppercase tracking-widest mb-4">
-              <BookOpen size={11} />Weekly Newsletter
+              <BookOpen size={11} />
+              Weekly Newsletter
             </span>
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
               <div>
                 <h1 style={{ color: "#0D1829" }}>The Executive<br />AI Brief</h1>
-                <HandwrittenNote size="md" rotate={-1} className="mt-2 block">Every Monday. Clear. Useful. Free.</HandwrittenNote>
+                <HandwrittenNote size="md" rotate={-1} className="mt-2 block">
+                  Every Monday. Clear. Useful. Free.
+                </HandwrittenNote>
               </div>
               <div className="text-right">
                 <p style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "40px", fontWeight: 800, color: "#1C2E5E", lineHeight: 1 }}>52</p>
@@ -55,19 +69,33 @@ export function NewsletterPage() {
       </div>
 
       <div className="max-w-6xl mx-auto px-6 py-16">
+        {/* Subscribe (inline, no popup) */}
         {!subscribed ? (
           <AnimatedSection className="mb-16 bg-[#1C2E5E] rounded-3xl p-8 md:p-10">
             <div className="grid md:grid-cols-2 gap-8 items-center">
               <div>
-                <p style={{ fontFamily: "Caveat, cursive", fontSize: "20px", color: "#F5A030", transform: "rotate(-1deg)", display: "inline-block" }}>Join 2,400+ senior leaders →</p>
-                <h3 style={{ fontFamily: "Barlow Condensed, sans-serif", color: "#EEF2F8", fontSize: "28px", fontWeight: 700 }} className="mt-1">Get AI Clarity Every Monday</h3>
-                <p className="text-[#8FA5C8] text-sm mt-2">No jargon. No hype. Just what you need to lead in an AI-shaped world.</p>
+                <p style={{ fontFamily: "Caveat, cursive", fontSize: "20px", color: "#F5A030", transform: "rotate(-1deg)", display: "inline-block" }}>
+                  Join 2,400+ senior leaders →
+                </p>
+                <h3 style={{ fontFamily: "Barlow Condensed, sans-serif", color: "#EEF2F8", fontSize: "28px", fontWeight: 700 }} className="mt-1">
+                  Get AI Clarity Every Monday
+                </h3>
+                <p className="text-[#8FA5C8] text-sm mt-2">
+                  No jargon. No hype. Just what you need to lead in an AI-shaped world.
+                </p>
               </div>
               <form onSubmit={(e) => { e.preventDefault(); if (email) setSubscribed(true); }} className="flex flex-col gap-3">
-                <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="your.name@company.com"
-                  className="px-5 py-3.5 rounded-2xl bg-[#162244] border border-[#2A4080] text-white placeholder:text-[#4A66A0] outline-none focus:border-[#8FA5C8] transition-colors" />
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your.name@company.com"
+                  className="px-5 py-3.5 rounded-2xl bg-[#162244] border border-[#2A4080] text-white placeholder:text-[#4A66A0] outline-none focus:border-[#8FA5C8] transition-colors"
+                />
                 <button type="submit" className="px-5 py-3.5 rounded-2xl bg-[#E8541A] text-white font-semibold hover:bg-[#D03010] transition-colors flex items-center justify-center gap-2">
-                  <Flame size={16} />Subscribe Free
+                  <Flame size={16} />
+                  Subscribe Free
                 </button>
               </form>
             </div>
@@ -79,45 +107,73 @@ export function NewsletterPage() {
           </AnimatedSection>
         )}
 
+        {/* Featured issue */}
         <AnimatedSection className="mb-12">
           <p className="text-xs font-semibold uppercase tracking-widest text-[#9BA3B0] mb-4">Latest Issue</p>
           <div className="bg-white rounded-3xl border-2 border-[#D0DAE8] p-8 md:p-10 hover:shadow-xl transition-shadow duration-300 cursor-pointer group">
             <div className="flex flex-col md:flex-row md:items-start gap-6">
               <div className="flex-1">
                 <div className="flex flex-wrap items-center gap-2 mb-3">
-                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full text-[#1C2E5E]" style={{ backgroundColor: tagColors[featured.tag] }}>{featured.tag}</span>
+                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full text-[#1C2E5E]" style={{ backgroundColor: tagColors[featured.tag] }}>
+                    {featured.tag}
+                  </span>
                   <span className="text-xs text-[#9BA3B0]" style={{ fontFamily: "JetBrains Mono, monospace" }}>{featured.num}</span>
                   <span className="text-xs text-[#9BA3B0]">{featured.date}</span>
-                  <span className="flex items-center gap-1 text-xs text-[#9BA3B0]"><Clock size={11} /> {featured.readTime}</span>
+                  <span className="flex items-center gap-1 text-xs text-[#9BA3B0]">
+                    <Clock size={11} /> {featured.readTime}
+                  </span>
                 </div>
-                <h2 style={{ color: "#0D1829", fontSize: "clamp(1.4rem, 3vw, 2rem)" }} className="mb-3 group-hover:text-[#1C2E5E] transition-colors">{featured.title}</h2>
+                <h2 style={{ color: "#0D1829", fontSize: "clamp(1.4rem, 3vw, 2rem)" }} className="mb-3 group-hover:text-[#1C2E5E] transition-colors">
+                  {featured.title}
+                </h2>
                 <p className="text-[#6B7280] leading-relaxed">{featured.teaser}</p>
                 <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-[#1C2E5E]">
                   Read full issue <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+              <div className="shrink-0 hidden md:block">
+                <div className="w-32 h-32 rounded-2xl bg-[#EEF2F8] flex flex-col items-center justify-center gap-1">
+                  <p style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "36px", fontWeight: 800, color: "#1C2E5E", lineHeight: 1 }}>
+                    {featured.num}
+                  </p>
+                  <div className="w-1 h-1 rounded-full bg-[#E8541A]" />
                 </div>
               </div>
             </div>
           </div>
         </AnimatedSection>
 
+        {/* Filter & Search */}
         <AnimatedSection className="mb-8">
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
             <div className="flex flex-wrap gap-2">
               {tags.map((t) => (
-                <button key={t} onClick={() => setActiveTag(t)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 ${activeTag === t ? "bg-[#1C2E5E] text-white" : "bg-white border border-[#E8E6E0] text-[#6B7280] hover:border-[#1C2E5E] hover:text-[#1C2E5E]"}`}>
+                <button
+                  key={t}
+                  onClick={() => setActiveTag(t)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 ${
+                    activeTag === t
+                      ? "bg-[#1C2E5E] text-white"
+                      : "bg-white border border-[#E8E6E0] text-[#6B7280] hover:border-[#1C2E5E] hover:text-[#1C2E5E]"
+                  }`}
+                >
                   {t}
                 </button>
               ))}
             </div>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9BA3B0]" size={14} />
-              <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search issues…"
-                className="pl-9 pr-4 py-2 rounded-xl border border-[#E8E6E0] bg-white text-sm text-[#0D1829] outline-none focus:border-[#1C2E5E] transition-colors w-48" />
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search issues…"
+                className="pl-9 pr-4 py-2 rounded-xl border border-[#E8E6E0] bg-white text-sm text-[#0D1829] outline-none focus:border-[#1C2E5E] transition-colors w-48"
+              />
             </div>
           </div>
         </AnimatedSection>
 
+        {/* Issue list */}
         <StaggerContainer className="space-y-3">
           {filtered.slice(1).map((issue) => (
             <StaggerItem key={issue.num}>
@@ -128,10 +184,14 @@ export function NewsletterPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                    <span className="text-xs font-semibold px-2 py-0.5 rounded-full text-[#1C2E5E]" style={{ backgroundColor: tagColors[issue.tag] || "#EEF2F8" }}>{issue.tag}</span>
+                    <span className="text-xs font-semibold px-2 py-0.5 rounded-full text-[#1C2E5E]" style={{ backgroundColor: tagColors[issue.tag] || "#EEF2F8" }}>
+                      {issue.tag}
+                    </span>
                     <span className="text-xs text-[#9BA3B0]">{issue.date}</span>
                   </div>
-                  <h4 className="font-bold text-[#0D1829] group-hover:text-[#1C2E5E] transition-colors leading-snug mb-1">{issue.title}</h4>
+                  <h4 className="font-bold text-[#0D1829] group-hover:text-[#1C2E5E] transition-colors leading-snug mb-1">
+                    {issue.title}
+                  </h4>
                   <p className="text-xs text-[#9BA3B0] leading-relaxed line-clamp-1">{issue.teaser}</p>
                 </div>
                 <ArrowRight size={16} className="shrink-0 text-[#CBD0D8] group-hover:text-[#1C2E5E] group-hover:translate-x-1 transition-all mt-1" />

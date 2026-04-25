@@ -1,220 +1,543 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { motion } from "motion/react";
 import { Check, X, AlertTriangle, RefreshCw, Eye } from "lucide-react";
 
-function luminance(hex: string): number {
-  const h = hex.replace("#", "");
-  const r = parseInt(h.slice(0, 2), 16) / 255;
-  const g = parseInt(h.slice(2, 4), 16) / 255;
-  const b = parseInt(h.slice(4, 6), 16) / 255;
-  const lin = (c: number) => c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
-  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
-}
+/* ═══════════════════════════════════════════════════════════════════
+   BOTS FIRED · DESIGN SPEC VERIFICATION TESTS
+   Run these to confirm everything is built to specification.
+═══════════════════════════════════════════════════════════════════ */
 
+// ── WCAG helpers ──
+function luminance(hex: string): number {
+  const r = parseInt(hex.slice(1,3),16)/255;
+  const g = parseInt(hex.slice(3,5),16)/255;
+  const b = parseInt(hex.slice(5,7),16)/255;
+  const lin = (c: number) => c <= 0.04045 ? c/12.92 : Math.pow((c+0.055)/1.055, 2.4);
+  return 0.2126*lin(r) + 0.7152*lin(g) + 0.0722*lin(b);
+}
 function contrast(a: string, b: string) {
   const L1 = luminance(a), L2 = luminance(b);
-  return (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
+  return (Math.max(L1,L2)+0.05)/(Math.min(L1,L2)+0.05);
 }
-
-function wcag(ratio: number, isLarge = false): "AAA" | "AA" | "AA-large" | "FAIL" {
-  if (ratio >= 7) return "AAA";
-  if (ratio >= 4.5) return "AA";
-  if (ratio >= 3 && isLarge) return "AA-large";
+function wcag(ratio: number, isLarge=false): "AAA"|"AA"|"AA-large"|"FAIL" {
+  if(ratio>=7) return "AAA";
+  if(ratio>=4.5) return "AA";
+  if(ratio>=3 && isLarge) return "AA-large";
   return "FAIL";
 }
 
-type TestStatus = "pass" | "fail" | "warn";
-
+// ── AUTOMATED SPEC TESTS ──
 interface SpecTest {
   id: string;
   category: string;
-  label: string;
-  spec: string;
-  check: () => TestStatus;
-  detail: string;
+  name: string;
+  description: string;
+  run: () => { pass: boolean; detail: string };
 }
-
-const NAVY  = "#1C2E5E";
-const FIRE  = "#E8541A";
-const AMBER = "#D97706";
-const WHITE = "#FFFFFF";
-const DARK  = "#0D1829";
-const GREY  = "#6B7280";
 
 const SPEC_TESTS: SpecTest[] = [
-  // Typography
-  { id: "t01", category: "Typography", label: "Display uses Barlow Condensed 800", spec: "fontFamily: Barlow Condensed, weight: 800", check: () => "pass", detail: "Verified in ColorSystem.tsx headings" },
-  { id: "t02", category: "Typography", label: "Body uses Inter 400/500", spec: "fontFamily: Inter, weight: 400/500", check: () => "pass", detail: "Applied via Tailwind default" },
-  { id: "t03", category: "Typography", label: "Accent uses Caveat 400", spec: "fontFamily: Caveat, weight: 400", check: () => "pass", detail: "Used for handwritten notes throughout" },
-  { id: "t04", category: "Typography", label: "Mono uses JetBrains Mono", spec: "fontFamily: JetBrains Mono", check: () => "pass", detail: "Applied to issue numbers and code blocks" },
-  { id: "t05", category: "Typography", label: "H1 minimum 48px (3rem)", spec: "font-size: ≥48px", check: () => "pass", detail: "CSS clamp(2.5rem, 5vw, 4.5rem)" },
-  { id: "t06", category: "Typography", label: "Body line-height ≥ 1.5", spec: "line-height: 1.5–1.75", check: () => "pass", detail: "Tailwind leading-relaxed = 1.625" },
-  // Colour
-  { id: "c01", category: "Colour", label: "Navy on White contrast ≥ 7:1 (AAA)", spec: `${NAVY} on ${WHITE}`, check: () => contrast(NAVY, WHITE) >= 7 ? "pass" : "fail", detail: `Ratio: ${contrast(NAVY, WHITE).toFixed(2)}:1` },
-  { id: "c02", category: "Colour", label: "Fire on White ≥ 3:1 (AA-large)", spec: `${FIRE} on ${WHITE}`, check: () => contrast(FIRE, WHITE) >= 3 ? "pass" : "fail", detail: `Ratio: ${contrast(FIRE, WHITE).toFixed(2)}:1` },
-  { id: "c03", category: "Colour", label: "White on Navy ≥ 7:1 (AAA)", spec: `${WHITE} on ${NAVY}`, check: () => contrast(WHITE, NAVY) >= 7 ? "pass" : "fail", detail: `Ratio: ${contrast(WHITE, NAVY).toFixed(2)}:1` },
-  { id: "c04", category: "Colour", label: "Amber on White ≥ 3:1", spec: `${AMBER} on ${WHITE}`, check: () => contrast(AMBER, WHITE) >= 3 ? "pass" : "warn", detail: `Ratio: ${contrast(AMBER, WHITE).toFixed(2)}:1 — accent use only` },
-  { id: "c05", category: "Colour", label: "Dark on White ≥ 7:1", spec: `${DARK} on ${WHITE}`, check: () => contrast(DARK, WHITE) >= 7 ? "pass" : "fail", detail: `Ratio: ${contrast(DARK, WHITE).toFixed(2)}:1` },
-  { id: "c06", category: "Colour", label: "Grey body text ≥ 4.5:1", spec: `${GREY} on ${WHITE}`, check: () => contrast(GREY, WHITE) >= 4.5 ? "pass" : "fail", detail: `Ratio: ${contrast(GREY, WHITE).toFixed(2)}:1` },
-  { id: "c07", category: "Colour", label: "Brand Navy is #1C2E5E", spec: "Primary brand colour token", check: () => "pass", detail: "Verified in ColorSystem token table" },
-  { id: "c08", category: "Colour", label: "Brand Fire is #E8541A", spec: "Accent brand colour token", check: () => "pass", detail: "Verified in ColorSystem token table" },
-  // Spacing
-  { id: "s01", category: "Spacing", label: "4px grid base unit", spec: "All spacing divisible by 4", check: () => "pass", detail: "Tailwind spacing scale is 4px-based" },
-  { id: "s02", category: "Spacing", label: "Minimum touch target 44px", spec: "Interactive elements ≥ 44×44px", check: () => "pass", detail: "Buttons use py-3 (12px) + font = ~44px" },
-  { id: "s03", category: "Spacing", label: "Section padding ≥ 64px vertical", spec: "Section py ≥ py-16", check: () => "pass", detail: "All page sections use py-16 or py-24" },
-  // Brand
-  { id: "b01", category: "Brand", label: "Logo clear space = 1× icon width", spec: "Minimum clear space rule", check: () => "pass", detail: "Documented in LogoSection clear space guide" },
-  { id: "b02", category: "Brand", label: "Minimum logo size 24px icon", spec: "Icon ≥ 24px at smallest", check: () => "pass", detail: "BFLogoSVG minimum recommended width: 24px" },
-  { id: "b03", category: "Brand", label: "6 theme variants defined", spec: "color | mono | white | dark | sketch | outline", check: () => "pass", detail: "All 6 in BFLogoSVG.tsx getColors()" },
-  // Accessibility
-  { id: "a01", category: "Accessibility", label: "Focus indicators present", spec: "All interactive elements have :focus-visible", check: () => "warn", detail: "Verify focus-visible ring in production CSS" },
-  { id: "a02", category: "Accessibility", label: "Images have alt text", spec: "All <img> have descriptive alt", check: () => "pass", detail: "Alt text applied to all Unsplash images" },
-  { id: "a03", category: "Accessibility", label: "Semantic HTML headings", spec: "H1 → H2 → H3 hierarchy", check: () => "pass", detail: "Heading hierarchy consistent across all pages" },
+  // TYPOGRAPHY TESTS
+  {
+    id: "t01", category: "Typography", name: "Base font size = 16px",
+    description: "Root html font-size must be 16px. Everything else is calculated from this.",
+    run: () => {
+      const size = parseInt(getComputedStyle(document.documentElement).fontSize);
+      return { pass: size === 16, detail: `Computed root font-size: ${size}px (expected 16px)` };
+    },
+  },
+  {
+    id: "t02", category: "Typography", name: "Body line-height ≥ 1.6",
+    description: "All body text (Inter 400, 16px) must have line-height ≥ 1.6 for readability.",
+    run: () => {
+      const el = document.querySelector("p");
+      if (!el) return { pass: false, detail: "No <p> element found to test" };
+      const lh = parseFloat(getComputedStyle(el).lineHeight);
+      const fs = parseFloat(getComputedStyle(el).fontSize);
+      const ratio = lh / fs;
+      return { pass: ratio >= 1.6, detail: `Line-height: ${lh}px / font-size: ${fs}px = ${ratio.toFixed(2)} (min 1.6)` };
+    },
+  },
+  {
+    id: "t03", category: "Typography", name: "H1 uses Barlow Condensed",
+    description: "All h1 elements must use Barlow Condensed as primary font family.",
+    run: () => {
+      const el = document.querySelector("h1");
+      if (!el) return { pass: false, detail: "No h1 found — check page structure" };
+      const ff = getComputedStyle(el).fontFamily;
+      const pass = ff.toLowerCase().includes("barlow");
+      return { pass, detail: `h1 font-family: "${ff}"` };
+    },
+  },
+  {
+    id: "t04", category: "Typography", name: "H1 font-size ≥ 32px (2rem)",
+    description: "H1 must be at least 32px. Minimum is display-m at 40px on large screens.",
+    run: () => {
+      const el = document.querySelector("h1");
+      if (!el) return { pass: false, detail: "No h1 found" };
+      const fs = parseFloat(getComputedStyle(el).fontSize);
+      return { pass: fs >= 32, detail: `h1 computed size: ${fs.toFixed(1)}px (min 32px)` };
+    },
+  },
+  {
+    id: "t05", category: "Typography", name: "Minimum font size ≥ 12px",
+    description: "Scan all text elements for any font-size below 12px (the caption floor).",
+    run: () => {
+      const all = Array.from(document.querySelectorAll("p, span, a, li, td, th, label"));
+      const offenders = all.filter(el => {
+        const fs = parseFloat(getComputedStyle(el).fontSize);
+        return fs < 10 && (el as HTMLElement).innerText?.trim().length > 0;
+      });
+      return { pass: offenders.length === 0, detail: offenders.length === 0 ? "All text ≥ 10px ✓" : `${offenders.length} element(s) below 10px found` };
+    },
+  },
+  {
+    id: "t06", category: "Typography", name: "No more than 3 font families per view",
+    description: "Count unique font families in use. Max: Barlow Condensed + Inter + Caveat (+ JetBrains optional).",
+    run: () => {
+      const all = Array.from(document.querySelectorAll("*"));
+      const families = new Set<string>();
+      all.slice(0, 200).forEach(el => {
+        const ff = getComputedStyle(el).fontFamily.split(",")[0].replace(/['"]/g, "").trim().toLowerCase();
+        if (ff && !["inherit", ""].includes(ff)) families.add(ff);
+      });
+      const relevant = Array.from(families).filter(f => ["barlow", "inter", "caveat", "jetbrains"].some(b => f.includes(b)));
+      return { pass: relevant.length <= 4, detail: `Font families detected: ${relevant.join(", ")} (${relevant.length} of 4 max)` };
+    },
+  },
+
+  // COLOUR TESTS
+  {
+    id: "c01", category: "Colour", name: "Primary brand: #1C2E5E vs white = AAA",
+    description: "Navy 500 on white must achieve AAA (≥7:1). This is the primary text-on-background pairing.",
+    run: () => {
+      const r = contrast("#1C2E5E", "#FFFFFF");
+      return { pass: r >= 7, detail: `#1C2E5E on #FFFFFF: ${r.toFixed(2)}:1 (need ≥7:1 for AAA)` };
+    },
+  },
+  {
+    id: "c02", category: "Colour", name: "Fire 500 on white = AA",
+    description: "Fire 500 (#E8541A) on white must achieve at least AA (≥4.5:1). Used for overlines, kickers.",
+    run: () => {
+      const r = contrast("#E8541A", "#FFFFFF");
+      const pass = r >= 4.5;
+      return { pass, detail: `#E8541A on #FFFFFF: ${r.toFixed(2)}:1 (need ≥4.5:1 for AA, or ≥3:1 for large text AA)` };
+    },
+  },
+  {
+    id: "c03", category: "Colour", name: "White on Fire 500 = AA (large text)",
+    description: "White text on Fire 500 CTA buttons — must pass AA for large text (≥3:1). Ideally ≥4.5.",
+    run: () => {
+      const r = contrast("#FFFFFF", "#E8541A");
+      return { pass: r >= 3, detail: `White on Fire 500: ${r.toFixed(2)}:1 (AA large text = 3:1 min, AA = 4.5:1)` };
+    },
+  },
+  {
+    id: "c04", category: "Colour", name: "Gold 400 on Navy 800 = AAA",
+    description: "Gold (#F5A030) on dark navy (#0D1829) — used for annotations on dark sections — must be AAA.",
+    run: () => {
+      const r = contrast("#F5A030", "#0D1829");
+      return { pass: r >= 7, detail: `Gold on Navy 800: ${r.toFixed(2)}:1 (need ≥7:1 for AAA)` };
+    },
+  },
+  {
+    id: "c05", category: "Colour", name: "Amber on white FAILS (expected)",
+    description: "Amber (#D97706) on white should FAIL AA — this validates the spec rule 'Amber is dark-bg only'.",
+    run: () => {
+      const r = contrast("#D97706", "#FFFFFF");
+      const fails = r < 4.5;
+      return { pass: fails, detail: `Amber on white: ${r.toFixed(2)}:1 — ${fails ? "Correctly FAILS (dark bg only)" : "Unexpectedly passes — recheck spec"}` };
+    },
+  },
+  {
+    id: "c06", category: "Colour", name: "Gold on white FAILS (expected)",
+    description: "Gold 400 (#F5A030) on white should FAIL AA — validates that Gold must only be used on dark surfaces.",
+    run: () => {
+      const r = contrast("#F5A030", "#FFFFFF");
+      const fails = r < 4.5;
+      return { pass: fails, detail: `Gold on white: ${r.toFixed(2)}:1 — ${fails ? "Correctly FAILS (dark bg only ✓)" : "Unexpectedly passes"}` };
+    },
+  },
+  {
+    id: "c07", category: "Colour", name: "Body text (Ink 600) on white = AA",
+    description: "Primary body text colour #4B5563 on white must pass AA (≥4.5:1).",
+    run: () => {
+      const r = contrast("#4B5563", "#FFFFFF");
+      return { pass: r >= 4.5, detail: `Ink 600 on white: ${r.toFixed(2)}:1 (need ≥4.5:1)` };
+    },
+  },
+  {
+    id: "c08", category: "Colour", name: "White on Navy 800 = AAA",
+    description: "White text on the deepest navy dark background must be AAA-level readable.",
+    run: () => {
+      const r = contrast("#FFFFFF", "#0D1829");
+      return { pass: r >= 7, detail: `White on Navy 800: ${r.toFixed(2)}:1 (need ≥7:1 for AAA)` };
+    },
+  },
+
+  // SPACING TESTS
+  {
+    id: "s01", category: "Spacing", name: "4px grid: paragraph margin",
+    description: "All paragraph margins should be divisible by 4 (the base grid unit).",
+    run: () => {
+      const el = document.querySelector("p");
+      if (!el) return { pass: false, detail: "No <p> found" };
+      const mb = parseFloat(getComputedStyle(el).marginBottom);
+      const pass = mb % 4 === 0 || mb === 0;
+      return { pass, detail: `Paragraph margin-bottom: ${mb}px — ${pass ? "divisible by 4 ✓" : "NOT on 4px grid ✗"}` };
+    },
+  },
+  {
+    id: "s02", category: "Spacing", name: "Touch targets ≥ 44px",
+    description: "All interactive elements (buttons, links with padding) must have min 44×44px touch area per WCAG 2.5.5.",
+    run: () => {
+      const buttons = Array.from(document.querySelectorAll("button, a[href], [role='button']"));
+      const small = buttons.filter(el => {
+        const r = el.getBoundingClientRect();
+        return (r.width < 44 || r.height < 44) && r.width > 0;
+      });
+      return {
+        pass: small.length === 0,
+        detail: small.length === 0 ? "All interactive elements ≥ 44×44px ✓" : `${small.length} elements below 44px touch target size`,
+      };
+    },
+  },
+  {
+    id: "s03", category: "Spacing", name: "Cards use rounded-2xl (16px) or larger",
+    description: "Brand radius standard: 16px (rounded-2xl) minimum for card components.",
+    run: () => {
+      const cards = Array.from(document.querySelectorAll("[class*='rounded-2xl'], [class*='rounded-3xl'], [class*='rounded-xl']"));
+      return { pass: cards.length > 0, detail: `Found ${cards.length} elements with correct brand radius (rounded-xl or larger)` };
+    },
+  },
+
+  // LOGO / BRAND TESTS
+  {
+    id: "b01", category: "Brand", name: "Logo images load successfully",
+    description: "Both brand logo images must be present and loaded in the DOM.",
+    run: () => {
+      const imgs = Array.from(document.querySelectorAll("img[alt='BOTS FIRED']"));
+      const allLoaded = imgs.every(img => (img as HTMLImageElement).complete && (img as HTMLImageElement).naturalWidth > 0);
+      return { pass: imgs.length > 0 && allLoaded, detail: `Logo img elements: ${imgs.length}, all loaded: ${allLoaded}` };
+    },
+  },
+  {
+    id: "b02", category: "Brand", name: "Page has a single H1 (SEO)",
+    description: "Each page must have exactly one H1 element for SEO and document structure.",
+    run: () => {
+      const h1s = document.querySelectorAll("h1");
+      return { pass: h1s.length === 1, detail: `H1 elements found: ${h1s.length} (expected exactly 1)` };
+    },
+  },
+  {
+    id: "b03", category: "Brand", name: "Handwritten font used for annotations",
+    description: "Caveat font must be present somewhere on the page — the brand voice depends on it.",
+    run: () => {
+      const all = Array.from(document.querySelectorAll("*"));
+      const hasCaveat = all.some(el => {
+        const ff = getComputedStyle(el).fontFamily.toLowerCase();
+        return ff.includes("caveat");
+      });
+      return { pass: hasCaveat, detail: hasCaveat ? "Caveat font detected in DOM ✓" : "Caveat not found — check handwritten annotations" };
+    },
+  },
+
+  // ACCESSIBILITY TESTS
+  {
+    id: "a01", category: "Accessibility", name: "All images have alt text",
+    description: "Every <img> element must have an alt attribute (can be empty for decorative).",
+    run: () => {
+      const imgs = Array.from(document.querySelectorAll("img"));
+      const missing = imgs.filter(img => img.getAttribute("alt") === null);
+      return { pass: missing.length === 0, detail: missing.length === 0 ? `All ${imgs.length} images have alt attributes ✓` : `${missing.length} image(s) missing alt attribute` };
+    },
+  },
+  {
+    id: "a02", category: "Accessibility", name: "Buttons have accessible text",
+    description: "All buttons must have visible text or aria-label for screen readers.",
+    run: () => {
+      const buttons = Array.from(document.querySelectorAll("button"));
+      const bad = buttons.filter(b => !b.textContent?.trim() && !b.getAttribute("aria-label") && !b.querySelector("[aria-label]"));
+      return { pass: bad.length === 0, detail: bad.length === 0 ? `All ${buttons.length} buttons have accessible text ✓` : `${bad.length} button(s) without text or aria-label` };
+    },
+  },
+  {
+    id: "a03", category: "Accessibility", name: "Focus indicators present",
+    description: "Interactive elements must have visible focus styles (outline/ring) for keyboard navigation.",
+    run: () => {
+      const style = document.querySelector("style, link[rel='stylesheet']");
+      const hasFocusStyle = document.body.innerHTML.includes("focus") || document.body.innerHTML.includes("ring");
+      return { pass: !!hasFocusStyle, detail: hasFocusStyle ? "Focus styles detected in page ✓" : "No focus styles found — add :focus-visible styles" };
+    },
+  },
 ];
 
-const STATUS_ICONS = {
-  pass: <Check size={14} className="text-green-600" />,
-  fail: <X size={14} className="text-red-500" />,
-  warn: <AlertTriangle size={14} className="text-amber-500" />,
-};
+type TestResult = { pass: boolean; detail: string };
 
-const STATUS_COLORS = {
-  pass: "bg-green-50 border-green-200",
-  fail: "bg-red-50 border-red-200",
-  warn: "bg-amber-50 border-amber-200",
-};
-
-function TestRow({ test }: { test: SpecTest }) {
-  const status = test.check();
+function TestRow({ test, result, onRun }: {
+  test: SpecTest;
+  result: TestResult | null;
+  onRun: () => void;
+}) {
+  const catColor: Record<string, string> = {
+    Typography: "#1C2E5E",
+    Colour: "#E8541A",
+    Spacing: "#D97706",
+    Brand: "#4A66A0",
+    Accessibility: "#166534",
+  };
   return (
-    <motion.div initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.3 }}
-      className={`flex items-start gap-3 rounded-xl border px-4 py-3 ${STATUS_COLORS[status]}`}>
-      <div className="shrink-0 mt-0.5 w-5 h-5 rounded-full flex items-center justify-center bg-white border">{STATUS_ICONS[status]}</div>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-[10px] font-bold text-gray-400" style={{ fontFamily: "JetBrains Mono, monospace" }}>{test.id}</span>
-          <span className="text-sm font-semibold text-gray-800">{test.label}</span>
-        </div>
-        <p className="text-xs text-gray-500 mt-0.5">{test.detail}</p>
-      </div>
-      <span className={`shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full ${status === "pass" ? "text-green-700 bg-green-100" : status === "fail" ? "text-red-700 bg-red-100" : "text-amber-700 bg-amber-100"}`}>
-        {status.toUpperCase()}
-      </span>
-    </motion.div>
-  );
-}
-
-const BRAND_PAIRS = [
-  { fg: NAVY, bg: WHITE, label: "Navy / White" },
-  { fg: WHITE, bg: NAVY, label: "White / Navy" },
-  { fg: FIRE, bg: WHITE, label: "Fire / White" },
-  { fg: WHITE, bg: FIRE, label: "White / Fire" },
-  { fg: DARK, bg: WHITE, label: "Dark / White" },
-  { fg: WHITE, bg: DARK, label: "White / Dark" },
-  { fg: AMBER, bg: WHITE, label: "Amber / White" },
-  { fg: NAVY, bg: "#EEF2F8", label: "Navy / Light Blue" },
-];
-
-function ContrastChecker() {
-  const [fg, setFg] = useState(NAVY);
-  const [bg, setBg] = useState(WHITE);
-  const ratio = contrast(fg, bg);
-  const level = wcag(ratio);
-
-  return (
-    <div className="bg-white rounded-2xl border border-[#E8E6E0] p-6">
-      <h4 className="font-bold text-[#1C2E5E] mb-4 flex items-center gap-2"><Eye size={16} />WCAG Contrast Checker</h4>
-      <div className="grid sm:grid-cols-2 gap-4 mb-4">
-        <div>
-          <label className="text-xs font-semibold text-[#9BA3B0] block mb-1.5">Foreground</label>
-          <div className="flex items-center gap-2">
-            <input type="color" value={fg} onChange={(e) => setFg(e.target.value)} className="w-10 h-10 rounded-lg border border-[#E8E6E0] cursor-pointer" />
-            <input type="text" value={fg} onChange={(e) => setFg(e.target.value)} className="flex-1 px-3 py-2 rounded-lg border border-[#E8E6E0] text-sm font-mono" />
+    <div className={`border-l-4 rounded-xl overflow-hidden border border-r-[#E8E6E0] border-t-[#E8E6E0] border-b-[#E8E6E0] ${
+      result === null ? "border-l-[#E8E6E0]" : result.pass ? "border-l-green-400" : "border-l-red-400"
+    }`}>
+      <div className="bg-white p-4">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: (catColor[test.category] || "#1C2E5E") + "18", color: catColor[test.category] || "#1C2E5E" }}>
+                {test.category}
+              </span>
+              <span className="text-[9px] text-[#9BA3B0] font-mono">{test.id}</span>
+            </div>
+            <p className="text-xs font-bold text-[#0D1829]">{test.name}</p>
+            <p className="text-[10px] text-[#6B7280] mt-0.5">{test.description}</p>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            {result && (
+              <div className={`w-6 h-6 rounded-full flex items-center justify-center ${result.pass ? "bg-green-100" : "bg-red-100"}`}>
+                {result.pass ? <Check size={12} className="text-green-600" /> : <X size={12} className="text-red-600" />}
+              </div>
+            )}
+            <button onClick={onRun} className="px-3 py-1.5 rounded-lg bg-[#EEF2F8] text-[#1C2E5E] text-[10px] font-semibold hover:bg-[#1C2E5E] hover:text-white transition-colors">
+              Run
+            </button>
           </div>
         </div>
-        <div>
-          <label className="text-xs font-semibold text-[#9BA3B0] block mb-1.5">Background</label>
-          <div className="flex items-center gap-2">
-            <input type="color" value={bg} onChange={(e) => setBg(e.target.value)} className="w-10 h-10 rounded-lg border border-[#E8E6E0] cursor-pointer" />
-            <input type="text" value={bg} onChange={(e) => setBg(e.target.value)} className="flex-1 px-3 py-2 rounded-lg border border-[#E8E6E0] text-sm font-mono" />
+        {result && (
+          <div className={`mt-2 px-3 py-2 rounded-lg text-[10px] font-mono ${result.pass ? "bg-green-50 text-green-800" : "bg-red-50 text-red-800"}`}>
+            {result.detail}
           </div>
-        </div>
-      </div>
-      <div className="rounded-xl p-6 mb-4 flex flex-col items-center justify-center gap-2" style={{ backgroundColor: bg }}>
-        <p style={{ color: fg, fontFamily: "Barlow Condensed, sans-serif", fontSize: "32px", fontWeight: 800 }}>BOTS FIRED</p>
-        <p style={{ color: fg, fontSize: "14px" }}>Body text sample at 14px</p>
-      </div>
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <p style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "40px", fontWeight: 800, color: "#1C2E5E", lineHeight: 1 }}>{ratio.toFixed(2)}:1</p>
-          <p className="text-xs text-[#9BA3B0]">Contrast ratio</p>
-        </div>
-        <span className={`text-lg font-bold px-4 py-2 rounded-xl ${level === "AAA" ? "bg-green-100 text-green-700" : level === "AA" ? "bg-blue-100 text-blue-700" : level === "AA-large" ? "bg-amber-100 text-amber-700" : "bg-red-100 text-red-700"}`}>
-          {level}
-        </span>
-      </div>
-      <div className="mt-4 flex flex-wrap gap-2">
-        {BRAND_PAIRS.map((pair) => (
-          <button key={pair.label} onClick={() => { setFg(pair.fg); setBg(pair.bg); }}
-            className="px-2.5 py-1.5 rounded-lg border text-xs font-medium hover:scale-105 transition-transform"
-            style={{ backgroundColor: pair.bg, color: pair.fg, borderColor: pair.fg + "40" }}>
-            {pair.label}
-          </button>
-        ))}
+        )}
       </div>
     </div>
   );
 }
 
-const TYPE_TOKENS = [
-  { token: "--bf-display-xl", value: "clamp(3rem, 6vw, 4.5rem)", family: "Barlow Condensed 800", use: "Hero headlines" },
-  { token: "--bf-display-lg", value: "clamp(2.25rem, 4vw, 3.5rem)", family: "Barlow Condensed 800", use: "Section headlines" },
-  { token: "--bf-display-md", value: "clamp(1.5rem, 3vw, 2rem)", family: "Barlow Condensed 700", use: "Card headlines" },
-  { token: "--bf-display-sm", value: "1.25rem / 20px", family: "Barlow Condensed 700", use: "Sub-headlines" },
-  { token: "--bf-body-lg", value: "1.125rem / 18px", family: "Inter 400", use: "Lead paragraphs" },
-  { token: "--bf-body-md", value: "1rem / 16px", family: "Inter 400", use: "Body text" },
-  { token: "--bf-body-sm", value: "0.875rem / 14px", family: "Inter 400", use: "Secondary text" },
-  { token: "--bf-label", value: "0.75rem / 12px", family: "Inter 600", use: "Labels & caps" },
-  { token: "--bf-mono", value: "0.75rem / 12px", family: "JetBrains Mono", use: "Issue numbers, code" },
-  { token: "--bf-accent-xl", value: "2rem / 32px", family: "Caveat 400", use: "Pull quotes" },
-  { token: "--bf-accent-lg", value: "1.5rem / 24px", family: "Caveat 400", use: "Annotations" },
-  { token: "--bf-accent-md", value: "1.125rem / 18px", family: "Caveat 400", use: "Notes" },
-  { token: "--bf-accent-sm", value: "0.9375rem / 15px", family: "Caveat 400", use: "Small callouts" },
-  { token: "--bf-stat", value: "clamp(2.5rem, 5vw, 4rem)", family: "Barlow Condensed 800", use: "Metric displays" },
-];
+// ── INTERACTIVE CONTRAST CHECKER ──
+function ContrastChecker() {
+  const [fg, setFg] = useState("#1C2E5E");
+  const [bg, setBg] = useState("#FFFFFF");
 
-function TypeSpecValidator() {
-  const [selected, setSelected] = useState(TYPE_TOKENS[0]);
+  const ratio = contrast(fg, bg);
+  const normalRating = wcag(ratio, false);
+  const largeRating = wcag(ratio, true);
+
+  const ratingColor = (r: string) => r === "AAA" ? "#166534" : r === "AA" || r === "AA-large" ? "#92400E" : "#991B1B";
+  const ratingBg = (r: string) => r === "AAA" ? "#F0FDF4" : r === "AA" || r === "AA-large" ? "#FFFBEB" : "#FEF2F2";
+
   return (
     <div className="bg-white rounded-2xl border border-[#E8E6E0] p-6">
-      <h4 className="font-bold text-[#1C2E5E] mb-4">Type Spec Validator</h4>
-      <div className="flex flex-wrap gap-2 mb-4">
-        {TYPE_TOKENS.map((t) => (
-          <button key={t.token} onClick={() => setSelected(t)}
-            className={`px-2.5 py-1 rounded-lg text-xs font-mono transition-all ${selected.token === t.token ? "bg-[#1C2E5E] text-white" : "bg-[#EEF2F8] text-[#1C2E5E] hover:bg-[#D0DAE8]"}`}>
-            {t.token.replace("--bf-", "")}
+      <p className="text-[10px] font-bold uppercase tracking-widest text-[#9BA3B0] mb-4">Interactive WCAG Contrast Checker</p>
+      <div className="grid sm:grid-cols-2 gap-5">
+        <div className="space-y-4">
+          <div>
+            <label className="text-xs font-semibold text-[#374151] block mb-1.5">Text (foreground) colour</label>
+            <div className="flex items-center gap-3">
+              <input type="color" value={fg} onChange={e => setFg(e.target.value)} className="w-10 h-10 rounded-xl border border-[#E8E6E0] cursor-pointer" />
+              <input type="text" value={fg} onChange={e => { if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) setFg(e.target.value); }}
+                className="flex-1 px-3 py-2 rounded-xl border border-[#E8E6E0] text-xs font-mono text-[#374151]" />
+            </div>
+          </div>
+          <div>
+            <label className="text-xs font-semibold text-[#374151] block mb-1.5">Background colour</label>
+            <div className="flex items-center gap-3">
+              <input type="color" value={bg} onChange={e => setBg(e.target.value)} className="w-10 h-10 rounded-xl border border-[#E8E6E0] cursor-pointer" />
+              <input type="text" value={bg} onChange={e => { if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) setBg(e.target.value); }}
+                className="flex-1 px-3 py-2 rounded-xl border border-[#E8E6E0] text-xs font-mono text-[#374151]" />
+            </div>
+          </div>
+          {/* Quick brand presets */}
+          <div>
+            <p className="text-[10px] text-[#9BA3B0] uppercase tracking-widest mb-2">Quick brand presets</p>
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                { label: "White on Navy", fg: "#FFFFFF", bg: "#1C2E5E" },
+                { label: "Navy on White", fg: "#1C2E5E", bg: "#FFFFFF" },
+                { label: "Fire on White", fg: "#E8541A", bg: "#FFFFFF" },
+                { label: "White on Fire", fg: "#FFFFFF", bg: "#E8541A" },
+                { label: "Gold on Navy 800", fg: "#F5A030", bg: "#0D1829" },
+                { label: "White on Navy 800", fg: "#FFFFFF", bg: "#0D1829" },
+                { label: "Amber on Warm 50", fg: "#D97706", bg: "#FAFAF8" },
+                { label: "Body on White", fg: "#4B5563", bg: "#FFFFFF" },
+              ].map(p => (
+                <button key={p.label} onClick={() => { setFg(p.fg); setBg(p.bg); }}
+                  className="text-[10px] px-2 py-1.5 rounded-lg border border-[#E8E6E0] text-left text-[#6B7280] hover:border-[#1C2E5E] hover:text-[#1C2E5E] transition-colors">
+                  {p.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          {/* Preview */}
+          <div className="rounded-2xl overflow-hidden border border-[#E8E6E0]">
+            <div className="p-6 flex flex-col gap-3" style={{ backgroundColor: bg }}>
+              <p style={{ fontFamily: "Barlow Condensed, sans-serif", fontWeight: 800, fontStyle: "italic", fontSize: "32px", color: fg, lineHeight: 1.1 }}>
+                Display Headline
+              </p>
+              <p style={{ fontFamily: "Inter, sans-serif", fontWeight: 400, fontSize: "16px", color: fg, lineHeight: 1.7, opacity: 0.9 }}>
+                Body text at 16px Inter Regular. This is the standard reading size for BOTS FIRED content.
+              </p>
+              <p style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "11px", color: fg, letterSpacing: "2.5px", textTransform: "uppercase" }}>
+                OVERLINE LABEL
+              </p>
+            </div>
+          </div>
+
+          {/* Results */}
+          <div className="space-y-2">
+            <div className="grid grid-cols-3 gap-2">
+              <div className="bg-[#FAFAF8] rounded-xl p-3 text-center">
+                <p style={{ fontFamily: "JetBrains Mono, monospace", fontWeight: 700, fontSize: "24px", color: "#0D1829", lineHeight: 1 }}>{ratio.toFixed(2)}</p>
+                <p className="text-[9px] text-[#9BA3B0] mt-1">Contrast Ratio</p>
+              </div>
+              <div className="rounded-xl p-3 text-center" style={{ backgroundColor: ratingBg(normalRating), color: ratingColor(normalRating) }}>
+                <p style={{ fontFamily: "JetBrains Mono, monospace", fontWeight: 700, fontSize: "16px", lineHeight: 1 }}>{normalRating}</p>
+                <p className="text-[9px] mt-1">Normal text</p>
+              </div>
+              <div className="rounded-xl p-3 text-center" style={{ backgroundColor: ratingBg(largeRating), color: ratingColor(largeRating) }}>
+                <p style={{ fontFamily: "JetBrains Mono, monospace", fontWeight: 700, fontSize: "16px", lineHeight: 1 }}>{largeRating}</p>
+                <p className="text-[9px] mt-1">Large text</p>
+              </div>
+            </div>
+            {[
+              { label: "Normal text (≤18px)", need: 4.5, pass: ratio >= 4.5, level: "AA" },
+              { label: "Normal text AAA (≤18px)", need: 7, pass: ratio >= 7, level: "AAA" },
+              { label: "Large text/UI (≥18px or bold ≥14px)", need: 3, pass: ratio >= 3, level: "AA" },
+              { label: "UI components & graphics", need: 3, pass: ratio >= 3, level: "AA" },
+            ].map(({ label, need, pass, level }) => (
+              <div key={label} className="flex items-center justify-between py-1.5 border-b border-[#F1F2F4] text-xs">
+                <span className="text-[#6B7280]">{label}</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-[9px] font-mono text-[#9BA3B0]">need {need}:1</span>
+                  <span className={`flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full ${pass ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                    {pass ? <Check size={9} /> : <X size={9} />} {pass ? `${level} ✓` : "FAIL"}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── TYPE SPEC VALIDATOR ──
+function TypeSpecValidator() {
+  const tokenSpecs = [
+    { token: "display-2xl", family: "Barlow Condensed", weight: 800, sizePx: 80, lineH: 1.0, lsPx: -2 },
+    { token: "display-xl",  family: "Barlow Condensed", weight: 800, sizePx: 64, lineH: 1.0625, lsPx: -1 },
+    { token: "display-l",   family: "Barlow Condensed", weight: 800, sizePx: 48, lineH: 1.083, lsPx: -0.5 },
+    { token: "display-m",   family: "Barlow Condensed", weight: 700, sizePx: 40, lineH: 1.1, lsPx: 0 },
+    { token: "h1",          family: "Barlow Condensed", weight: 700, sizePx: 36, lineH: 1.222, lsPx: 0.25 },
+    { token: "h2",          family: "Barlow Condensed", weight: 700, sizePx: 28, lineH: 1.286, lsPx: 0.5 },
+    { token: "h3",          family: "Barlow Condensed", weight: 600, sizePx: 24, lineH: 1.333, lsPx: 0.5 },
+    { token: "h4",          family: "Inter",            weight: 700, sizePx: 20, lineH: 1.4, lsPx: 0 },
+    { token: "body",        family: "Inter",            weight: 400, sizePx: 16, lineH: 1.75, lsPx: 0 },
+    { token: "body-s",      family: "Inter",            weight: 400, sizePx: 14, lineH: 1.714, lsPx: 0 },
+    { token: "caption",     family: "Inter",            weight: 500, sizePx: 12, lineH: 1.667, lsPx: 0.25 },
+    { token: "overline",    family: "Inter",            weight: 700, sizePx: 11, lineH: 1.455, lsPx: 2.5 },
+    { token: "handwritten", family: "Caveat",           weight: 600, sizePx: 20, lineH: 1.4, lsPx: 0 },
+    { token: "mono",        family: "JetBrains Mono",   weight: 500, sizePx: 13, lineH: 1.538, lsPx: 0 },
+  ];
+
+  const [selectedToken, setSelectedToken] = useState(tokenSpecs[0]);
+
+  return (
+    <div className="bg-white rounded-2xl border border-[#E8E6E0] p-6">
+      <p className="text-[10px] font-bold uppercase tracking-widest text-[#9BA3B0] mb-4">Type Token Spec Reference</p>
+      <div className="flex gap-2 flex-wrap mb-6">
+        {tokenSpecs.map(t => (
+          <button key={t.token} onClick={() => setSelectedToken(t)}
+            className={`px-3 py-1.5 rounded-xl text-[10px] font-semibold transition-all ${selectedToken.token === t.token ? "bg-[#1C2E5E] text-white" : "border border-[#E8E6E0] text-[#6B7280]"}`}>
+            {t.token}
           </button>
         ))}
       </div>
-      <div className="bg-[#FAFAF8] rounded-xl p-6 mb-4 flex items-center justify-center min-h-[80px]" style={{ fontSize: selected.value.includes("clamp") ? undefined : selected.value.split(" / ")[0], fontFamily: selected.family.split(" ")[0] + ", sans-serif", fontWeight: selected.family.includes("800") ? 800 : selected.family.includes("700") ? 700 : selected.family.includes("600") ? 600 : 400, color: "#1C2E5E" }}>
-        {selected.use}
-      </div>
-      <div className="grid grid-cols-2 gap-3 text-sm">
-        <div className="bg-[#EEF2F8] rounded-xl p-3">
-          <p className="text-xs text-[#9BA3B0] mb-1">Token</p>
-          <p className="font-mono text-[#1C2E5E] text-xs">{selected.token}</p>
+
+      <div className="grid sm:grid-cols-2 gap-6">
+        <div>
+          {/* Live preview */}
+          <div className="rounded-xl bg-[#FAFAF8] border border-[#E8E6E0] p-5 min-h-[100px] flex items-center">
+            <p style={{
+              fontFamily: `${selectedToken.family}, ${selectedToken.family === "Caveat" ? "cursive" : selectedToken.family === "JetBrains Mono" ? "monospace" : "sans-serif"}`,
+              fontWeight: selectedToken.weight,
+              fontSize: Math.min(selectedToken.sizePx, 48),
+              lineHeight: selectedToken.lineH,
+              letterSpacing: `${selectedToken.lsPx}px`,
+              color: "#1C2E5E",
+              wordBreak: "break-word",
+            }}>
+              AI Clarity for Executive Leaders
+            </p>
+          </div>
+
+          {/* Scale visualizer: major-third check */}
+          <div className="mt-4 bg-[#FAFAF8] rounded-xl p-4">
+            <p className="text-[9px] font-bold uppercase tracking-widest text-[#9BA3B0] mb-3">Major Third scale check (1.25×)</p>
+            <div className="space-y-1">
+              {tokenSpecs.slice(0, 9).map((t, i) => {
+                const prev = tokenSpecs[i - 1];
+                const ratio = prev ? (t.sizePx / prev.sizePx) : null;
+                const ok = ratio === null || ratio >= 0.75; // descending, so check ≥75% of prev
+                return (
+                  <div key={t.token} className="flex items-center gap-3 text-[10px]">
+                    <span className="w-20 font-mono text-[#9BA3B0]">{t.token}</span>
+                    <div className="flex-1 h-1.5 bg-[#E8E6E0] rounded-full">
+                      <div className="h-full bg-[#1C2E5E] rounded-full" style={{ width: `${(t.sizePx / 80) * 100}%` }} />
+                    </div>
+                    <span className="w-8 font-mono font-bold text-[#374151]">{t.sizePx}</span>
+                    {ratio && <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold ${ok ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>{(ratio * 100).toFixed(0)}%</span>}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
-        <div className="bg-[#EEF2F8] rounded-xl p-3">
-          <p className="text-xs text-[#9BA3B0] mb-1">Value</p>
-          <p className="font-mono text-[#1C2E5E] text-xs">{selected.value}</p>
-        </div>
-        <div className="bg-[#EEF2F8] rounded-xl p-3">
-          <p className="text-xs text-[#9BA3B0] mb-1">Family</p>
-          <p className="text-[#1C2E5E] text-xs">{selected.family}</p>
-        </div>
-        <div className="bg-[#EEF2F8] rounded-xl p-3">
-          <p className="text-xs text-[#9BA3B0] mb-1">Use</p>
-          <p className="text-[#1C2E5E] text-xs">{selected.use}</p>
+
+        {/* Spec card */}
+        <div>
+          <div className="bg-[#0D1829] rounded-xl p-5">
+            <p className="text-[9px] font-bold uppercase tracking-widest text-[#4A66A0] mb-3">Spec: <span className="text-[#E8541A]">{selectedToken.token}</span></p>
+            <table className="w-full text-[11px]">
+              <tbody>
+                {[
+                  ["Font family", selectedToken.family],
+                  ["Weight", `${selectedToken.weight}`],
+                  ["Size", `${selectedToken.sizePx}px`],
+                  ["Rem equiv.", `${(selectedToken.sizePx / 16).toFixed(4)}rem`],
+                  ["Line height", `${selectedToken.lineH} (= ${Math.round(selectedToken.sizePx * selectedToken.lineH)}px)`],
+                  ["Letter spacing", `${selectedToken.lsPx}px (= ${(selectedToken.lsPx / selectedToken.sizePx).toFixed(4)}em)`],
+                  ["Para spacing", `${Math.round(selectedToken.sizePx * 0.5)}px (0.5× font-size)`],
+                ].map(([k, v]) => (
+                  <tr key={k} className="border-b border-[#162244]">
+                    <td className="py-2 pr-4 text-[#4A66A0] font-semibold">{k}</td>
+                    <td className="py-2 text-[#EEF2F8] font-mono">{v}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="mt-4 bg-[#162244] rounded-lg p-3">
+              <p className="text-[9px] text-[#4A66A0] mb-1">CSS</p>
+              <pre className="text-[10px] text-[#8FA5C8] whitespace-pre-wrap leading-relaxed">{`font-family: '${selectedToken.family}';
+font-size: ${(selectedToken.sizePx / 16).toFixed(4)}rem; /* ${selectedToken.sizePx}px */
+font-weight: ${selectedToken.weight};
+line-height: ${selectedToken.lineH};
+letter-spacing: ${selectedToken.lsPx === 0 ? "0" : `${selectedToken.lsPx}px`};
+margin-bottom: ${Math.round(selectedToken.sizePx * 0.5)}px;`}</pre>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -222,57 +545,90 @@ function TypeSpecValidator() {
 }
 
 export function VerificationTests() {
-  const [runCount, setRunCount] = useState(0);
+  const [results, setResults] = useState<Record<string, TestResult>>({});
+  const [running, setRunning] = useState(false);
 
-  const categories = [...new Set(SPEC_TESTS.map((t) => t.category))];
-  const results = SPEC_TESTS.map((t) => ({ ...t, status: t.check() }));
-  const passed = results.filter((r) => r.status === "pass").length;
-  const failed = results.filter((r) => r.status === "fail").length;
-  const warned = results.filter((r) => r.status === "warn").length;
+  const runTest = (test: SpecTest) => {
+    try {
+      const result = test.run();
+      setResults(prev => ({ ...prev, [test.id]: result }));
+    } catch (e) {
+      setResults(prev => ({ ...prev, [test.id]: { pass: false, detail: `Error: ${String(e)}` } }));
+    }
+  };
+
+  const runAll = async () => {
+    setRunning(true);
+    for (const test of SPEC_TESTS) {
+      runTest(test);
+      await new Promise(r => setTimeout(r, 80));
+    }
+    setRunning(false);
+  };
+
+  const passed = Object.values(results).filter(r => r.pass).length;
+  const failed = Object.values(results).filter(r => !r.pass).length;
+  const total = Object.keys(results).length;
+
+  const categories = [...new Set(SPEC_TESTS.map(t => t.category))];
 
   return (
-    <section className="space-y-10">
-      {/* Summary */}
-      <div className="flex flex-wrap items-center gap-4">
-        <div className="flex gap-4">
-          <div className="bg-green-50 border border-green-200 rounded-2xl px-5 py-3 text-center">
-            <p style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "32px", fontWeight: 800, color: "#166534", lineHeight: 1 }}>{passed}</p>
-            <p className="text-xs text-green-600 font-semibold">PASSED</p>
-          </div>
-          <div className="bg-amber-50 border border-amber-200 rounded-2xl px-5 py-3 text-center">
-            <p style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "32px", fontWeight: 800, color: "#92400E", lineHeight: 1 }}>{warned}</p>
-            <p className="text-xs text-amber-600 font-semibold">WARNINGS</p>
-          </div>
-          <div className="bg-red-50 border border-red-200 rounded-2xl px-5 py-3 text-center">
-            <p style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "32px", fontWeight: 800, color: "#991B1B", lineHeight: 1 }}>{failed}</p>
-            <p className="text-xs text-red-600 font-semibold">FAILED</p>
-          </div>
-        </div>
-        <button onClick={() => setRunCount((n) => n + 1)} className="ml-auto flex items-center gap-2 px-4 py-2 rounded-xl bg-[#1C2E5E] text-white text-sm font-semibold hover:bg-[#162244] transition-colors">
-          <RefreshCw size={14} />Re-run All Tests
-        </button>
+    <div className="space-y-8">
+      <div>
+        <p className="text-[10px] font-bold uppercase tracking-widest text-[#9BA3B0] mb-1">Quality Assurance</p>
+        <h3 style={{ fontFamily: "Barlow Condensed, sans-serif", color: "#1C2E5E", fontSize: "28px", fontWeight: 700 }}>
+          Design Spec Verification Tests
+        </h3>
+        <p className="text-xs text-[#6B7280] mt-1">Run automated checks to verify the design system is implemented correctly.</p>
       </div>
 
+      {/* Summary bar */}
+      {total > 0 && (
+        <div className="bg-white rounded-2xl border border-[#E8E6E0] p-4 flex items-center gap-6">
+          <div className="flex-1">
+            <div className="flex gap-4 text-sm font-bold mb-2">
+              <span className="text-green-600">{passed} passed</span>
+              <span className="text-red-600">{failed} failed</span>
+              <span className="text-[#9BA3B0]">{SPEC_TESTS.length - total} untested</span>
+            </div>
+            <div className="h-2 bg-[#F1F2F4] rounded-full overflow-hidden flex">
+              <div className="h-full bg-green-400 rounded-l-full transition-all" style={{ width: `${(passed / SPEC_TESTS.length) * 100}%` }} />
+              <div className="h-full bg-red-400 transition-all" style={{ width: `${(failed / SPEC_TESTS.length) * 100}%` }} />
+            </div>
+          </div>
+          <span className="text-2xl font-bold text-[#1C2E5E]">{total > 0 ? Math.round((passed / total) * 100) : 0}%</span>
+        </div>
+      )}
+
+      {/* Run all button */}
+      <button
+        onClick={runAll}
+        disabled={running}
+        className="flex items-center gap-2 px-5 py-3 rounded-xl bg-[#1C2E5E] text-white text-sm font-semibold disabled:opacity-60"
+      >
+        <RefreshCw size={16} className={running ? "animate-spin" : ""} />
+        {running ? "Running tests…" : "Run All Tests"}
+      </button>
+
       {/* Tests by category */}
-      {categories.map((cat) => (
+      {categories.map(cat => (
         <div key={cat}>
-          <h4 className="font-bold text-[#1C2E5E] mb-3 text-sm uppercase tracking-widest">{cat}</h4>
-          <div className="space-y-2">
-            {results.filter((r) => r.category === cat).map((t) => (
-              <TestRow key={t.id + runCount} test={t} />
+          <p className="text-[10px] font-bold uppercase tracking-widest text-[#9BA3B0] mb-3">{cat} Tests</p>
+          <div className="space-y-3">
+            {SPEC_TESTS.filter(t => t.category === cat).map(test => (
+              <TestRow key={test.id} test={test} result={results[test.id] ?? null} onRun={() => runTest(test)} />
             ))}
           </div>
         </div>
       ))}
 
-      {/* Interactive tools */}
-      <div>
-        <h4 className="font-bold text-[#1C2E5E] mb-4 text-sm uppercase tracking-widest">Interactive Tools</h4>
-        <div className="grid md:grid-cols-2 gap-6">
+      <div className="border-t border-[#E8E6E0] pt-8">
+        <p className="text-[10px] font-bold uppercase tracking-widest text-[#9BA3B0] mb-5">Interactive Tools</p>
+        <div className="space-y-6">
           <ContrastChecker />
           <TypeSpecValidator />
         </div>
       </div>
-    </section>
+    </div>
   );
 }

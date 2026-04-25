@@ -1,188 +1,439 @@
 import React from "react";
+import logo1 from "figma:asset/Gemini_Generated_Image_8us1f28us1f28us1.png";
+import logo2 from "figma:asset/Gemini_Generated_Image_8w18gl8w18gl8w18.png";
 
-export const BF_NAVY  = "#1C3068";
-export const BF_FIRE  = "#E8541A";
-export const BF_AMBER = "#D97706";
-export const BF_GOLD  = "#F5A030";
-export const BF_WHITE = "#FFFFFF";
-export const BF_DARK  = "#0D1829";
-export const BF_CREAM = "#FAFAF8";
+/* ─────────────────────────────────────────────
+   Reusable BOTS FIRED Logo SVG — all variants
+   variant: "full" | "icon" | "wordmark" | "stacked"
+   theme:   "color" | "mono" | "white" | "dark" | "sketch" | "outline"
+───────────────────────────────────────────── */
 
-type LogoVariant = "full" | "icon" | "wordmark" | "stacked";
-type LogoTheme = "color" | "mono" | "white" | "dark" | "sketch" | "outline";
+export const BF_NAVY   = "#1C2E5E";
+export const BF_FIRE   = "#E8541A";
+export const BF_AMBER  = "#D97706";
+export const BF_GOLD   = "#F5A030";
+export const BF_WHITE  = "#FFFFFF";
 
 interface BFLogoSVGProps {
-  variant?: LogoVariant;
-  theme?: LogoTheme;
+  variant?: "full" | "icon" | "wordmark" | "stacked";
+  theme?: "color" | "mono" | "white" | "dark" | "sketch" | "outline";
   width?: number;
   className?: string;
 }
 
-function getTextColor(theme: LogoTheme) {
-  switch (theme) {
-    case "white":   return "#FFFFFF";
-    case "dark":    return BF_DARK;
-    case "mono":    return "#374151";
-    case "sketch":
-    case "outline": return BF_NAVY;
-    default:        return BF_NAVY;
-  }
-}
-
-// Flame + sparkles icon — matches the actual BOTS FIRED logo mark
-function FlameIcon({ size = 48, theme = "color" as LogoTheme }) {
-  const isWhite = theme === "white";
-  const isMono  = theme === "mono" || theme === "dark";
-
-  const flameA = isMono ? "#374151" : isWhite ? "#FFFFFF" : "#E8541A";
-  const flameB = isMono ? "#6B7280" : isWhite ? "#FFFFFF" : "#F5A030";
-  const star   = isMono ? "#9BA3B0" : isWhite ? "#FFFFFF" : "#F5A030";
+/* ── Flame path (scalable at 0,0 64×80 canvas) ── */
+function FlamePath({ theme = "color" }: { theme?: string }) {
+  const outer = theme === "white" ? "#FFFFFF" : theme === "mono" ? "#333" : theme === "outline" ? "none" : BF_FIRE;
+  const inner = theme === "white" ? "rgba(255,255,255,0.6)" : theme === "mono" ? "#666" : theme === "outline" ? "none" : BF_GOLD;
+  const stroke = (theme === "sketch" || theme === "outline") ? (theme === "white" ? "#fff" : BF_FIRE) : "none";
+  const sw = (theme === "sketch" || theme === "outline") ? "2.5" : "0";
 
   return (
-    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="flameGrad" x1="14" y1="40" x2="32" y2="8" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor={flameA} />
-          <stop offset="100%" stopColor={flameB} />
-        </linearGradient>
-      </defs>
-      {/* Main flame body */}
-      <path d="M22 38C22 38 12 32 14 22C14 22 11 26 12 30C12 30 8 24 12 16C12 16 10 20 12 22C12 22 14 12 22 8C22 8 19 14 22 18C22 18 20 10 26 6C26 6 24 14 28 16C28 16 30 10 34 12C34 12 30 16 30 20C30 20 34 16 36 18C36 18 34 24 30 26C30 26 32 28 30 32C30 32 26 28 24 30C24 30 26 34 22 38Z"
-        fill="url(#flameGrad)" />
-      {/* Inner flame highlight */}
-      <path d="M22 34C22 34 16 29 18 23C18 23 17 26 18 28C18 28 16 24 18 20C18 20 20 22 20 26C20 26 21 22 24 20C24 20 22 24 24 26C24 26 26 22 28 24C28 24 27 28 25 30C25 30 26 32 24 34C24 34 23 31 22 34Z"
-        fill={flameB} opacity="0.5" />
-      {/* Sparkle star top-right (large) */}
-      <path d="M36 8L37 12L41 13L37 14L36 18L35 14L31 13L35 12Z" fill={star} />
-      {/* Sparkle star middle-right (small) */}
-      <path d="M41 18L42 20L44 21L42 22L41 24L40 22L38 21L40 20Z" fill={star} />
-      {/* Sparkle star bottom-right (tiny) */}
-      <path d="M38 28L38.8 30L41 30.8L38.8 31.5L38 33.5L37.2 31.5L35 30.8L37.2 30Z" fill={star} />
-    </svg>
+    <g>
+      {/* Outer flame */}
+      <path
+        d="M32 72 C32 72 8 56 14 34 C18 20 28 12 28 12 C28 12 24 24 32 30 C32 30 36 8 48 2 C48 2 42 24 52 36 C60 46 56 62 48 70 C44 64 40 60 32 72Z"
+        fill={outer}
+        stroke={stroke}
+        strokeWidth={sw}
+        strokeLinejoin="round"
+      />
+      {/* Inner flame */}
+      <path
+        d="M32 70 C32 70 20 56 26 44 C29 36 34 30 34 30 C34 30 31 40 36 44 C40 34 46 50 40 62 C38 58 36 56 32 70Z"
+        fill={inner}
+        stroke={theme === "sketch" ? BF_AMBER : "none"}
+        strokeWidth={theme === "sketch" ? "1.5" : "0"}
+      />
+      {/* Sparkles */}
+      {(theme !== "outline") && (
+        <>
+          <circle cx="54" cy="14" r="4" fill={theme === "white" ? "rgba(255,255,255,0.8)" : BF_GOLD} />
+          <circle cx="10" cy="40" r="2.5" fill={theme === "white" ? "rgba(255,255,255,0.6)" : BF_AMBER} />
+          <circle cx="58" cy="50" r="2" fill={theme === "white" ? "rgba(255,255,255,0.5)" : BF_GOLD} />
+          {/* 4-pointed star sparkle */}
+          <path d="M54 14 L56 10 L58 14 L56 18Z" fill={theme === "white" ? "#fff" : "#FBBF24"} transform="rotate(45 56 14)" opacity="0.7" />
+        </>
+      )}
+    </g>
   );
 }
 
-// The full wordmark using SVG text — matches bold italic condensed style
-function WordmarkText({ color, width }: { color: string; width: number }) {
-  // Scale factor: viewBox is 520 × 80
+/* ── Sketch filter ── */
+function SketchFilter({ id }: { id: string }) {
   return (
-    <svg width={width} height={Math.round(width * 80 / 520)} viewBox="0 0 520 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <text
-        x="0" y="70"
-        fontFamily="'Barlow Condensed', 'Exo 2', 'Rajdhani', Impact, sans-serif"
-        fontWeight="800"
-        fontStyle="italic"
-        fontSize="80"
-        fill={color}
-        letterSpacing="-2"
-      >
-        BOTS FIRED
-      </text>
-    </svg>
+    <filter id={id} x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="4" seed="2" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+      <feGaussianBlur in="displaced" stdDeviation="0.3" />
+    </filter>
   );
 }
 
-// Full horizontal lock-up with flame on right (matching actual logo)
-export function BFLogoSVG({ variant = "full", theme = "color", width = 300, className = "" }: BFLogoSVGProps) {
-  const textColor = getTextColor(theme);
+export function BFLogoSVG({ variant = "full", theme = "color", width = 280, className = "" }: BFLogoSVGProps) {
+  const filterId = `sketch-${Math.random().toString(36).slice(2, 7)}`;
+  const navy   = theme === "white" ? "#FFFFFF" : theme === "mono" ? "#1a1a1a" : BF_NAVY;
+  const fire   = theme === "white" ? "rgba(255,255,255,0.85)" : theme === "mono" ? "#555" : BF_FIRE;
+  const amber  = theme === "white" ? "rgba(255,255,255,0.7)" : theme === "mono" ? "#888" : BF_AMBER;
+  const filterAttr = theme === "sketch" ? `url(#${filterId})` : undefined;
 
   if (variant === "icon") {
     return (
-      <span className={className} style={{ display: "inline-flex" }}>
-        <FlameIcon size={width} theme={theme} />
-      </span>
+      <svg width={width * 0.35} viewBox="0 0 64 80" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} filter={filterAttr}>
+        {theme === "sketch" && <SketchFilter id={filterId} />}
+        <FlamePath theme={theme} />
+      </svg>
+    );
+  }
+
+  if (variant === "stacked") {
+    return (
+      <svg width={width * 0.6} viewBox="0 0 160 140" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} filter={filterAttr}>
+        {theme === "sketch" && <SketchFilter id={filterId} />}
+        <g transform="translate(48, 0)">
+          <FlamePath theme={theme} />
+        </g>
+        <text x="80" y="108" textAnchor="middle" fontFamily="Barlow Condensed, sans-serif" fontWeight="800" fontStyle="italic" fontSize="36" fill={navy} letterSpacing="2">BOTS</text>
+        <text x="80" y="136" textAnchor="middle" fontFamily="Barlow Condensed, sans-serif" fontWeight="800" fontStyle="italic" fontSize="36" fill={fire} letterSpacing="2">FIRED</text>
+      </svg>
     );
   }
 
   if (variant === "wordmark") {
     return (
-      <span className={className} style={{ display: "inline-flex" }}>
-        <WordmarkText color={textColor} width={width} />
-      </span>
-    );
-  }
-
-  if (variant === "stacked") {
-    const iconSize = Math.round(width * 0.4);
-    return (
-      <div className={className} style={{ display: "inline-flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-        <FlameIcon size={iconSize} theme={theme} />
-        <WordmarkText color={textColor} width={width} />
-      </div>
-    );
-  }
-
-  // "full" — wordmark + flame overlaid on right edge (exact logo layout)
-  const textW = Math.round(width * 0.88);
-  const iconSize = Math.round(width * 0.22);
-  return (
-    <div className={className} style={{ display: "inline-flex", alignItems: "center", position: "relative", width }}>
-      <WordmarkText color={textColor} width={textW} />
-      <div style={{ position: "absolute", right: 0, top: "50%", transform: "translate(10%, -60%)" }}>
-        <FlameIcon size={iconSize} theme={theme} />
-      </div>
-    </div>
-  );
-}
-
-// Circle avatar / profile image version
-export function BFPhotoLogo({ width = 120, className = "" }: { width?: number; className?: string }) {
-  return (
-    <div className={className} style={{
-      width, height: width, borderRadius: "50%",
-      background: `linear-gradient(135deg, ${BF_NAVY} 0%, #0D1829 100%)`,
-      display: "flex", alignItems: "center", justifyContent: "center",
-    }}>
-      <FlameIcon size={Math.round(width * 0.55)} theme="white" />
-    </div>
-  );
-}
-
-// Square app-icon version
-export function BFPhotoLogo2({ width = 120, className = "" }: { width?: number; className?: string }) {
-  return (
-    <div className={className} style={{
-      width, height: width, borderRadius: Math.round(width * 0.2),
-      background: `linear-gradient(135deg, ${BF_NAVY} 0%, #0D1829 100%)`,
-      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4,
-    }}>
-      <FlameIcon size={Math.round(width * 0.4)} theme="white" />
-      <svg width={Math.round(width * 0.7)} height={Math.round(width * 0.14)} viewBox="0 0 70 14" fill="none">
-        <text x="35" y="12" textAnchor="middle" fontFamily="'Barlow Condensed', Impact, sans-serif" fontWeight="800" fontStyle="italic" fontSize="13" fill="#FFFFFF">BOTS FIRED</text>
+      <svg width={width * 0.8} viewBox="0 0 260 48" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} filter={filterAttr}>
+        {theme === "sketch" && <SketchFilter id={filterId} />}
+        <text x="0" y="38" fontFamily="Barlow Condensed, sans-serif" fontWeight="800" fontStyle="italic" fontSize="44" fill={navy} letterSpacing="2">BOTS</text>
+        <text x="140" y="38" fontFamily="Barlow Condensed, sans-serif" fontWeight="800" fontStyle="italic" fontSize="44" fill={fire} letterSpacing="2">FIRED</text>
       </svg>
-    </div>
+    );
+  }
+
+  /* full / default */
+  return (
+    <svg width={width} viewBox="0 0 340 80" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} filter={filterAttr}>
+      {theme === "sketch" && <SketchFilter id={filterId} />}
+      <FlamePath theme={theme} />
+      {/* BOTS */}
+      <text x="72" y="36" fontFamily="Barlow Condensed, sans-serif" fontWeight="800" fontStyle="italic" fontSize="38" fill={navy} letterSpacing="2">BOTS</text>
+      {/* dot separator */}
+      <circle cx="198" cy="26" r="3" fill={amber} />
+      {/* FIRED */}
+      <text x="208" y="36" fontFamily="Barlow Condensed, sans-serif" fontWeight="800" fontStyle="italic" fontSize="38" fill={fire} letterSpacing="2">FIRED</text>
+      {/* Tagline */}
+      <text x="72" y="58" fontFamily="Inter, sans-serif" fontWeight="400" fontSize="12" fill={amber} letterSpacing="3">AI FOR LEADERS</text>
+    </svg>
   );
 }
 
-type Holiday = "new-year" | "valentines" | "july4" | "halloween" | "thanksgiving" | "christmas" | "diwali" | "holi" | "republic-day" | "india-independence" | "navratri" | "pongal";
+/* ─── Imported photo logo (actual brand asset) ─── */
+export function BFPhotoLogo({ height = 40, white = false, className = "" }: { height?: number; white?: boolean; className?: string }) {
+  return (
+    <img
+      src={logo1}
+      alt="BOTS FIRED"
+      style={{
+        height,
+        filter: white ? "brightness(0) invert(1)" : undefined,
+      }}
+      className={className}
+    />
+  );
+}
 
-const holidayConfigs: Record<Holiday, { bg: string; accent: string; label: string; emoji: string }> = {
-  "new-year":           { bg: "#0D1829", accent: "#F5A030", label: "Happy New Year",     emoji: "🎆" },
-  "valentines":         { bg: "#9F1239", accent: "#FFC0CB", label: "Happy Valentine's",  emoji: "❤️" },
-  "july4":              { bg: "#1C3068", accent: "#E8541A", label: "Independence Day",    emoji: "🇺🇸" },
-  "halloween":          { bg: "#1C0A00", accent: "#F5A030", label: "Happy Halloween",     emoji: "🎃" },
-  "thanksgiving":       { bg: "#7C2D12", accent: "#FED7AA", label: "Happy Thanksgiving",  emoji: "🦃" },
-  "christmas":          { bg: "#14532D", accent: "#FEF08A", label: "Merry Christmas",     emoji: "🎄" },
-  "diwali":             { bg: "#1C0A00", accent: "#F5A030", label: "Happy Diwali",        emoji: "🪔" },
-  "holi":               { bg: "#FAFAF8", accent: "#E8541A", label: "Happy Holi",          emoji: "🌈" },
-  "republic-day":       { bg: "#FF6600", accent: "#FFFFFF", label: "Republic Day",        emoji: "🇮🇳" },
-  "india-independence": { bg: "#138808", accent: "#FFFFFF", label: "Independence Day",    emoji: "🇮🇳" },
-  "navratri":           { bg: "#7C3AED", accent: "#FDE68A", label: "Happy Navratri",      emoji: "🪷" },
-  "pongal":             { bg: "#78350F", accent: "#FDE68A", label: "Happy Pongal",        emoji: "🌾" },
+export function BFPhotoLogo2({ height = 40, white = false, className = "" }: { height?: number; white?: boolean; className?: string }) {
+  return (
+    <img
+      src={logo2}
+      alt="BOTS FIRED"
+      style={{
+        height,
+        filter: white ? "brightness(0) invert(1)" : undefined,
+      }}
+      className={className}
+    />
+  );
+}
+
+/* ─── Holiday Logo Overlay ─── */
+interface HolidayLogoProps {
+  holiday: string;
+  width?: number;
+}
+
+const holidayConfigs: Record<string, {
+  bg: string; overlay: React.ReactNode; label: string; textColor: string;
+}> = {
+  "new-year": {
+    bg: "#0a0a2e",
+    textColor: "#FFD700",
+    label: "New Year",
+    overlay: (
+      <g>
+        {/* Fireworks */}
+        {[[80, 10], [160, 5], [250, 12], [310, 8]].map(([x, y], i) => (
+          <g key={i} transform={`translate(${x},${y})`}>
+            {[0,45,90,135,180,225,270,315].map((angle, j) => (
+              <line key={j} x1="0" y1="0" x2={Math.cos(angle * Math.PI / 180) * 12} y2={Math.sin(angle * Math.PI / 180) * 12}
+                stroke={["#FFD700","#FF6B6B","#4ECDC4","#FFE66D"][j % 4]} strokeWidth="1.5" strokeLinecap="round" />
+            ))}
+            <circle cx="0" cy="0" r="2.5" fill="#FFD700" />
+          </g>
+        ))}
+        <text x="160" y="88" textAnchor="middle" fontFamily="Caveat, cursive" fontWeight="700" fontSize="14" fill="#FFD700" letterSpacing="2">Happy New Year 2026!</text>
+      </g>
+    ),
+  },
+  "valentines": {
+    bg: "#FFF0F3",
+    textColor: "#E63946",
+    label: "Valentine's Day",
+    overlay: (
+      <g>
+        {[[20,8],[300,6],[50,70],[280,68],[160,4]].map(([x, y], i) => (
+          <g key={i} transform={`translate(${x},${y}) scale(${0.6 + i * 0.1})`}>
+            <path d="M0 4 C0 2 2 0 4 0 C6 0 8 2 8 4 C8 6 4 10 0 14 C-4 10 -8 6 -8 4 C-8 2 -6 0 -4 0 C-2 0 0 2 0 4Z" fill="#E63946" opacity="0.7" />
+          </g>
+        ))}
+        <text x="160" y="88" textAnchor="middle" fontFamily="Caveat, cursive" fontWeight="700" fontSize="14" fill="#E63946">Happy Valentine's Day ♥</text>
+      </g>
+    ),
+  },
+  "july4": {
+    bg: "#0A1628",
+    textColor: "#E8541A",
+    label: "4th of July",
+    overlay: (
+      <g>
+        {/* Stars */}
+        {[[30,8],[80,4],[130,10],[200,6],[250,8],[300,5]].map(([x, y], i) => (
+          <g key={i} transform={`translate(${x},${y})`}>
+            <path d="M0-6L1.4-2H6L2.4 1 3.8 5 0 2.5-3.8 5-2.4 1-6-2H-1.4Z" fill={["#E8541A","#FFFFFF","#1C3A7A"][i % 3]} transform="scale(0.8)" />
+          </g>
+        ))}
+        {/* Red/white/blue stripes hint */}
+        <rect x="0" y="76" width="113" height="4" fill="#B22234" opacity="0.5" rx="2" />
+        <rect x="113" y="76" width="114" height="4" fill="#FFFFFF" opacity="0.5" rx="2" />
+        <rect x="227" y="76" width="113" height="4" fill="#3C3B6E" opacity="0.5" rx="2" />
+        <text x="160" y="90" textAnchor="middle" fontFamily="Caveat, cursive" fontWeight="700" fontSize="13" fill="#FFD700">Happy Independence Day 🇺🇸</text>
+      </g>
+    ),
+  },
+  "halloween": {
+    bg: "#1A0A00",
+    textColor: "#F5A030",
+    label: "Halloween",
+    overlay: (
+      <g>
+        {/* Moon */}
+        <circle cx="310" cy="12" r="14" fill="#FFD700" opacity="0.9" />
+        <circle cx="318" cy="8" r="12" fill="#1A0A00" />
+        {/* Spiderweb */}
+        <g transform="translate(20,0)" opacity="0.6">
+          {[0,60,120,180,240,300].map((a, i) => (
+            <line key={i} x1="0" y1="0" x2={Math.cos(a*Math.PI/180)*22} y2={Math.sin(a*Math.PI/180)*22} stroke="#aaa" strokeWidth="0.7" />
+          ))}
+          {[8,15,22].map((r, i) => (
+            <circle key={i} cx="0" cy="0" r={r} fill="none" stroke="#aaa" strokeWidth="0.5" />
+          ))}
+        </g>
+        <text x="160" y="88" textAnchor="middle" fontFamily="Caveat, cursive" fontWeight="700" fontSize="14" fill="#F5A030">🎃 Spooky AI Season!</text>
+      </g>
+    ),
+  },
+  "thanksgiving": {
+    bg: "#FFF8ED",
+    textColor: "#8B4513",
+    label: "Thanksgiving",
+    overlay: (
+      <g>
+        {/* Autumn leaves */}
+        {[[25,8,"#D2691E"],[50,4,"#CD853F"],[280,6,"#A0522D"],[305,10,"#8B4513"],[160,3,"#DEB887"]].map(([x, y, c], i) => (
+          <ellipse key={i} cx={x as number} cy={y as number} rx="7" ry="4" fill={c as string} opacity="0.8" transform={`rotate(${i*30} ${x} ${y})`} />
+        ))}
+        <text x="160" y="88" textAnchor="middle" fontFamily="Caveat, cursive" fontWeight="700" fontSize="14" fill="#8B4513">Grateful for great leadership 🦃</text>
+      </g>
+    ),
+  },
+  "christmas": {
+    bg: "#0A1F0A",
+    textColor: "#FFD700",
+    label: "Christmas",
+    overlay: (
+      <g>
+        {/* Snowflakes */}
+        {[[30,8],[90,5],[160,4],[230,7],[295,5]].map(([x, y], i) => (
+          <g key={i} transform={`translate(${x},${y})`}>
+            {[0,60,120].map((a, j) => (
+              <line key={j} x1={Math.cos(a*Math.PI/180)*8} y1={Math.sin(a*Math.PI/180)*8} x2={Math.cos((a+180)*Math.PI/180)*8} y2={Math.sin((a+180)*Math.PI/180)*8} stroke="white" strokeWidth="1.2" strokeLinecap="round" opacity="0.8" />
+            ))}
+          </g>
+        ))}
+        {/* Holly berries */}
+        <circle cx="295" cy="30" r="3" fill="#C41E3A" />
+        <circle cx="302" cy="27" r="3" fill="#C41E3A" />
+        <text x="160" y="88" textAnchor="middle" fontFamily="Caveat, cursive" fontWeight="700" fontSize="14" fill="#FFD700">Season's Greetings 🎄</text>
+      </g>
+    ),
+  },
+  "diwali": {
+    bg: "#1A0D00",
+    textColor: "#FFD700",
+    label: "Diwali",
+    overlay: (
+      <g>
+        {/* Diyas */}
+        {[[30,62],[80,65],[130,62],[195,65],[250,62],[305,65]].map(([x, y], i) => (
+          <g key={i} transform={`translate(${x},${y})`}>
+            {/* Flame */}
+            <ellipse cx="0" cy="-10" rx="3" ry="6" fill="#FFD700" opacity="0.9" />
+            <ellipse cx="0" cy="-8" rx="1.5" ry="3" fill="#FF6B00" opacity="0.8" />
+            {/* Diya bowl */}
+            <path d="M-8 0 Q0-5 8 0 Q8 5 0 6 Q-8 5 -8 0Z" fill="#C65C00" />
+            <ellipse cx="0" cy="0" rx="8" ry="3" fill="#D97706" opacity="0.6" />
+          </g>
+        ))}
+        {/* Gold sparkles */}
+        {[[50,20],[160,15],[270,22]].map(([x, y], i) => (
+          <g key={i}>
+            <circle cx={x as number} cy={y as number} r="2" fill="#FFD700" opacity="0.8" />
+            <line x1={x as number} y1={(y as number) - 6} x2={x as number} y2={(y as number) + 6} stroke="#FFD700" strokeWidth="0.8" opacity="0.5" />
+            <line x1={(x as number) - 6} y1={y as number} x2={(x as number) + 6} y2={y as number} stroke="#FFD700" strokeWidth="0.8" opacity="0.5" />
+          </g>
+        ))}
+        <text x="160" y="88" textAnchor="middle" fontFamily="Caveat, cursive" fontWeight="700" fontSize="14" fill="#FFD700">Happy Diwali! दीपावली मुबारक ✨</text>
+      </g>
+    ),
+  },
+  "holi": {
+    bg: "#FFF5FF",
+    textColor: "#7B2D8B",
+    label: "Holi",
+    overlay: (
+      <g>
+        {/* Color splashes */}
+        {[
+          [20, 10, "#FF6B6B", 18],
+          [70, 5, "#4ECDC4", 14],
+          [130, 12, "#FFE66D", 20],
+          [200, 8, "#A8E6CF", 15],
+          [255, 6, "#FF8B94", 16],
+          [310, 10, "#9B59B6", 14],
+        ].map(([x, y, c, r], i) => (
+          <ellipse key={i} cx={x as number} cy={y as number} rx={r as number} ry={(r as number) * 0.6} fill={c as string} opacity="0.55" transform={`rotate(${i * 20} ${x} ${y})`} />
+        ))}
+        <text x="160" y="88" textAnchor="middle" fontFamily="Caveat, cursive" fontWeight="700" fontSize="14" fill="#7B2D8B">Happy Holi! होली की शुभकामनाएँ 🌈</text>
+      </g>
+    ),
+  },
+  "republic-day": {
+    bg: "#FFFFFF",
+    textColor: "#FF9933",
+    label: "Republic Day (India)",
+    overlay: (
+      <g>
+        {/* Tricolor stripes */}
+        <rect x="0" y="0" width="340" height="5" fill="#FF9933" opacity="0.7" />
+        <rect x="0" y="5" width="340" height="5" fill="#FFFFFF" opacity="0.7" />
+        <rect x="0" y="10" width="340" height="5" fill="#138808" opacity="0.7" />
+        {/* Ashoka wheel */}
+        <g transform="translate(320, 30)">
+          {Array.from({ length: 24 }).map((_, i) => (
+            <line key={i} x1="0" y1="-14" x2="0" y2="14" stroke="#000080" strokeWidth="0.7" opacity="0.7" transform={`rotate(${i * 15})`} />
+          ))}
+          <circle cx="0" cy="0" r="14" fill="none" stroke="#000080" strokeWidth="1.2" opacity="0.7" />
+          <circle cx="0" cy="0" r="3" fill="#000080" opacity="0.7" />
+        </g>
+        <text x="155" y="88" textAnchor="middle" fontFamily="Caveat, cursive" fontWeight="700" fontSize="13" fill="#000080">Jai Hind! Republic Day 🇮🇳 Jan 26</text>
+      </g>
+    ),
+  },
+  "india-independence": {
+    bg: "#F0FFF0",
+    textColor: "#138808",
+    label: "India Independence Day",
+    overlay: (
+      <g>
+        <rect x="0" y="0" width="340" height="6" fill="#FF9933" opacity="0.6" />
+        <rect x="0" y="6" width="340" height="6" fill="#FFFFFF" opacity="0.8" />
+        <rect x="0" y="12" width="340" height="6" fill="#138808" opacity="0.6" />
+        {/* Kites */}
+        {[[40, 40],[160, 30],[280, 42]].map(([x, y], i) => (
+          <g key={i} transform={`translate(${x},${y})`}>
+            <path d="M0-12L8 0L0 12L-8 0Z" fill={["#FF9933","#138808","#FF9933"][i]} opacity="0.7" />
+            <line x1="0" y1="12" x2="5" y2="28" stroke="#888" strokeWidth="0.6" />
+          </g>
+        ))}
+        <text x="155" y="88" textAnchor="middle" fontFamily="Caveat, cursive" fontWeight="700" fontSize="13" fill="#138808">Happy Independence Day! 🇮🇳 Aug 15</text>
+      </g>
+    ),
+  },
+  "navratri": {
+    bg: "#FF6B35",
+    textColor: "#FFD700",
+    label: "Navratri",
+    overlay: (
+      <g>
+        {/* Garba dots */}
+        {[
+          ["#FFD700", 30, 12], ["#FF1493", 80, 8], ["#00CED1", 130, 12],
+          ["#FFD700", 210, 10], ["#FF1493", 260, 8], ["#00CED1", 300, 12],
+        ].map(([c, x, y], i) => (
+          <g key={i}>
+            <circle cx={x as number} cy={y as number} r="6" fill={c as string} opacity="0.8" />
+            <circle cx={(x as number)} cy={y as number} r="3" fill="white" opacity="0.5" />
+          </g>
+        ))}
+        <text x="160" y="88" textAnchor="middle" fontFamily="Caveat, cursive" fontWeight="700" fontSize="14" fill="#FFD700">Navratri Celebrations! 🪔 Garba Time!</text>
+      </g>
+    ),
+  },
+  "pongal": {
+    bg: "#FFF8DC",
+    textColor: "#8B4513",
+    label: "Pongal",
+    overlay: (
+      <g>
+        {/* Sugarcane */}
+        {[[20, 0], [28, 0], [300, 0], [308, 0]].map(([x], i) => (
+          <line key={i} x1={x} y1="0" x2={x} y2="80" stroke="#228B22" strokeWidth="3" opacity="0.4" />
+        ))}
+        {/* Pongal pot */}
+        <g transform="translate(155, 30)">
+          <ellipse cx="0" cy="0" rx="12" ry="8" fill="#C65C00" />
+          <rect x="-10" y="0" width="20" height="20" fill="#CD853F" rx="2" />
+          <ellipse cx="0" cy="20" rx="11" ry="5" fill="#A0522D" />
+          {/* Milk overflow */}
+          <ellipse cx="0" cy="-2" rx="10" ry="4" fill="white" opacity="0.7" />
+        </g>
+        <text x="160" y="88" textAnchor="middle" fontFamily="Caveat, cursive" fontWeight="700" fontSize="14" fill="#8B4513">Happy Pongal! பொங்கல் வாழ்த்துக்கள் 🌾</text>
+      </g>
+    ),
+  },
 };
 
-export function HolidayLogo({ holiday, width = 240, className = "" }: { holiday: Holiday; width?: number; className?: string }) {
-  const cfg = holidayConfigs[holiday];
-  const h = Math.round(width * 0.5);
+export function HolidayLogo({ holiday, width = 340 }: HolidayLogoProps) {
+  const config = holidayConfigs[holiday];
+  if (!config) return null;
+
   return (
-    <div className={className} style={{
-      width, height: h, borderRadius: 14, backgroundColor: cfg.bg,
-      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-      gap: 4, padding: 12, overflow: "hidden", position: "relative",
-    }}>
-      <div style={{ position: "absolute", top: 8, right: 10, fontSize: Math.round(width * 0.1) }}>{cfg.emoji}</div>
-      <BFLogoSVG variant="full" theme="white" width={Math.round(width * 0.75)} />
-      <p style={{ fontFamily: "Caveat, cursive", fontSize: Math.round(width * 0.075), color: cfg.accent, margin: 0 }}>{cfg.label}</p>
+    <div className="flex flex-col items-center gap-2">
+      <div
+        className="rounded-2xl overflow-hidden relative"
+        style={{ background: config.bg, width, padding: "12px 12px 4px" }}
+      >
+        <svg width={width - 24} viewBox="0 0 340 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Main logo */}
+          <FlamePath theme="color" />
+          <text x="72" y="36" fontFamily="Barlow Condensed, sans-serif" fontWeight="800" fontStyle="italic" fontSize="38" fill={BF_NAVY} letterSpacing="2">BOTS</text>
+          <circle cx="198" cy="26" r="3" fill={BF_AMBER} />
+          <text x="208" y="36" fontFamily="Barlow Condensed, sans-serif" fontWeight="800" fontStyle="italic" fontSize="38" fill={BF_FIRE} letterSpacing="2">FIRED</text>
+          <text x="72" y="56" fontFamily="Inter, sans-serif" fontWeight="400" fontSize="11" fill={BF_AMBER} letterSpacing="3">AI FOR LEADERS</text>
+          {/* Holiday overlay */}
+          {config.overlay}
+        </svg>
+      </div>
+      <span className="text-xs font-semibold text-center" style={{ color: "#6B7280" }}>{config.label}</span>
     </div>
   );
 }

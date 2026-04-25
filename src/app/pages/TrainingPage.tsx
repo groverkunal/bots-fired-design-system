@@ -1,90 +1,116 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
-import { ArrowRight, Check, Calendar, Users, Clock, MapPin, Video } from "lucide-react";
+import { Check, ArrowRight, Calendar, Users, Globe, MapPin, GraduationCap, Flame } from "lucide-react";
 import { HandwrittenNote } from "../components/shared/HandwrittenNote";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "../components/shared/AnimatedSection";
 import { TrainingPathwayDiagram } from "../components/shared/AIFrameworkDiagram";
 
+const trainingImg = "https://images.unsplash.com/photo-1565946590329-fc70903f0ba0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3Jwb3JhdGUlMjB0cmFpbmluZyUyMHdvcmtzaG9wJTIwc2VuaW9yJTIwZXhlY3V0aXZlc3xlbnwxfHx8fDE3NzY5MDU3MTR8MA&ixlib=rb-4.1.0&q=80&w=1080";
+
 const programs = [
   {
-    id: "board-briefing",
+    id: "board",
     title: "Board Briefing",
-    subtitle: "AI Essentials for Directors",
+    tagline: "AI literacy for non-executives",
     duration: "3 Hours",
-    format: "In-person or virtual",
-    groupSize: "6–20 participants",
-    price: "£4,500",
-    tag: "Entry point",
+    format: "In-person",
+    group: "4–16 participants",
+    price: "From £3,500",
+    audience: "Non-executive directors, Board Chairs, Trustees",
+    outcomes: [
+      "Understand what AI can and cannot do",
+      "Ask the right questions of your management team",
+      "Know your governance obligations around AI",
+      "Assess AI risk in board decisions",
+    ],
+    note: "Most popular starting point",
     color: "#EEF2F8",
-    border: "#8FA5C8",
+    border: "#D0DAE8",
     accent: "#1C2E5E",
     dark: false,
-    outcomes: ["Understand what AI is — and what it genuinely can't do", "Identify AI risks and governance obligations for boards", "Ask the right questions of your management team", "Leave with a board-level AI agenda template"],
-    ideal: "Non-executive directors, board chairs, and trustees who need fluency without technical depth.",
   },
   {
-    id: "half-day",
+    id: "intensive",
     title: "Half-Day Intensive",
-    subtitle: "AI Strategy for Executives",
+    tagline: "Strategic AI for senior leaders",
     duration: "4 Hours",
-    format: "In-person or virtual",
-    groupSize: "8–16 participants",
-    price: "£6,500",
-    tag: "Most popular",
+    format: "In-person or Virtual",
+    group: "6–20 participants",
+    price: "From £5,500",
+    audience: "C-suite executives, General Counsel, Chief Officers",
+    outcomes: [
+      "Build a clear AI strategic framework",
+      "Identify your highest-value AI use cases",
+      "Understand AI talent and build/buy decisions",
+      "Navigate vendor selection without being sold to",
+    ],
+    note: "Best ROI for executive time",
     color: "#FFF8EC",
     border: "#F5A030",
     accent: "#D97706",
     dark: false,
-    outcomes: ["Map AI opportunities to your business model", "Evaluate build vs buy vs partner decisions", "Design a governance structure for AI initiatives", "Create a 90-day AI strategy roadmap"],
-    ideal: "C-suite executives, MDs, and senior VPs building their first AI strategy.",
+    featured: true,
   },
   {
-    id: "full-day",
+    id: "workshop",
     title: "Full-Day Workshop",
-    subtitle: "AI Leadership Deep Dive",
+    tagline: "Deep-dive AI strategy session",
     duration: "8 Hours",
-    format: "In-person preferred",
-    groupSize: "10–20 participants",
-    price: "£12,000",
-    tag: "Comprehensive",
+    format: "In-person",
+    group: "8–24 participants",
+    price: "From £9,500",
+    audience: "Senior Leadership Teams, ExCo + Extended Leadership",
+    outcomes: [
+      "Complete AI readiness assessment for your business",
+      "Co-create your 18-month AI roadmap",
+      "Develop your AI ethics framework",
+      "Build internal AI advocacy and momentum",
+    ],
+    note: "For transformational change",
     color: "#F0F4FF",
-    border: "#4A66A0",
+    border: "#8FA5C8",
     accent: "#2A4080",
     dark: false,
-    outcomes: ["Full AI literacy programme across all key domains", "Live case studies from your sector", "Hands-on AI tool demonstrations", "Customised governance framework for your organisation", "Team alignment workshop"],
-    ideal: "Full leadership teams who want aligned, organisation-wide AI understanding.",
   },
   {
     id: "cohort",
     title: "4-Week Cohort",
-    subtitle: "Executive AI Mastery",
-    duration: "4 × 2hr live sessions",
-    format: "Virtual (cohort of peers)",
-    groupSize: "12–18 executives",
-    price: "£2,800 pp",
-    tag: "Deepest impact",
+    tagline: "The flagship executive programme",
+    duration: "4 × 90-min live sessions + async",
+    format: "Virtual (live + recorded)",
+    group: "12–30 participants",
+    price: "From £1,200 / person",
+    audience: "Executive teams across multiple organisations",
+    outcomes: [
+      "Complete the AI Clarity Journey (all 4 stages)",
+      "Peer learning with executives across sectors",
+      "Build a personal AI leadership playbook",
+      "Access to alumni community and resource library",
+    ],
+    note: "Deepest, most lasting impact",
     color: "#1C2E5E",
-    border: "#2A4080",
+    border: "#1C2E5E",
     accent: "#F5A030",
     dark: true,
-    outcomes: ["Complete AI strategy development for your organisation", "Weekly accountability and peer learning", "1:1 coaching session included", "Ongoing access to resource library", "Certificate of completion"],
-    ideal: "Individual senior leaders who want structured, peer-learning over four weeks.",
   },
 ];
 
 const upcomingDates = [
-  { program: "Half-Day Intensive", date: "12 May 2026", location: "London", spots: 4, format: "In-person" },
-  { program: "4-Week Cohort", date: "19 May 2026", location: "Virtual", spots: 6, format: "Virtual" },
-  { program: "Board Briefing", date: "3 Jun 2026", location: "Manchester", spots: 8, format: "In-person" },
-  { program: "Full-Day Workshop", date: "10 Jun 2026", location: "Virtual", spots: 5, format: "Virtual" },
+  { program: "Half-Day Intensive", date: "May 14, 2026", location: "London", format: "In-person", spots: 4 },
+  { program: "4-Week Cohort", date: "May 19 – Jun 9, 2026", location: "Virtual", format: "Live Online", spots: 8 },
+  { program: "Half-Day Intensive", date: "Jun 3, 2026", location: "Singapore", format: "In-person", spots: 6 },
+  { program: "Board Briefing", date: "Jun 11, 2026", location: "London", format: "In-person", spots: 2 },
+  { program: "4-Week Cohort", date: "Jun 23 – Jul 14, 2026", location: "Virtual", format: "Live Online", spots: 12 },
 ];
 
+const clientLogos = ["Goldman Sachs", "Deloitte", "HSBC", "Unilever", "NHS", "Rolls-Royce"];
+
 export function TrainingPage() {
-  const [activeProgram, setActiveProgram] = useState("half-day");
-  const [formData, setFormData] = useState({ name: "", email: "", org: "", program: "Half-Day Intensive" });
+  const [active, setActive] = useState("intensive");
+  const [formState, setFormState] = useState({ name: "", email: "", org: "", interest: "Half-Day Intensive" });
   const [submitted, setSubmitted] = useState(false);
 
-  const selected = programs.find((p) => p.id === activeProgram) || programs[1];
+  const activeProgram = programs.find((p) => p.id === active)!;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,150 +119,308 @@ export function TrainingPage() {
 
   return (
     <div className="min-h-screen bg-[#FAFAF8] pt-24">
-      {/* HERO */}
-      <div className="bg-white border-b border-[#E8E6E0]">
-        <div className="max-w-6xl mx-auto px-6 py-16">
+      {/* Header */}
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0">
+          <img src={trainingImg} alt="Training" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-[#0D1829]/85" />
+        </div>
+        <div className="relative max-w-6xl mx-auto px-6 py-20">
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EEF2F8] text-[#1C2E5E] text-xs font-semibold uppercase tracking-widest mb-4">
-              Executive Training
+            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#162244] text-[#8FA5C8] text-xs font-semibold uppercase tracking-widest mb-4">
+              <GraduationCap size={11} />
+              Executive Education
             </span>
-            <div className="grid md:grid-cols-2 gap-8 items-end">
-              <div>
-                <h1 style={{ color: "#0D1829" }}>AI Mastery<br />Programmes</h1>
-                <HandwrittenNote size="md" rotate={-1.5} className="mt-3 block">built for people who lead, not code</HandwrittenNote>
-              </div>
-              <p className="text-[#6B7280] text-lg leading-relaxed">From 3-hour board briefings to 4-week cohort programmes — practical, facilitated learning for senior leaders who need to make AI decisions with confidence.</p>
-            </div>
+            <h1 style={{ color: "#EEF2F8" }} className="mb-2">AI Mastery for<br />Senior Leaders</h1>
+            <HandwrittenNote size="lg" color="#F5A030" rotate={-1} className="block mb-5">
+              Practical. Engaging. Immediately useful.
+            </HandwrittenNote>
+            <p className="text-[#8FA5C8] max-w-lg leading-relaxed">
+              Four programme formats designed around how senior executives actually learn — 
+              in focused sessions, with real peers, on real business challenges.
+            </p>
           </motion.div>
         </div>
       </div>
 
       <div className="max-w-6xl mx-auto px-6 py-16">
-        {/* PATHWAY */}
-        <AnimatedSection className="mb-20">
+        {/* Client logos */}
+        <AnimatedSection className="mb-16">
+          <p className="text-xs font-semibold uppercase tracking-widest text-[#9BA3B0] text-center mb-6">
+            Trusted by senior leaders at
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-6">
+            {clientLogos.map((org) => (
+              <div key={org} className="px-5 py-2.5 rounded-xl border border-[#E8E6E0] bg-white">
+                <p className="text-sm font-semibold text-[#9BA3B0]">{org}</p>
+              </div>
+            ))}
+          </div>
+        </AnimatedSection>
+
+        {/* Programme Pathway Diagram */}
+        <AnimatedSection className="mb-16">
           <div className="mb-8">
-            <p className="text-xs font-semibold uppercase tracking-widest text-[#9BA3B0] mb-2">The Progression</p>
-            <h2 style={{ color: "#0D1829" }}>Find Your Right Programme</h2>
+            <p className="text-xs font-semibold uppercase tracking-widest text-[#9BA3B0] mb-2">The Learning Pathway</p>
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+              <h2 style={{ color: "#0D1829" }}>Choose Your<br />Programme</h2>
+              <HandwrittenNote size="md" rotate={2}>
+                No experience needed
+              </HandwrittenNote>
+            </div>
+            <p className="text-[#6B7280] mt-2 max-w-md">
+              All programmes are self-contained — you don't need to complete them in order. 
+              We'll recommend the right starting point for your context.
+            </p>
           </div>
           <TrainingPathwayDiagram />
         </AnimatedSection>
 
-        {/* PROGRAMME SELECTOR */}
-        <AnimatedSection className="mb-20">
-          <p className="text-xs font-semibold uppercase tracking-widest text-[#9BA3B0] mb-4">Programme Detail</p>
-          <div className="flex flex-wrap gap-2 mb-8">
+        {/* Programme detail cards */}
+        <AnimatedSection className="mb-16">
+          <p className="text-xs font-semibold uppercase tracking-widest text-[#9BA3B0] mb-6">Programme Details</p>
+
+          {/* Tab selector */}
+          <div className="flex flex-wrap gap-2 mb-8 bg-[#F4F3EF] p-1.5 rounded-2xl w-fit">
             {programs.map((p) => (
-              <button key={p.id} onClick={() => setActiveProgram(p.id)}
-                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${activeProgram === p.id ? "bg-[#1C2E5E] text-white" : "bg-white border border-[#E8E6E0] text-[#6B7280] hover:border-[#1C2E5E]"}`}>
+              <button
+                key={p.id}
+                onClick={() => setActive(p.id)}
+                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                  active === p.id
+                    ? "bg-[#1C2E5E] text-white shadow-sm"
+                    : "text-[#6B7280] hover:text-[#374151]"
+                }`}
+              >
                 {p.title}
               </button>
             ))}
           </div>
-          <motion.div key={selected.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}
-            className="rounded-3xl border-2 p-8 md:p-10" style={{ backgroundColor: selected.color, borderColor: selected.border }}>
-            <div className="grid md:grid-cols-2 gap-10">
-              <div>
-                <span className="text-xs font-semibold px-2.5 py-1 rounded-full mb-3 inline-block" style={{ backgroundColor: selected.dark ? "#162244" : "#fff", color: selected.dark ? "#F5A030" : "#6B7280", border: `1px solid ${selected.border}` }}>{selected.tag}</span>
-                <h2 style={{ fontFamily: "Barlow Condensed, sans-serif", color: selected.dark ? "#EEF2F8" : "#1C2E5E", fontSize: "clamp(1.8rem, 3vw, 2.5rem)", fontWeight: 800 }}>{selected.title}</h2>
-                <p style={{ color: selected.dark ? "#8FA5C8" : "#6B7280" }} className="text-lg mt-1 mb-6">{selected.subtitle}</p>
-                <div className="grid grid-cols-2 gap-3 mb-6">
+
+          {/* Detail panel */}
+          <motion.div
+            key={active}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35 }}
+          >
+            <div className="grid md:grid-cols-3 gap-6">
+              {/* Main info */}
+              <div
+                className="md:col-span-2 rounded-3xl border-2 p-8"
+                style={{ backgroundColor: activeProgram.color, borderColor: activeProgram.border }}
+              >
+                {activeProgram.featured && (
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold mb-4 bg-white" style={{ color: "#D97706" }}>
+                    <Flame size={11} /> Most Popular
+                  </div>
+                )}
+
+                <p
+                  className="text-xs font-semibold uppercase tracking-widest mb-1"
+                  style={{ color: activeProgram.dark ? "#8FA5C8" : "#9BA3B0" }}
+                >
+                  {activeProgram.tagline}
+                </p>
+                <h2
+                  style={{
+                    fontFamily: "Barlow Condensed, sans-serif",
+                    color: activeProgram.dark ? "#EEF2F8" : "#0D1829",
+                    fontSize: "clamp(1.8rem, 3vw, 2.5rem)",
+                  }}
+                >
+                  {activeProgram.title}
+                </h2>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-5 mb-6">
                   {[
-                    { icon: Clock, label: selected.duration },
-                    { icon: Users, label: selected.groupSize },
-                    { icon: selected.format.includes("Virtual") ? Video : MapPin, label: selected.format },
-                  ].map(({ icon: Icon, label }) => (
-                    <div key={label} className="flex items-center gap-2">
-                      <Icon size={14} style={{ color: selected.accent }} />
-                      <span className="text-sm" style={{ color: selected.dark ? "#D0DAE8" : "#374151" }}>{label}</span>
+                    { icon: Calendar, label: "Duration", val: activeProgram.duration },
+                    { icon: Globe, label: "Format", val: activeProgram.format },
+                    { icon: Users, label: "Group Size", val: activeProgram.group },
+                  ].map(({ icon: Icon, label, val }) => (
+                    <div key={label}>
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <Icon size={13} style={{ color: activeProgram.dark ? "#4A66A0" : "#9BA3B0" }} />
+                        <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: activeProgram.dark ? "#4A66A0" : "#9BA3B0" }}>
+                          {label}
+                        </p>
+                      </div>
+                      <p className="text-sm font-semibold" style={{ color: activeProgram.dark ? "#D0DAE8" : "#374151" }}>
+                        {val}
+                      </p>
                     </div>
                   ))}
                 </div>
-                <p style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "32px", fontWeight: 800, color: selected.accent, lineHeight: 1 }}>{selected.price}</p>
-                <p className="text-xs mt-1" style={{ color: selected.dark ? "#4A66A0" : "#9BA3B0" }}>per session / per person where noted</p>
-                <p className="text-sm mt-4 leading-relaxed" style={{ color: selected.dark ? "#8FA5C8" : "#6B7280" }}><strong style={{ color: selected.dark ? "#D0DAE8" : "#374151" }}>Ideal for: </strong>{selected.ideal}</p>
-              </div>
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: selected.dark ? "#4A66A0" : "#9BA3B0" }}>What You'll Leave With</p>
-                <ul className="space-y-3">
-                  {selected.outcomes.map((o) => (
-                    <li key={o} className="flex items-start gap-3">
-                      <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5" style={{ backgroundColor: selected.accent }}>
-                        <Check size={11} className="text-white" />
+
+                <div className="mb-5">
+                  <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: activeProgram.dark ? "#4A66A0" : "#9BA3B0" }}>
+                    Ideal For
+                  </p>
+                  <p className="text-sm" style={{ color: activeProgram.dark ? "#8FA5C8" : "#6B7280" }}>
+                    {activeProgram.audience}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: activeProgram.dark ? "#4A66A0" : "#9BA3B0" }}>
+                    What You'll Walk Away With
+                  </p>
+                  <div className="space-y-2">
+                    {activeProgram.outcomes.map((o) => (
+                      <div key={o} className="flex items-start gap-2.5">
+                        <div
+                          className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+                          style={{ backgroundColor: activeProgram.accent + "22" }}
+                        >
+                          <Check size={11} style={{ color: activeProgram.accent }} />
+                        </div>
+                        <p className="text-sm" style={{ color: activeProgram.dark ? "#8FA5C8" : "#374151" }}>{o}</p>
                       </div>
-                      <span className="text-sm leading-snug" style={{ color: selected.dark ? "#D0DAE8" : "#374151" }}>{o}</span>
-                    </li>
-                  ))}
-                </ul>
+                    ))}
+                  </div>
+                </div>
+
+                <p
+                  className="mt-6"
+                  style={{ fontFamily: "Caveat, cursive", fontSize: "18px", color: activeProgram.accent }}
+                >
+                  {activeProgram.note}
+                </p>
+              </div>
+
+              {/* Pricing sidebar */}
+              <div className="space-y-4">
+                <div className="bg-white rounded-3xl border border-[#E8E6E0] p-6">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-[#9BA3B0] mb-1">Investment</p>
+                  <p
+                    style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "28px", color: "#1C2E5E", fontWeight: 800, lineHeight: 1 }}
+                  >
+                    {activeProgram.price}
+                  </p>
+                  <p className="text-xs text-[#9BA3B0] mt-1">Per session, per organisation</p>
+                  <p style={{ fontFamily: "Caveat, cursive", fontSize: "14px", color: "#D97706", marginTop: "8px" }}>
+                    Custom pricing for enterprise
+                  </p>
+                  <a
+                    href="#enquire"
+                    className="mt-4 block w-full text-center px-4 py-3 rounded-2xl bg-[#1C2E5E] text-white text-sm font-semibold hover:bg-[#162244] transition-colors"
+                  >
+                    Enquire Now
+                  </a>
+                </div>
+
+                <div className="bg-[#EEF2F8] rounded-3xl p-5">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-[#9BA3B0] mb-3">Upcoming Dates</p>
+                  <div className="space-y-3">
+                    {upcomingDates
+                      .filter((d) => d.program === activeProgram.title)
+                      .slice(0, 3)
+                      .map((d) => (
+                        <div key={d.date} className="flex items-start gap-2">
+                          <div className="w-1.5 h-1.5 rounded-full bg-[#E8541A] shrink-0 mt-1.5" />
+                          <div>
+                            <p className="text-xs font-semibold text-[#1C2E5E]">{d.date}</p>
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                              {d.format === "In-person" ? <MapPin size={10} className="text-[#9BA3B0]" /> : <Globe size={10} className="text-[#9BA3B0]" />}
+                              <p className="text-[10px] text-[#9BA3B0]">{d.location} · {d.spots} spots left</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    {upcomingDates.filter((d) => d.program === activeProgram.title).length === 0 && (
+                      <p className="text-xs text-[#9BA3B0]">Bespoke dates — contact us to schedule.</p>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>
         </AnimatedSection>
 
-        {/* UPCOMING DATES */}
-        <AnimatedSection className="mb-20">
-          <p className="text-xs font-semibold uppercase tracking-widest text-[#9BA3B0] mb-2">Upcoming Dates</p>
-          <h2 style={{ color: "#0D1829" }} className="mb-8">Available Sessions</h2>
-          <StaggerContainer className="grid sm:grid-cols-2 gap-4">
-            {upcomingDates.map((d) => (
-              <StaggerItem key={d.date + d.program}>
-                <div className="bg-white rounded-2xl border border-[#E8E6E0] p-5 hover:shadow-md hover:border-[#D0DAE8] transition-all duration-300">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="font-bold text-[#1C2E5E] mb-1">{d.program}</p>
-                      <div className="flex items-center gap-3 text-sm text-[#6B7280]">
-                        <span className="flex items-center gap-1"><Calendar size={12} />{d.date}</span>
-                        <span className="flex items-center gap-1">{d.format === "Virtual" ? <Video size={12} /> : <MapPin size={12} />}{d.location}</span>
-                      </div>
-                    </div>
-                    <span className="shrink-0 text-xs font-semibold px-2.5 py-1 rounded-full bg-[#F0FDF4] text-[#166534]">{d.spots} spots left</span>
-                  </div>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
-        </AnimatedSection>
-
-        {/* ENQUIRY FORM */}
-        <AnimatedSection>
-          <div className="bg-[#1C2E5E] rounded-3xl p-8 md:p-12">
-            <div className="grid md:grid-cols-2 gap-12 items-start">
+        {/* Enquiry form (inline — no popup) */}
+        <AnimatedSection id="enquire" className="mb-8">
+          <div className="bg-white rounded-3xl border border-[#E8E6E0] p-8 md:p-10">
+            <div className="grid md:grid-cols-2 gap-10 items-start">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-[#4A66A0] mb-3">Get in Touch</p>
-                <h2 className="text-[#EEF2F8] mb-3">Enquire About Training</h2>
-                <HandwrittenNote size="md" color="#F5A030" rotate={1.5} className="mb-6 block">we respond within 24 hours</HandwrittenNote>
-                <p className="text-[#8FA5C8] leading-relaxed">All programmes can be customised for your organisation, industry, and leadership level. We also offer private group sessions for boards and leadership teams.</p>
+                <p className="text-xs font-semibold uppercase tracking-widest text-[#9BA3B0] mb-2">Get in Touch</p>
+                <h2 style={{ color: "#0D1829" }}>Enquire About<br />Training</h2>
+                <HandwrittenNote size="md" rotate={-1.5} className="block mt-2 mb-4">
+                  We respond within 24 hours
+                </HandwrittenNote>
+                <p className="text-[#6B7280] text-sm leading-relaxed">
+                  Tell us about your team and we'll recommend the right programme. 
+                  We also design bespoke sessions for organisations with specific needs.
+                </p>
               </div>
+
               {submitted ? (
-                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-[#162244] rounded-2xl p-8 text-center">
-                  <div className="w-12 h-12 rounded-full bg-[#E8541A]/20 flex items-center justify-center mx-auto mb-4">
-                    <Check size={24} className="text-[#E8541A]" />
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="flex flex-col items-center justify-center gap-3 py-12"
+                >
+                  <div className="w-16 h-16 rounded-full bg-[#F0FDF4] flex items-center justify-center">
+                    <Check size={28} className="text-[#22C55E]" />
                   </div>
-                  <p style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "24px", color: "#EEF2F8" }}>Enquiry Sent!</p>
-                  <p className="text-[#8FA5C8] text-sm mt-2">We'll be in touch within 24 hours.</p>
+                  <p style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "24px", color: "#1C2E5E" }}>
+                    Enquiry received!
+                  </p>
+                  <p className="text-sm text-[#9BA3B0] text-center">We'll be in touch within 24 hours.</p>
                 </motion.div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  {[
-                    { key: "name", label: "Full Name", type: "text", placeholder: "Your name" },
-                    { key: "email", label: "Work Email", type: "email", placeholder: "your@company.com" },
-                    { key: "org", label: "Organisation", type: "text", placeholder: "Company name" },
-                  ].map(({ key, label, type, placeholder }) => (
-                    <div key={key}>
-                      <label className="block text-xs font-semibold text-[#8FA5C8] mb-1.5">{label}</label>
-                      <input type={type} required placeholder={placeholder}
-                        value={(formData as any)[key]} onChange={(e) => setFormData({ ...formData, [key]: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl bg-[#162244] border border-[#2A4080] text-white placeholder:text-[#4A66A0] outline-none focus:border-[#8FA5C8] transition-colors text-sm" />
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-[#374151] mb-1.5 uppercase tracking-wider">Name</label>
+                      <input
+                        required
+                        value={formState.name}
+                        onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+                        placeholder="Jane Smith"
+                        className="w-full px-4 py-3 rounded-xl border border-[#E8E6E0] bg-[#FAFAF8] text-[#0D1829] outline-none focus:border-[#1C2E5E] transition-colors"
+                      />
                     </div>
-                  ))}
+                    <div>
+                      <label className="block text-xs font-semibold text-[#374151] mb-1.5 uppercase tracking-wider">Work Email</label>
+                      <input
+                        type="email"
+                        required
+                        value={formState.email}
+                        onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+                        placeholder="jane@company.com"
+                        className="w-full px-4 py-3 rounded-xl border border-[#E8E6E0] bg-[#FAFAF8] text-[#0D1829] outline-none focus:border-[#1C2E5E] transition-colors"
+                      />
+                    </div>
+                  </div>
                   <div>
-                    <label className="block text-xs font-semibold text-[#8FA5C8] mb-1.5">Interested Programme</label>
-                    <select value={formData.program} onChange={(e) => setFormData({ ...formData, program: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-[#162244] border border-[#2A4080] text-white outline-none focus:border-[#8FA5C8] transition-colors text-sm">
-                      {programs.map((p) => <option key={p.id} value={p.title}>{p.title}</option>)}
+                    <label className="block text-xs font-semibold text-[#374151] mb-1.5 uppercase tracking-wider">Organisation</label>
+                    <input
+                      value={formState.org}
+                      onChange={(e) => setFormState({ ...formState, org: e.target.value })}
+                      placeholder="Company name"
+                      className="w-full px-4 py-3 rounded-xl border border-[#E8E6E0] bg-[#FAFAF8] text-[#0D1829] outline-none focus:border-[#1C2E5E] transition-colors"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-[#374151] mb-1.5 uppercase tracking-wider">Programme Interest</label>
+                    <select
+                      value={formState.interest}
+                      onChange={(e) => setFormState({ ...formState, interest: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl border border-[#E8E6E0] bg-[#FAFAF8] text-[#0D1829] outline-none focus:border-[#1C2E5E] transition-colors appearance-none"
+                    >
+                      <option>Board Briefing</option>
+                      <option>Half-Day Intensive</option>
+                      <option>Full-Day Workshop</option>
+                      <option>4-Week Cohort</option>
+                      <option>Bespoke / Not Sure Yet</option>
                     </select>
                   </div>
-                  <button type="submit" className="w-full px-5 py-3.5 rounded-2xl bg-[#E8541A] text-white font-semibold hover:bg-[#D03010] transition-colors flex items-center justify-center gap-2">
-                    Send Enquiry <ArrowRight size={16} />
+                  <button
+                    type="submit"
+                    className="w-full px-6 py-3.5 rounded-2xl bg-[#1C2E5E] text-white font-semibold hover:bg-[#162244] transition-colors flex items-center justify-center gap-2"
+                  >
+                    Send Enquiry
+                    <ArrowRight size={16} />
                   </button>
                 </form>
               )}

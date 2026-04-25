@@ -1,172 +1,313 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
-import { Check, Copy } from "lucide-react";
+import { Download, Copy, Check } from "lucide-react";
 import { BFLogoSVG, BFPhotoLogo, BFPhotoLogo2, HolidayLogo } from "./BFLogoSVG";
 import { HandwrittenNote } from "../shared/HandwrittenNote";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "../shared/AnimatedSection";
 
-type Variant = "full" | "icon" | "wordmark" | "stacked";
-type Theme = "color" | "mono" | "white" | "dark" | "sketch" | "outline";
-
-const VARIANTS: Variant[] = ["full", "icon", "wordmark", "stacked"];
-const THEMES: Theme[] = ["color", "mono", "white", "dark", "sketch", "outline"];
-const THEME_BG: Record<Theme, string> = { color: "#FAFAF8", mono: "#FAFAF8", white: "#1C2E5E", dark: "#FAFAF8", sketch: "#FAFAF8", outline: "#FAFAF8" };
-
-const US_HOLIDAYS = ["new-year", "valentines", "july4", "halloween", "thanksgiving", "christmas"] as const;
-const IN_HOLIDAYS = ["diwali", "holi", "republic-day", "india-independence", "navratri", "pongal"] as const;
-
-const DONTS = [
-  { label: "Don't stretch or distort", desc: "Always scale proportionally." },
-  { label: "Don't use on busy backgrounds", desc: "Ensure minimum contrast ratio of 3:1." },
-  { label: "Don't change the brand colours", desc: "Use only the 6 approved theme variants." },
-  { label: "Don't add effects", desc: "No drop shadows, glows, or gradients on the logo." },
-];
-
-const EMAIL_SIGNATURES = [
-  { style: "Minimal", html: `<table><tr><td><strong style="color:#1C2E5E;font-family:sans-serif">BOTS FIRED</strong></td></tr><tr><td style="color:#6B7280;font-size:12px;font-family:sans-serif">AI Education for Executives</td></tr></table>` },
-  { style: "Full", html: `<table><tr><td><strong style="color:#1C2E5E;font-family:sans-serif;font-size:18px">BOTS FIRED</strong><br/><span style="color:#E8541A;font-size:12px;font-family:sans-serif">AI Education for Executives</span><br/><br/><span style="color:#6B7280;font-size:12px;font-family:sans-serif">[Your Name] · [Title]<br/>[email] · botsfired.com</span></td></tr></table>` },
-  { style: "Dark", html: `<table style="background:#1C2E5E;padding:12px;border-radius:8px"><tr><td><strong style="color:#FFFFFF;font-family:sans-serif">BOTS FIRED</strong><br/><span style="color:#8FA5C8;font-size:12px;font-family:sans-serif">AI Education for Executives</span></td></tr></table>` },
-  { style: "Orange accent", html: `<table style="border-left:4px solid #E8541A;padding-left:12px"><tr><td><strong style="color:#1C2E5E;font-family:sans-serif">BOTS FIRED</strong><br/><span style="color:#6B7280;font-size:12px;font-family:sans-serif">[Your Name] · [Title] · botsfired.com</span></td></tr></table>` },
-];
-
-function CopyButton({ text }: { text: string }) {
-  const [copied, setCopied] = useState(false);
+function SectionTitle({ label, title, note }: { label: string; title: string; note?: string }) {
   return (
-    <button onClick={() => { navigator.clipboard.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
-      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#EEF2F8] text-[#1C2E5E] hover:bg-[#D0DAE8] transition-colors">
-      {copied ? <><Check size={12} />Copied!</> : <><Copy size={12} />Copy HTML</>}
-    </button>
+    <div className="mb-8">
+      <p className="text-xs font-semibold uppercase tracking-widest text-[#9BA3B0] mb-1">{label}</p>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <h3 style={{ fontFamily: "Barlow Condensed, sans-serif", color: "#1C2E5E", fontSize: "28px", fontWeight: 700 }}>{title}</h3>
+        {note && <HandwrittenNote size="sm" rotate={-1}>{note}</HandwrittenNote>}
+      </div>
+    </div>
+  );
+}
+
+function LogoCard({ title, bg, children, dark = false, note }: {
+  title: string; bg: string; children: React.ReactNode; dark?: boolean; note?: string;
+}) {
+  return (
+    <div className="flex flex-col gap-2">
+      <div
+        className="rounded-2xl flex items-center justify-center p-8 min-h-[120px] border"
+        style={{ backgroundColor: bg, borderColor: dark ? "#2A4080" : "#E8E6E0" }}
+      >
+        {children}
+      </div>
+      <p className="text-xs font-semibold text-center" style={{ color: dark ? "#1C2E5E" : "#6B7280" }}>{title}</p>
+      {note && <p className="text-[10px] text-center text-[#9BA3B0]">{note}</p>}
+    </div>
+  );
+}
+
+/* ── Clear Space Guide ── */
+function ClearSpaceGuide() {
+  return (
+    <div className="bg-[#FAFAF8] rounded-2xl border-2 border-dashed border-[#D0DAE8] p-8 flex items-center justify-center">
+      <svg width="360" viewBox="0 0 360 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {/* Clear space zone */}
+        <rect x="20" y="10" width="320" height="120" rx="4" fill="#EEF2F8" stroke="#8FA5C8" strokeWidth="1" strokeDasharray="6 3" />
+        {/* Logo area */}
+        <rect x="60" y="30" width="240" height="80" rx="4" fill="white" stroke="#D0DAE8" strokeWidth="1" />
+        {/* X marks for spacing */}
+        {/* Top spacing annotation */}
+        <line x1="180" y1="10" x2="180" y2="30" stroke="#E8541A" strokeWidth="1.5" />
+        <text x="185" y="22" fontFamily="Inter,sans-serif" fontSize="10" fill="#E8541A">1× logo-height clear</text>
+        {/* Bottom */}
+        <line x1="180" y1="110" x2="180" y2="130" stroke="#E8541A" strokeWidth="1.5" />
+        {/* Left */}
+        <line x1="20" y1="70" x2="60" y2="70" stroke="#E8541A" strokeWidth="1.5" />
+        {/* Right */}
+        <line x1="300" y1="70" x2="340" y2="70" stroke="#E8541A" strokeWidth="1.5" />
+        {/* Logo placeholder */}
+        <text x="180" y="72" textAnchor="middle" dominantBaseline="middle" fontFamily="Barlow Condensed, sans-serif" fontWeight="800" fontStyle="italic" fontSize="26" fill="#1C2E5E">BOTS</text>
+        <text x="180" y="95" textAnchor="middle" dominantBaseline="middle" fontFamily="Barlow Condensed, sans-serif" fontWeight="800" fontStyle="italic" fontSize="14" fill="#E8541A">⚡ FIRED · AI FOR LEADERS</text>
+        {/* Corner measurement lines */}
+        <rect x="60" y="30" width="20" height="20" fill="none" stroke="#8FA5C8" strokeWidth="0.7" />
+        <rect x="280" y="30" width="20" height="20" fill="none" stroke="#8FA5C8" strokeWidth="0.7" />
+        <rect x="60" y="90" width="20" height="20" fill="none" stroke="#8FA5C8" strokeWidth="0.7" />
+        <rect x="280" y="90" width="20" height="20" fill="none" stroke="#8FA5C8" strokeWidth="0.7" />
+        {/* Annotation text */}
+        <text x="20" y="140" fontFamily="Caveat, cursive" fontSize="13" fill="#D97706">min clear space = ½ × flame height on all sides</text>
+      </svg>
+    </div>
+  );
+}
+
+/* ── Minimum Size Guide ── */
+function MinSizeGuide() {
+  const sizes = [
+    { label: "Favicon", w: 16, text: "16px" },
+    { label: "Mobile Icon", w: 32, text: "32px" },
+    { label: "App Bar", w: 64, text: "64px" },
+    { label: "Email Sig.", w: 96, text: "96px" },
+    { label: "Min Print", w: 128, text: "25mm" },
+  ];
+  return (
+    <div className="bg-white rounded-2xl border border-[#E8E6E0] p-6">
+      <p className="text-xs font-semibold uppercase tracking-widest text-[#9BA3B0] mb-4">Minimum Sizes</p>
+      <div className="flex items-end gap-6 flex-wrap">
+        {sizes.map(({ label, w, text }) => (
+          <div key={label} className="flex flex-col items-center gap-2">
+            <div
+              className="rounded bg-[#1C2E5E] flex items-center justify-center"
+              style={{ width: Math.max(w, 16), height: Math.max(w, 16) }}
+            >
+              <span style={{ fontFamily: "Barlow Condensed, sans-serif", fontWeight: 800, fontStyle: "italic", color: "#E8541A", fontSize: Math.max(w * 0.35, 6) }}>BF</span>
+            </div>
+            <div className="text-center">
+              <p className="text-[10px] font-semibold text-[#374151]">{text}</p>
+              <p className="text-[9px] text-[#9BA3B0]">{label}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <p className="mt-4 text-xs text-[#9BA3B0]">
+        <span style={{ fontFamily: "Caveat, cursive", fontSize: "15px", color: "#D97706" }}>Rule: </span>
+        Never display the full wordmark below 120px wide. Use icon-only below 48px.
+      </p>
+    </div>
+  );
+}
+
+/* ── Signature / Footnote Templates ── */
+function SignatureTemplates() {
+  const sigs = [
+    {
+      label: "Email Signature — Full",
+      content: (
+        <div className="font-sans text-sm bg-white p-5 rounded-xl border border-[#E8E6E0]" style={{ fontFamily: "Inter, sans-serif" }}>
+          <div className="flex gap-4 items-start">
+            <div className="w-12 h-12 rounded-xl bg-[#1C2E5E] flex items-center justify-center shrink-0">
+              <span style={{ fontFamily: "Barlow Condensed, sans-serif", fontWeight: 800, fontStyle: "italic", color: "#E8541A", fontSize: "16px" }}>BF</span>
+            </div>
+            <div className="border-l-2 border-[#E8541A] pl-4">
+              <p className="font-bold text-[#1C2E5E]">Your Name</p>
+              <p className="text-[#6B7280] text-xs">Founder & AI Educator, BOTS FIRED</p>
+              <div className="mt-1 flex flex-col gap-0.5 text-xs text-[#9BA3B0]">
+                <span>📧 name@botsfired.com</span>
+                <span>🔗 linkedin.com/in/yourname</span>
+              </div>
+              <div className="mt-2 pt-2 border-t border-[#F4F3EF] flex items-center gap-2">
+                <BFLogoSVG variant="wordmark" theme="color" width={120} />
+                <span className="text-[10px] text-[#9BA3B0]">AI Clarity for Leaders</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      label: "Email Signature — Compact",
+      content: (
+        <div className="bg-white p-4 rounded-xl border border-[#E8E6E0]" style={{ fontFamily: "Inter, sans-serif" }}>
+          <div className="flex items-center gap-3">
+            <BFLogoSVG variant="icon" theme="color" width={80} />
+            <div className="border-l border-[#E8E6E0] pl-3 text-xs">
+              <p className="font-bold text-[#1C2E5E]">Your Name · BOTS FIRED</p>
+              <p className="text-[#9BA3B0]">name@botsfired.com · AI for C-Suite</p>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      label: "Footnote — With Logo",
+      content: (
+        <div className="bg-white p-4 rounded-xl border border-[#E8E6E0]">
+          <div className="border-t border-[#E8E6E0] pt-3 flex items-center justify-between">
+            <p className="text-[10px] text-[#9BA3B0]">© 2026 BOTS FIRED. All rights reserved. For C-Suite Executives only.</p>
+            <BFLogoSVG variant="icon" theme="color" width={60} />
+          </div>
+        </div>
+      ),
+    },
+    {
+      label: "Footnote — Minimal, No Logo",
+      content: (
+        <div className="bg-white p-4 rounded-xl border border-[#E8E6E0]">
+          <div className="border-t border-[#E8E6E0] pt-3 flex items-center justify-between">
+            <p className="text-[10px] text-[#9BA3B0]">© 2026 BOTS FIRED · botsfired.com · Unsubscribe</p>
+            <p style={{ fontFamily: "Caveat, cursive", fontSize: "13px", color: "#D97706" }}>AI for Leaders.</p>
+          </div>
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      {sigs.map(({ label, content }) => (
+        <div key={label} className="space-y-2">
+          <p className="text-xs font-semibold text-[#6B7280] uppercase tracking-wide">{label}</p>
+          {content}
+        </div>
+      ))}
+    </div>
   );
 }
 
 export function LogoSection() {
-  const [activeTheme, setActiveTheme] = useState<Theme>("color");
-  const [activeVariant, setActiveVariant] = useState<Variant>("full");
+  const [copied, setCopied] = useState(false);
+
+  const copyHex = (hex: string) => {
+    navigator.clipboard.writeText(hex).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  const usaHolidays = ["new-year", "valentines", "july4", "halloween", "thanksgiving", "christmas"];
+  const indiaHolidays = ["diwali", "holi", "republic-day", "india-independence", "navratri", "pongal"];
 
   return (
-    <section className="space-y-20">
-      {/* Photo logos */}
+    <div id="logos" className="space-y-16">
+      {/* ── Brand Assets (imported) ── */}
       <AnimatedSection>
-        <h3 style={{ fontFamily: "Barlow Condensed, sans-serif", color: "#1C2E5E", fontSize: "24px", fontWeight: 700 }} className="mb-2">Brand Assets</h3>
-        <p className="text-sm text-[#6B7280] mb-6">Profile photos and avatar versions for social and digital use.</p>
-        <div className="flex flex-wrap gap-8 items-end">
-          <div className="text-center">
-            <BFPhotoLogo width={120} className="mx-auto mb-2" />
-            <p className="text-xs text-[#9BA3B0]">Circle (social)</p>
+        <SectionTitle label="Brand Assets" title="Logo System" note="The official marks" />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <LogoCard title="Primary Logo" bg="#FFFFFF"><BFPhotoLogo height={50} /></LogoCard>
+          <LogoCard title="Alt Mark" bg="#FFFFFF"><BFPhotoLogo2 height={50} /></LogoCard>
+          <LogoCard title="On Dark Background" bg="#0D1829" dark><BFPhotoLogo height={50} white /></LogoCard>
+          <LogoCard title="On Navy Background" bg="#1C2E5E" dark><BFPhotoLogo height={50} white /></LogoCard>
+        </div>
+      </AnimatedSection>
+
+      {/* ── SVG Logo Variants ── */}
+      <AnimatedSection>
+        <SectionTitle label="Logo Variants" title="All Configurations" note="Use the right one for context" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <LogoCard title="Full Logo — Color" bg="#FAFAF8"><BFLogoSVG variant="full" theme="color" width={260} /></LogoCard>
+          <LogoCard title="Full Logo — Dark Background" bg="#0D1829" dark><BFLogoSVG variant="full" theme="white" width={260} /></LogoCard>
+          <LogoCard title="Stacked — Color" bg="#FAFAF8"><BFLogoSVG variant="stacked" theme="color" width={200} /></LogoCard>
+          <LogoCard title="Stacked — Dark" bg="#1C2E5E" dark><BFLogoSVG variant="stacked" theme="white" width={200} /></LogoCard>
+          <LogoCard title="Wordmark Only" bg="#FFFFFF"><BFLogoSVG variant="wordmark" theme="color" width={240} /></LogoCard>
+          <LogoCard title="Wordmark — Mono" bg="#FAFAF8"><BFLogoSVG variant="wordmark" theme="mono" width={240} /></LogoCard>
+          <LogoCard title="Icon Mark — Color" bg="#FFFFFF"><BFLogoSVG variant="icon" theme="color" width={200} /></LogoCard>
+          <LogoCard title="Icon Mark — Outline" bg="#FAFAF8"><BFLogoSVG variant="icon" theme="outline" width={200} /></LogoCard>
+        </div>
+      </AnimatedSection>
+
+      {/* ── Sketch & Art Styles ── */}
+      <AnimatedSection>
+        <SectionTitle label="Art Styles" title="Sketch & Line Variations" note="For editorial & creative use" />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <LogoCard title="Pencil Sketch" bg="#FFFEF5" note="Rough / hand-drawn"><BFLogoSVG variant="full" theme="sketch" width={200} /></LogoCard>
+          <LogoCard title="Line Art / Outline" bg="#FAFAF8" note="Emboss / watermark use"><BFLogoSVG variant="icon" theme="outline" width={180} /></LogoCard>
+          <LogoCard title="Grayscale" bg="#FFFFFF" note="B&W print"><BFLogoSVG variant="full" theme="mono" width={200} /></LogoCard>
+          <LogoCard title="White / Knockout" bg="#374151" dark note="For photography overlays"><BFLogoSVG variant="full" theme="white" width={200} /></LogoCard>
+        </div>
+        <div className="mt-3 px-4 py-3 rounded-xl bg-[#FFF8EC] border border-[#F5A030]/30">
+          <p className="text-xs text-[#92400E]">
+            <span style={{ fontFamily: "Caveat, cursive", fontSize: "15px" }}>Guidance: </span>
+            Use sketch only for editorial / article imagery. Never use sketch for digital UI. Outline/line-art approved for watermarks and embossed stationery only.
+          </p>
+        </div>
+      </AnimatedSection>
+
+      {/* ── Clear Space & Minimum Size ── */}
+      <AnimatedSection>
+        <SectionTitle label="Usage Rules" title="Clear Space & Minimum Size" />
+        <div className="grid md:grid-cols-2 gap-6">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-[#9BA3B0] mb-3">Clear Space Guide</p>
+            <ClearSpaceGuide />
           </div>
-          <div className="text-center">
-            <BFPhotoLogo2 width={120} className="mx-auto mb-2" />
-            <p className="text-xs text-[#9BA3B0]">Square (app icon)</p>
-          </div>
-          <div className="text-center">
-            <BFPhotoLogo width={60} className="mx-auto mb-2" />
-            <p className="text-xs text-[#9BA3B0]">60px</p>
-          </div>
-          <div className="text-center">
-            <BFPhotoLogo width={40} className="mx-auto mb-2" />
-            <p className="text-xs text-[#9BA3B0]">40px</p>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-[#9BA3B0] mb-3">Minimum Sizes</p>
+            <MinSizeGuide />
           </div>
         </div>
       </AnimatedSection>
 
-      {/* SVG variants */}
+      {/* ── Signature & Footnote ── */}
       <AnimatedSection>
-        <h3 style={{ fontFamily: "Barlow Condensed, sans-serif", color: "#1C2E5E", fontSize: "24px", fontWeight: 700 }} className="mb-2">SVG Logo Variants</h3>
-        <div className="flex flex-wrap gap-2 mb-4">
-          {VARIANTS.map((v) => (
-            <button key={v} onClick={() => setActiveVariant(v)} className={`px-3 py-1.5 rounded-xl text-xs font-semibold capitalize transition-all ${activeVariant === v ? "bg-[#1C2E5E] text-white" : "bg-[#EEF2F8] text-[#1C2E5E] hover:bg-[#D0DAE8]"}`}>{v}</button>
-          ))}
-        </div>
-        <div className="flex flex-wrap gap-2 mb-6">
-          {THEMES.map((t) => (
-            <button key={t} onClick={() => setActiveTheme(t)} className={`px-3 py-1.5 rounded-xl text-xs font-semibold capitalize transition-all ${activeTheme === t ? "bg-[#E8541A] text-white" : "bg-[#EEF2F8] text-[#1C2E5E] hover:bg-[#D0DAE8]"}`}>{t}</button>
-          ))}
-        </div>
-        <motion.div key={activeTheme + activeVariant} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="rounded-2xl border border-[#E8E6E0] p-8 flex flex-wrap gap-8 items-center justify-center" style={{ backgroundColor: THEME_BG[activeTheme] }}>
-          {[240, 160, 80, 40].map((w) => (
-            <div key={w} className="text-center">
-              <BFLogoSVG variant={activeVariant} theme={activeTheme} width={w} />
-              <p className="text-xs mt-2" style={{ color: activeTheme === "white" ? "#8FA5C8" : "#9BA3B0" }}>{w}px</p>
-            </div>
-          ))}
-        </motion.div>
+        <SectionTitle label="Application" title="Email Signatures & Footnotes" note="Always consistent" />
+        <SignatureTemplates />
       </AnimatedSection>
 
-      {/* Clear space */}
+      {/* ── USA Holiday Logos ── */}
       <AnimatedSection>
-        <h3 style={{ fontFamily: "Barlow Condensed, sans-serif", color: "#1C2E5E", fontSize: "24px", fontWeight: 700 }} className="mb-2">Clear Space</h3>
-        <p className="text-sm text-[#6B7280] mb-6">Maintain a minimum clear space equal to the height of the "B" in BOTS FIRED around all edges of the logo.</p>
-        <div className="bg-white rounded-2xl border border-[#E8E6E0] p-8 flex items-center justify-center">
-          <svg width="280" height="180" viewBox="0 0 280 180" fill="none">
-            <rect x="10" y="10" width="260" height="160" rx="8" fill="#F9FAFB" stroke="#E8E6E0" strokeWidth="1" strokeDasharray="4 3" />
-            <rect x="40" y="40" width="200" height="100" rx="4" fill="#EEF2F8" />
-            <text x="140" y="96" textAnchor="middle" dominantBaseline="middle" fontFamily="Barlow Condensed, sans-serif" fontWeight="800" fontSize="28" fill="#1C2E5E">BOTS FIRED</text>
-            <line x1="40" y1="15" x2="40" y2="35" stroke="#E8541A" strokeWidth="1" />
-            <line x1="240" y1="15" x2="240" y2="35" stroke="#E8541A" strokeWidth="1" />
-            <line x1="40" y1="25" x2="240" y2="25" stroke="#E8541A" strokeWidth="1" markerEnd="url(#arr)" />
-            <text x="140" y="22" textAnchor="middle" fontSize="9" fill="#E8541A" fontFamily="sans-serif">min 1× icon width each side</text>
-            <defs><marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#E8541A" /></marker></defs>
-          </svg>
+        <SectionTitle label="Holiday Editions — USA" title="American Holiday Logos" note="Swap in for seasonal content" />
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {usaHolidays.map((h) => (
+            <HolidayLogo key={h} holiday={h} width={280} />
+          ))}
         </div>
       </AnimatedSection>
 
-      {/* Email signatures */}
+      {/* ── India Holiday Logos ── */}
       <AnimatedSection>
-        <h3 style={{ fontFamily: "Barlow Condensed, sans-serif", color: "#1C2E5E", fontSize: "24px", fontWeight: 700 }} className="mb-6">Email Signatures</h3>
-        <StaggerContainer className="grid sm:grid-cols-2 gap-4">
-          {EMAIL_SIGNATURES.map((sig) => (
-            <StaggerItem key={sig.style}>
-              <div className="bg-white rounded-2xl border border-[#E8E6E0] p-5">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-semibold text-[#9BA3B0]">{sig.style}</span>
-                  <CopyButton text={sig.html} />
+        <SectionTitle label="Holiday Editions — India" title="Indian Festival Logos" note="Culturally calibrated" />
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {indiaHolidays.map((h) => (
+            <HolidayLogo key={h} holiday={h} width={280} />
+          ))}
+        </div>
+        <div className="mt-4 p-4 rounded-xl bg-[#EEF2F8] border border-[#D0DAE8] text-xs text-[#374151]">
+          <span style={{ fontFamily: "Caveat, cursive", fontSize: "15px", color: "#D97706" }}>Note: </span>
+          Holiday editions should be used for social media, newsletter headers, and email banners only. Never replace the primary brand mark in UI or print with a holiday variant.
+        </div>
+      </AnimatedSection>
+
+      {/* ── Don'ts ── */}
+      <AnimatedSection>
+        <SectionTitle label="Don'ts" title="What Never to Do" />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            { label: "Don't stretch", style: { transform: "scaleX(1.5)", transformOrigin: "center" } },
+            { label: "Don't rotate", style: { transform: "rotate(25deg)" } },
+            { label: "Don't add effects", style: { filter: "blur(1px) contrast(2) saturate(3)" } },
+            { label: "Don't use low contrast", bg: "#D0D0D0" },
+          ].map(({ label, style, bg }, i) => (
+            <div key={i} className="space-y-2">
+              <div className="rounded-2xl border-2 border-red-200 bg-red-50 flex items-center justify-center p-6 min-h-[100px] relative overflow-hidden">
+                <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-red-500 flex items-center justify-center">
+                  <span className="text-white text-xs">✕</span>
                 </div>
-                <div className="bg-[#FAFAF8] rounded-xl p-4 border border-[#E8E6E0]" dangerouslySetInnerHTML={{ __html: sig.html }} />
+                <div style={style}>
+                  <BFLogoSVG variant="icon" theme={bg ? "mono" : "color"} width={80} />
+                </div>
               </div>
-            </StaggerItem>
-          ))}
-        </StaggerContainer>
-      </AnimatedSection>
-
-      {/* Holiday logos */}
-      <AnimatedSection>
-        <h3 style={{ fontFamily: "Barlow Condensed, sans-serif", color: "#1C2E5E", fontSize: "24px", fontWeight: 700 }} className="mb-2">USA Holiday Logos</h3>
-        <div className="flex flex-wrap gap-4 mb-12">
-          {US_HOLIDAYS.map((h) => (
-            <div key={h} className="text-center">
-              <HolidayLogo holiday={h} width={160} />
-              <p className="text-xs text-[#9BA3B0] mt-2 capitalize">{h.replace(/-/g, " ")}</p>
-            </div>
-          ))}
-        </div>
-        <h3 style={{ fontFamily: "Barlow Condensed, sans-serif", color: "#1C2E5E", fontSize: "24px", fontWeight: 700 }} className="mb-2">India Holiday Logos</h3>
-        <div className="flex flex-wrap gap-4">
-          {IN_HOLIDAYS.map((h) => (
-            <div key={h} className="text-center">
-              <HolidayLogo holiday={h} width={160} />
-              <p className="text-xs text-[#9BA3B0] mt-2 capitalize">{h.replace(/-/g, " ")}</p>
+              <p className="text-xs text-center text-red-600 font-semibold">{label}</p>
             </div>
           ))}
         </div>
       </AnimatedSection>
-
-      {/* Don'ts */}
-      <AnimatedSection>
-        <h3 style={{ fontFamily: "Barlow Condensed, sans-serif", color: "#1C2E5E", fontSize: "24px", fontWeight: 700 }} className="mb-6">Logo Don'ts</h3>
-        <div className="grid sm:grid-cols-2 gap-4">
-          {DONTS.map((d) => (
-            <div key={d.label} className="bg-red-50 border border-red-200 rounded-2xl p-5 flex gap-3">
-              <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center shrink-0 mt-0.5">
-                <span className="text-white text-xs font-bold">✕</span>
-              </div>
-              <div>
-                <p className="font-semibold text-red-700 text-sm">{d.label}</p>
-                <p className="text-xs text-red-600 mt-0.5">{d.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </AnimatedSection>
-    </section>
+    </div>
   );
 }
