@@ -1,0 +1,2 @@
+import {defineConfig} from '@playwright/test';
+export default defineConfig({testDir:'tests/browser',timeout:45000,workers:2,use:{baseURL:'http://127.0.0.1:4321',headless:true,launchOptions:process.env.BF_CHROMIUM_PATH?{executablePath:process.env.BF_CHROMIUM_PATH,args:['--no-sandbox']}:{}},webServer:{command:'ASTRO_TELEMETRY_DISABLED=1 npm run preview -- --host 127.0.0.1',port:4321,reuseExistingServer:true}});

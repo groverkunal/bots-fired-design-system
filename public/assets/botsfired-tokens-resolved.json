@@ -319,7 +319,7 @@
     "alpha": 1,
     "hex": "#111827"
   },
-  "primitive.color.amber": {
+  "primitive.color.amber.500": {
     "colorSpace": "srgb",
     "components": [
       0.8509803921568627,
@@ -328,6 +328,16 @@
     ],
     "alpha": 1,
     "hex": "#D97706"
+  },
+  "primitive.color.amber.background": {
+    "colorSpace": "srgb",
+    "components": [
+      1,
+      0.984313725490196,
+      0.9215686274509803
+    ],
+    "alpha": 1,
+    "hex": "#FFFBEB"
   },
   "primitive.color.card": {
     "colorSpace": "srgb",
@@ -620,6 +630,80 @@
   "primitive.fontWeight.semibold": 600,
   "primitive.fontWeight.bold": 700,
   "primitive.fontWeight.heavy": 800,
+  "primitive.size.control": {
+    "value": 44,
+    "unit": "px"
+  },
+  "primitive.size.field": {
+    "value": 48,
+    "unit": "px"
+  },
+  "primitive.size.headerMobile": {
+    "value": 56,
+    "unit": "px"
+  },
+  "primitive.size.headerDesktop": {
+    "value": 64,
+    "unit": "px"
+  },
+  "primitive.size.drawer": {
+    "value": 360,
+    "unit": "px"
+  },
+  "primitive.shadow.one": {
+    "color": {
+      "colorSpace": "srgb",
+      "components": [
+        0.050980392156862744,
+        0.09411764705882353,
+        0.1607843137254902
+      ],
+      "alpha": 0.08
+    },
+    "offsetX": {
+      "value": 0,
+      "unit": "px"
+    },
+    "offsetY": {
+      "value": 2,
+      "unit": "px"
+    },
+    "blur": {
+      "value": 8,
+      "unit": "px"
+    },
+    "spread": {
+      "value": 0,
+      "unit": "px"
+    }
+  },
+  "primitive.shadow.two": {
+    "color": {
+      "colorSpace": "srgb",
+      "components": [
+        0.050980392156862744,
+        0.09411764705882353,
+        0.1607843137254902
+      ],
+      "alpha": 0.12
+    },
+    "offsetX": {
+      "value": 0,
+      "unit": "px"
+    },
+    "offsetY": {
+      "value": 4,
+      "unit": "px"
+    },
+    "blur": {
+      "value": 16,
+      "unit": "px"
+    },
+    "spread": {
+      "value": 0,
+      "unit": "px"
+    }
+  },
   "semantic.color.bg.canvas": {
     "colorSpace": "srgb",
     "components": [
@@ -856,5 +940,32 @@
     "value": 8,
     "unit": "px"
   },
-  "component.toast.z": 500
+  "component.toast.z": 500,
+  "component.toast.elevation": {
+    "color": {
+      "colorSpace": "srgb",
+      "components": [
+        0.050980392156862744,
+        0.09411764705882353,
+        0.1607843137254902
+      ],
+      "alpha": 0.12
+    },
+    "offsetX": {
+      "value": 0,
+      "unit": "px"
+    },
+    "offsetY": {
+      "value": 4,
+      "unit": "px"
+    },
+    "blur": {
+      "value": 16,
+      "unit": "px"
+    },
+    "spread": {
+      "value": 0,
+      "unit": "px"
+    }
+  }
 }

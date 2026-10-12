@@ -22,6 +22,8 @@ function LogoCard({ title, bg, children, dark = false, note }: {
 }) {
   const ref = React.useRef<HTMLDivElement>(null);
   const [downloaded, setDownloaded] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+  React.useEffect(() => setHydrated(true), []);
   const exportSVG = () => {
     const svg = ref.current?.querySelector('svg');
     if (!svg) return;
@@ -41,7 +43,7 @@ function LogoCard({ title, bg, children, dark = false, note }: {
       </div>
       <p className="text-xs font-semibold text-center" style={{ color: dark ? "#1C2E5E" : "#6B7280" }}>{title}</p>
       {note && <p className="text-[10px] text-center text-[#9BA3B0]">{note}</p>}
-      {!title.includes("Primary Logo") && !title.includes("Alt Mark") && !title.startsWith("On ") && <button onClick={exportSVG} className="text-xs text-[#1C2E5E] underline">{downloaded ? 'Downloaded' : `Download ${title} SVG`}</button>}
+      {!title.includes("Primary Logo") && !title.includes("Alt Mark") && !title.startsWith("On ") && <button disabled={!hydrated} onClick={exportSVG} className="text-xs text-[#1C2E5E] underline">{downloaded ? 'Downloaded' : `Download ${title} SVG`}</button>}
     </div>
   );
 }

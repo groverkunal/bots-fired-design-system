@@ -755,6 +755,7 @@ export function TemplatesSection() {
         {tabs.map(({ id, label }) => (
           <button
             key={id}
+            aria-pressed={activeTab === id}
             onClick={() => setActiveTab(id)}
             className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-200 ${
               activeTab === id

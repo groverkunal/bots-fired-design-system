@@ -144,7 +144,7 @@ export function ColorSystem() {
         <h3 style={{fontFamily:"Barlow Condensed, sans-serif",color:"#1C2E5E",fontSize:"28px",fontWeight:700}}>Full Colour System · BOTS FIRED</h3>
         <div className="mt-2 flex flex-wrap gap-2">{["WCAG 2.1 AA minimum","AAA target","9-step Fire Temperature Scale","10-step Navy Palette","9-step Neutral/Ink","6 harmony rules"].map((t)=>(<span key={t} className="px-2.5 py-1 rounded-full bg-[#EEF2F8] text-[#1C2E5E] font-semibold text-[10px]">{t}</span>))}</div>
       </div>
-      <div className="flex gap-2 flex-wrap">{TABS.map(({id,label})=>(<button key={id} onClick={()=>setActiveTab(id)} className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${activeTab===id?"bg-[#1C2E5E] text-white":"border border-[#E8E6E0] text-[#6B7280]"}`}>{label}</button>))}</div>
+      <div className="flex gap-2 flex-wrap">{TABS.map(({id,label})=>(<button key={id} aria-pressed={activeTab===id} onClick={()=>setActiveTab(id)} className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${activeTab===id?"bg-[#1C2E5E] text-white":"border border-[#E8E6E0] text-[#6B7280]"}`}>{label}</button>))}</div>
 
       {activeTab==="fire" && (
         <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{duration:0.3}}>

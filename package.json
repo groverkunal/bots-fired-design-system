@@ -1,15 +1,19 @@
 {
-  "name": "@figma/my-make-file",
+  "name": "@botsfired/design-system",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "build": "npm run tokens && vite build",
-    "dev": "vite",
-    "preview": "vite preview",
-    "tokens": "node scripts/build-tokens.mjs"
+    "build": "npm run tokens && ASTRO_TELEMETRY_DISABLED=1 astro build && node scripts/prepare-static.mjs",
+    "dev": "ASTRO_TELEMETRY_DISABLED=1 astro dev",
+    "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview",
+    "tokens": "node scripts/build-tokens.mjs",
+    "build:legacy": "npm run tokens && vite build",
+    "test:tokens": "node --test tests/tokens.test.mjs",
+    "test:browser": "playwright test"
   },
   "dependencies": {
+    "@astrojs/react": "7.0.1",
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.1",
     "@fontsource/barlow-condensed": "^5.3.0",
@@ -45,6 +49,7 @@
     "@radix-ui/react-toggle": "1.1.2",
     "@radix-ui/react-toggle-group": "1.1.2",
     "@radix-ui/react-tooltip": "1.1.8",
+    "astro": "7.3.8",
     "canvas-confetti": "1.9.4",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
@@ -71,6 +76,8 @@
     "vaul": "1.1.2"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.64.0",
     "@tailwindcss/vite": "4.1.12",
     "@vitejs/plugin-react": "4.7.0",
     "tailwindcss": "4.1.12",

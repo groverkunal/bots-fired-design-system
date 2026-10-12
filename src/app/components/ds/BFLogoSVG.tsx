@@ -1,6 +1,6 @@
 import React from "react";
-import logo1 from "../../../imports/Gemini_Generated_Image_8us1f28us1f28us1.png";
-import logo2 from "../../../imports/Gemini_Generated_Image_8w18gl8w18gl8w18.png";
+const logo1 = "/assets/botsfired-primary.png";
+const logo2 = "/assets/botsfired-alternate.png";
 
 /* ─────────────────────────────────────────────
    Reusable BOTS FIRED Logo SVG — all variants
@@ -102,7 +102,7 @@ function SketchFilter({ id }: { id: string }) {
 }
 
 export function BFLogoSVG({ variant = "full", theme = "color", width = 280, className = "" }: BFLogoSVGProps) {
-  const filterId = `sketch-${Math.random().toString(36).slice(2, 7)}`;
+  const filterId = `sketch-${React.useId().replace(/:/g, "")}`;
   const navy   = theme === "white" ? "#FFFFFF" : theme === "mono" ? "#1a1a1a" : BF_NAVY;
   const fire   = theme === "white" ? "rgba(255,255,255,0.85)" : theme === "mono" ? "#555" : BF_FIRE;
   const amber  = theme === "white" ? "rgba(255,255,255,0.7)" : theme === "mono" ? "#888" : BF_AMBER;

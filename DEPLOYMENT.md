@@ -1,17 +1,17 @@
-# BotsFired design-system publication
+# Coordinated design-system publication
 
-This is the existing groverkunal/bots-fired-design-system repository. The production target already exists in the platform project: Firebase project `microblogger-agent-prod`, Hosting site `botsfired-design`. Do not deploy this build to the root BotsFired site.
+Use the existing `groverkunal/bots-fired-design-system` branch `design-system-presentation`. Parent coordinates the pinned artifact in `botsfired-platform` and the existing Firebase site `botsfired-design` under project `microblogger-agent-prod`. Do not deploy concurrently, replace unrelated site output, create a new site or change DNS.
 
-Build with `npm ci && npm run build`. With an existing authorized Firebase identity, deploy only this site:
+Build with Node >=22.12: `npm ci && npm run build`. The `dist/` directory is fully static Astro documentation. The platform worker must replace only `apps/web/dist/design` with the pinned distribution and preserve the existing security headers and public audience.
 
-```
-firebase deploy --project microblogger-agent-prod --config firebase.design.json --only hosting
-```
+Integration changes required for this static release:
 
-The hub opens at `/` on design.botsfired.com and botsfired-design.web.app. Locally, use `/design-system`. All seven chapters have hash URLs. No sitemap is generated; robots and HTML/HTTP noindex directives are supplied. This is unlisted public content, not authenticated content.
+- Remove the design target's blanket SPA rewrite, while preserving every other site's routing and configuration. Existing real chapter directories serve their own index HTML. Missing assets must return 404; `dist/404.html` provides the fallback page.
+- Preserve `/assets/` download paths and `_astro/` hashed modules/styles/fonts. Hashed `_astro/**` files can use immutable caching; stable named downloads should retain conservative caching.
+- Keep HTML and HTTP noindex directives, robots disallow and empty/absent design sitemap. The design hub remains unlinked from main-site navigation.
+- Retain the existing self-only script policy. The build extracts executable inline Astro bootstraps into local hashed scripts, without changing CSP. Retain existing inline-style permission because historical specimens still use inline styles.
+- Recheck all routes, download MIME types, missing-file status, mode preferences and island exports after deployment. No automatic publishing is performed by this repository's CI.
 
-The parent task reports that platform commit `c9f7ed12640e24aeaf75e1c5283dcb1e6da52c0e` durably integrated design commit `b7282a041cf91b7dad78319be1f173e77d28e4bb` and published it at https://botsfired-design.web.app, verifying all 53 prior file checksums. For subsequent releases, coordinate with the parent to update that pinned design artifact through the existing platform workflow. Do not deploy concurrently or replace other site outputs. This follow-up changes only the design repository; the parent owns publication and DNS coordination.
+The intended URL remains https://design.botsfired.com. The existing Firebase origin is https://botsfired-design.web.app. Parent owns DNS approval and live checks; a hidden URL is not authentication. No confidential material belongs in this public reference.
 
-The platform's October 11 deployment record proposes a DNS CNAME `design.botsfired.com` → `botsfired-design.web.app`. Re-read Firebase's live domain requirements and obtain approval before changing DNS. DNS and TLS have not been verified from this executor.
-
-Verification in this session: Vite production build passes. Runtime and responsive results are recorded separately. Live deployment requires authorized Firebase access or integration into the existing platform workflow. No credentials were created and no DNS/access changes were made.
+The earlier platform integration published the prior design distribution and verified its checksums. This static upgrade must be pinned as a new artifact; do not claim it is live until the parent verifies the deployment. Keep the prior artifact available for rollback.

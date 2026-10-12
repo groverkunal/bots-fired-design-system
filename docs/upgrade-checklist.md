@@ -6,3 +6,17 @@
 - Rejected formula: fluid text need not be divisible by 4; several suggested clamp formulas do not reach their claimed endpoint at 1280px. Use tested minimum/maximum bounds, not an unsupported Major Third claim.
 - Newly implemented: primitive/semantic/component DTCG source and aliases, generated CSS/resolved JSON/types, 10 verified light/dark semantic pair checks; labelled sample content; corrected audit and colour documentation.
 - Approval boundaries: true vector brand originals must be supplied or verified. Existing raster masters stay unchanged. Redraw/tracing, perceptually changed ramps, certified Pantone matches, DNS, security policies, analytics and package publishing remain outside this implementation.
+
+## Static documentation and reference components
+
+- Completed: static Astro 7 routes, no-JavaScript readable chapter content, navigation search, external preference script, generated dark semantic overrides, persistent high contrast, 13 component specifications with anatomy/states/tokens/do-don't/copyable code, native button/form/dialog/toast/filter/disclosure examples.
+- Completed: existing PNG imports now use the canonical public asset paths, avoiding duplicate Gemini-named output. Found existing true-alpha primary cutout in platform asset archive, with original SHA-256 matching this repository's original. Added that existing raster derivative; no vector-original claim or redraw.
+- Completed: explicit static 404 and removed this repo's blanket SPA rewrite. Platform hosting rewrite/cache integration must be updated by the coordinating parent for the same behavior live.
+- Completed: generated elevation, z-index, spacing, radius, duration, easing, size and icon tokens. CI validates tokens, builds static docs and runs browser/axe checks. No schedules or publishing tasks added.
+- Deliberate alternatives: a small deterministic generator supports the used DTCG types instead of adding Style Dictionary/remote schema dependence; custom Astro shell preserves the current brand instead of Starlight's default appearance. The current font files remain static; variable Barlow Condensed and the proposed 120KB budget are not asserted. Native examples are Astro-rendered; older React islands stay explicitly illustrative.
+- Deferred: approval-dependent logo redraw/vector master, Pantone certification, new perceptual OKLCH ramp, package publishing/tags, analytics and security/DNS/account changes. Existing consumer sites must adopt the pinned exported token release through their own reviewed changes; this task does not alter unrelated production pages.
+- Deferred/review target: full manual VoiceOver/TalkBack signoff, Lighthouse score guarantee, APCA policy, and exhaustive legacy-demo remediation. The legacy gallery remains clearly labelled and excluded from normative reference-page axe assertions; do not treat those exclusions as a full-site WCAG pass.
+- Dark preference is applied by a bundled external script; a no-flash inline script and CSP hash would require security-policy coordination. No security headers have been weakened or added.
+
+- Dependency correction: Astro 5.18.2 had critical registry advisories at verification time. Upgraded to patched Astro 7.3.8 and React integration 7.0.1, requiring Node >=22.12. The build remains fully static; no server deployment is introduced.
+- Existing script-src self compatibility: executable inline Astro bootstraps are extracted into hashed local scripts during build. No CSP/header/account configuration is changed.

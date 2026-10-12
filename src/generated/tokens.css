@@ -32,7 +32,8 @@
   --bf-primitive-color-ink-700: #374151;
   --bf-primitive-color-ink-800: #1F2937;
   --bf-primitive-color-ink-900: #111827;
-  --bf-primitive-color-amber: #D97706;
+  --bf-primitive-color-amber-500: #D97706;
+  --bf-primitive-color-amber-background: #FFFBEB;
   --bf-primitive-color-card: #FFFFFF;
   --bf-primitive-color-popover: #FFFFFF;
   --bf-primitive-color-primary-foreground: #FFFFFF;
@@ -97,6 +98,13 @@
   --bf-primitive-fontWeight-semibold: 600;
   --bf-primitive-fontWeight-bold: 700;
   --bf-primitive-fontWeight-heavy: 800;
+  --bf-primitive-size-control: 44px;
+  --bf-primitive-size-field: 48px;
+  --bf-primitive-size-headerMobile: 56px;
+  --bf-primitive-size-headerDesktop: 64px;
+  --bf-primitive-size-drawer: 360px;
+  --bf-primitive-shadow-one: 0px 2px 8px 0px rgba(13,24,41,0.08);
+  --bf-primitive-shadow-two: 0px 4px 16px 0px rgba(13,24,41,0.12);
   --bf-semantic-color-bg-canvas: var(--bf-primitive-color-warm-50);
   --bf-semantic-color-bg-surface: var(--bf-primitive-color-white);
   --bf-semantic-color-text-default: var(--bf-primitive-color-navy-800);
@@ -114,6 +122,7 @@
   --bf-component-card-padding: var(--bf-primitive-space-6);
   --bf-component-input-radius: var(--bf-primitive-radius-sm);
   --bf-component-toast-z: var(--bf-primitive-z-toast);
+  --bf-component-toast-elevation: var(--bf-primitive-shadow-two);
   --navy-50: var(--bf-primitive-color-navy-50);
   --navy-100: var(--bf-primitive-color-navy-100);
   --navy-200: var(--bf-primitive-color-navy-200);
@@ -144,8 +153,8 @@
   --ink-700: var(--bf-primitive-color-ink-700);
   --ink-800: var(--bf-primitive-color-ink-800);
   --ink-900: var(--bf-primitive-color-ink-900);
-  --amber: var(--bf-primitive-color-amber);
-  --amber-bg: var(--bf-primitive-color-amber-bg);
+  --amber: var(--bf-primitive-color-amber-500);
+  --amber-bg: var(--bf-primitive-color-amber-background);
   --card: var(--bf-primitive-color-card);
   --popover: var(--bf-primitive-color-popover);
   --primary-foreground: var(--bf-primitive-color-primary-foreground);

@@ -22,7 +22,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install Dependencies
@@ -31,10 +31,14 @@ jobs:
       - name: Security Audit (High+)
         run: npm audit --audit-level=high
 
-      - name: Build (If Entrypoint Exists)
-        run: |
-          if [ -f index.html ]; then
-            npm run build
-          else
-            echo "Skipping build: index.html not present in repository."
-          fi
+      - name: Validate tokens
+        run: npm run test:tokens
+
+      - name: Build static documentation
+        run: npm run build
+
+      - name: Install test browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Check documentation and accessibility
+        run: npm run test:browser

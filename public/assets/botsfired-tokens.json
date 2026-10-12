@@ -458,19 +458,21 @@
         }
       },
       "amber": {
-        "$type": "color",
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [
-            0.8509803921568627,
-            0.4666666666666667,
-            0.023529411764705882
-          ],
-          "alpha": 1,
-          "hex": "#D97706"
+        "500": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.8509803921568627,
+              0.4666666666666667,
+              0.023529411764705882
+            ],
+            "alpha": 1,
+            "hex": "#D97706"
+          },
+          "$description": "Preserved existing CSS colour"
         },
-        "$description": "Preserved existing CSS colour",
-        "bg": {
+        "background": {
           "$type": "color",
           "$value": {
             "colorSpace": "srgb",
@@ -1062,6 +1064,112 @@
         "$value": 800,
         "$description": ""
       }
+    },
+    "size": {
+      "control": {
+        "$type": "dimension",
+        "$value": {
+          "value": 44,
+          "unit": "px"
+        },
+        "$description": "Reference component size"
+      },
+      "field": {
+        "$type": "dimension",
+        "$value": {
+          "value": 48,
+          "unit": "px"
+        },
+        "$description": "Reference component size"
+      },
+      "headerMobile": {
+        "$type": "dimension",
+        "$value": {
+          "value": 56,
+          "unit": "px"
+        },
+        "$description": "Reference component size"
+      },
+      "headerDesktop": {
+        "$type": "dimension",
+        "$value": {
+          "value": 64,
+          "unit": "px"
+        },
+        "$description": "Reference component size"
+      },
+      "drawer": {
+        "$type": "dimension",
+        "$value": {
+          "value": 360,
+          "unit": "px"
+        },
+        "$description": "Reference component size"
+      }
+    },
+    "shadow": {
+      "one": {
+        "$type": "shadow",
+        "$value": {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [
+              0.050980392156862744,
+              0.09411764705882353,
+              0.1607843137254902
+            ],
+            "alpha": 0.08
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 2,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 8,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        "$description": "Navy-tinted reference elevation"
+      },
+      "two": {
+        "$type": "shadow",
+        "$value": {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [
+              0.050980392156862744,
+              0.09411764705882353,
+              0.1607843137254902
+            ],
+            "alpha": 0.12
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 4,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 16,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        "$description": "Navy-tinted reference elevation"
+      }
     }
   },
   "semantic": {
@@ -1238,6 +1346,10 @@
         "$type": "number",
         "$value": "{primitive.z.toast}",
         "$description": ""
+      },
+      "elevation": {
+        "$type": "shadow",
+        "$value": "{primitive.shadow.two}"
       }
     }
   }

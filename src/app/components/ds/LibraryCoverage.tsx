@@ -1,6 +1,9 @@
 import React from 'react';
 
 export const libraryAssets = [
+  { file: 'botsfired-primary-transparent.png', label: 'Existing primary cutout', format: 'PNG · true alpha', purpose: 'Existing platform derivative of the same primary original · not a vector master' },
+  { file: 'botsfired-contrast.json', label: 'Calculated contrast matrix', format: 'JSON', purpose: 'Ten normal-text semantic pairs in light and dark reading schemes' },
+  { file: 'botsfired-tokens-resolved.json', label: 'Resolved token values', format: 'JSON', purpose: 'Typed values for consumers; generated from DTCG aliases' },
   { file: 'botsfired-primary.png', label: 'Primary logo', format: 'PNG', purpose: 'Existing source asset · digital placements' },
   { file: 'botsfired-alternate.png', label: 'Alternate mark', format: 'PNG', purpose: 'Existing source asset · alternate placements' },
   { file: 'botsfired-tokens.css', label: 'CSS token library', format: 'CSS', purpose: 'Brand and semantic custom properties' },
