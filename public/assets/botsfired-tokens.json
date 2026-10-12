@@ -1,0 +1,301 @@
+{
+  "description": "Extracted from src/styles/theme.css. CSS var() aliases retain their source expressions.",
+  "tokens": {
+    "--font-size": {
+      "$type": "string",
+      "$value": "16px"
+    },
+    "--navy-50": {
+      "$type": "color",
+      "$value": "#EEF2F8"
+    },
+    "--navy-100": {
+      "$type": "color",
+      "$value": "#D0DAE8"
+    },
+    "--navy-200": {
+      "$type": "color",
+      "$value": "#8FA5C8"
+    },
+    "--navy-300": {
+      "$type": "color",
+      "$value": "#4A66A0"
+    },
+    "--navy-400": {
+      "$type": "color",
+      "$value": "#2A4080"
+    },
+    "--navy-500": {
+      "$type": "color",
+      "$value": "#1C2E5E"
+    },
+    "--navy-600": {
+      "$type": "color",
+      "$value": "#162244"
+    },
+    "--navy-700": {
+      "$type": "color",
+      "$value": "#111C36"
+    },
+    "--navy-800": {
+      "$type": "color",
+      "$value": "#0D1829"
+    },
+    "--navy-900": {
+      "$type": "color",
+      "$value": "#09101C"
+    },
+    "--fire-50": {
+      "$type": "color",
+      "$value": "#FFF8EC"
+    },
+    "--fire-100": {
+      "$type": "color",
+      "$value": "#FEF0D4"
+    },
+    "--fire-300": {
+      "$type": "color",
+      "$value": "#F8BF60"
+    },
+    "--fire-400": {
+      "$type": "color",
+      "$value": "#F5A030"
+    },
+    "--fire-500": {
+      "$type": "color",
+      "$value": "#E8541A"
+    },
+    "--fire-600": {
+      "$type": "color",
+      "$value": "#D03010"
+    },
+    "--warm-50": {
+      "$type": "color",
+      "$value": "#FAFAF8"
+    },
+    "--warm-100": {
+      "$type": "color",
+      "$value": "#F4F3EF"
+    },
+    "--warm-200": {
+      "$type": "color",
+      "$value": "#E8E6E0"
+    },
+    "--warm-300": {
+      "$type": "color",
+      "$value": "#D4D0C8"
+    },
+    "--ink-50": {
+      "$type": "color",
+      "$value": "#F8F9FA"
+    },
+    "--ink-100": {
+      "$type": "color",
+      "$value": "#F1F2F4"
+    },
+    "--ink-200": {
+      "$type": "color",
+      "$value": "#E2E4E8"
+    },
+    "--ink-300": {
+      "$type": "color",
+      "$value": "#CBD0D8"
+    },
+    "--ink-400": {
+      "$type": "color",
+      "$value": "#9BA3B0"
+    },
+    "--ink-500": {
+      "$type": "color",
+      "$value": "#6B7280"
+    },
+    "--ink-600": {
+      "$type": "color",
+      "$value": "#4B5563"
+    },
+    "--ink-700": {
+      "$type": "color",
+      "$value": "#374151"
+    },
+    "--ink-800": {
+      "$type": "color",
+      "$value": "#1F2937"
+    },
+    "--ink-900": {
+      "$type": "color",
+      "$value": "#111827"
+    },
+    "--amber": {
+      "$type": "color",
+      "$value": "#D97706"
+    },
+    "--amber-bg": {
+      "$type": "color",
+      "$value": "#FFFBEB"
+    },
+    "--background": {
+      "$type": "string",
+      "$value": "var(--warm-50)"
+    },
+    "--foreground": {
+      "$type": "string",
+      "$value": "var(--navy-800)"
+    },
+    "--card": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "--card-foreground": {
+      "$type": "string",
+      "$value": "var(--navy-800)"
+    },
+    "--popover": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "--popover-foreground": {
+      "$type": "string",
+      "$value": "var(--navy-800)"
+    },
+    "--primary": {
+      "$type": "string",
+      "$value": "var(--navy-500)"
+    },
+    "--primary-foreground": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "--secondary": {
+      "$type": "string",
+      "$value": "var(--warm-100)"
+    },
+    "--secondary-foreground": {
+      "$type": "string",
+      "$value": "var(--navy-700)"
+    },
+    "--muted": {
+      "$type": "string",
+      "$value": "var(--ink-100)"
+    },
+    "--muted-foreground": {
+      "$type": "string",
+      "$value": "var(--ink-500)"
+    },
+    "--accent": {
+      "$type": "string",
+      "$value": "var(--fire-500)"
+    },
+    "--accent-foreground": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "--destructive": {
+      "$type": "string",
+      "$value": "var(--fire-600)"
+    },
+    "--destructive-foreground": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "--border": {
+      "$type": "string",
+      "$value": "var(--warm-200)"
+    },
+    "--input": {
+      "$type": "string",
+      "$value": "transparent"
+    },
+    "--input-background": {
+      "$type": "string",
+      "$value": "var(--warm-100)"
+    },
+    "--switch-background": {
+      "$type": "string",
+      "$value": "var(--ink-300)"
+    },
+    "--font-weight-medium": {
+      "$type": "string",
+      "$value": "500"
+    },
+    "--font-weight-normal": {
+      "$type": "string",
+      "$value": "400"
+    },
+    "--ring": {
+      "$type": "string",
+      "$value": "var(--navy-300)"
+    },
+    "--radius": {
+      "$type": "string",
+      "$value": "0.75rem"
+    },
+    "--chart-1": {
+      "$type": "string",
+      "$value": "var(--navy-500)"
+    },
+    "--chart-2": {
+      "$type": "string",
+      "$value": "var(--fire-500)"
+    },
+    "--chart-3": {
+      "$type": "string",
+      "$value": "var(--fire-300)"
+    },
+    "--chart-4": {
+      "$type": "string",
+      "$value": "var(--navy-300)"
+    },
+    "--chart-5": {
+      "$type": "string",
+      "$value": "var(--amber)"
+    },
+    "--sidebar": {
+      "$type": "string",
+      "$value": "var(--navy-800)"
+    },
+    "--sidebar-foreground": {
+      "$type": "string",
+      "$value": "var(--navy-100)"
+    },
+    "--sidebar-primary": {
+      "$type": "string",
+      "$value": "var(--fire-500)"
+    },
+    "--sidebar-primary-foreground": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "--sidebar-accent": {
+      "$type": "string",
+      "$value": "var(--navy-700)"
+    },
+    "--sidebar-accent-foreground": {
+      "$type": "string",
+      "$value": "var(--navy-200)"
+    },
+    "--sidebar-border": {
+      "$type": "string",
+      "$value": "var(--navy-600)"
+    },
+    "--sidebar-ring": {
+      "$type": "string",
+      "$value": "var(--navy-400)"
+    },
+    "--font-display": {
+      "$type": "string",
+      "$value": "'Barlow Condensed', sans-serif"
+    },
+    "--font-body": {
+      "$type": "string",
+      "$value": "'Inter', sans-serif"
+    },
+    "--font-mono": {
+      "$type": "string",
+      "$value": "'JetBrains Mono', monospace"
+    },
+    "--font-handwritten": {
+      "$type": "string",
+      "$value": "'Caveat', cursive"
+    }
+  }
+}

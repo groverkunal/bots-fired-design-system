@@ -10,7 +10,7 @@ firebase deploy --project microblogger-agent-prod --config firebase.design.json 
 
 The hub opens at `/` on design.botsfired.com and botsfired-design.web.app. Locally, use `/design-system`. All seven chapters have hash URLs. No sitemap is generated; robots and HTML/HTTP noindex directives are supplied. This is unlisted public content, not authenticated content.
 
-The platform's existing continuous deployment currently generates its own design placeholder. Before using that workflow to publish this build, copy the immutable design distribution into a tracked platform artifact directory, then have apps/web/scripts/build.mjs replace only dist/design after its normal build. Preserve every other site's output. Alternatively deploy this repository's scoped config, and update the platform workflow to avoid overwriting that release. No platform production source was changed in this session.
+The parent task reports that platform commit `c9f7ed12640e24aeaf75e1c5283dcb1e6da52c0e` durably integrated design commit `b7282a041cf91b7dad78319be1f173e77d28e4bb` and published it at https://botsfired-design.web.app, verifying all 53 prior file checksums. For subsequent releases, coordinate with the parent to update that pinned design artifact through the existing platform workflow. Do not deploy concurrently or replace other site outputs. This follow-up changes only the design repository; the parent owns publication and DNS coordination.
 
 The platform's October 11 deployment record proposes a DNS CNAME `design.botsfired.com` → `botsfired-design.web.app`. Re-read Firebase's live domain requirements and obtain approval before changing DNS. DNS and TLS have not been verified from this executor.
 

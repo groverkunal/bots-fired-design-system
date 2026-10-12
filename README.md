@@ -1,3 +1,7 @@
+## Application and governance coverage
+
+The hub now includes Applications, Asset Library and Governance chapters. New editable HTML deck, merchandise SVG and two call-background SVGs are starters requiring production review, not approved brand masters. JSON tokens are extracted from the current CSS source, retaining CSS alias expressions. The persistent high-contrast toggle simplifies interface colours while original downloaded files remain unchanged.
+
 ## Runnable design-system hub
 
 See [DEPLOYMENT.md](DEPLOYMENT.md) for the existing Firebase target and scoped publication. Run `npm ci`, then `npm run dev`; open `/design-system`. The design subdomain opens the hub at `/`. The hub includes original PNG downloads, SVG variant exports, CSS tokens and guidelines. It is excluded from search indexing and main navigation.

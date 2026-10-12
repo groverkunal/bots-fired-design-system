@@ -18,3 +18,12 @@
 .ds-hub table { display: block; max-width: 100%; overflow-x: auto; }
 /* Reference documentation stays visible before intersection animations run. */
 .ds-hub main div[style*="opacity: 0"] { opacity: 1 !important; transform: none !important; }
+
+/* Reading mode: preserve image/SVG brand assets while making UI text explicit. */
+.ds-hub[data-high-contrast="true"],
+.ds-hub[data-high-contrast="true"] :is(header,footer,aside,main,section,article,div,p,h1,h2,h3,h4,h5,h6,span,label,dt,dd,li,ol,ul,td,th,table,nav) { background-color: #FFFFFF !important; color: #000000 !important; border-color: #000000 !important; background-image: none !important; }
+.ds-hub[data-high-contrast="true"] :is(a,button,input,textarea,select) { background-color: #FFFFFF !important; color: #000000 !important; border: 2px solid #000000 !important; }
+.ds-hub[data-high-contrast="true"] a { text-decoration: underline; text-underline-offset: 3px; }
+.ds-hub[data-high-contrast="true"] [aria-current="page"],
+.ds-hub[data-high-contrast="true"] [aria-pressed="true"] { outline: 3px solid #000000; outline-offset: 2px; font-weight: 800; }
+.ds-hub[data-high-contrast="true"] :is(button,a,input,select,textarea):focus-visible { outline: 4px solid #000000 !important; outline-offset: 5px; }
