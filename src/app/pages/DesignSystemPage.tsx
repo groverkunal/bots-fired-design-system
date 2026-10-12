@@ -21,123 +21,65 @@ const sections = [
   { id: "verify",      label: "Spec Tests",      icon: FlaskConical, color: "#166534" },
 ];
 
-const colorTokens = [
-  { name: "Navy 500", hex: "#1C2E5E", role: "Primary / Brand" },
-  { name: "Navy 800", hex: "#0D1829", role: "Deep / Background" },
-  { name: "Fire 500", hex: "#E8541A", role: "Accent / CTA" },
-  { name: "Gold 400", hex: "#F5A030", role: "Highlight / AI" },
-  { name: "Amber",    hex: "#D97706", role: "Handwritten / Notes" },
-  { name: "Warm 50",  hex: "#FAFAF8", role: "Page Background" },
-  { name: "Ink 500",  hex: "#6B7280", role: "Body Text" },
-  { name: "Warm 200", hex: "#E8E6E0", role: "Borders" },
-];
-
-const typeSamples = [
-  { label: "Display H1", family: "Barlow Condensed", weight: "800", style: "italic", size: "clamp(2.5rem,6vw,4rem)", text: "AI Clarity for Leaders" },
-  { label: "Display H2", family: "Barlow Condensed", weight: "700", style: "normal", size: "clamp(1.8rem,4vw,3rem)", text: "The Boardroom AI" },
-  { label: "Body",       family: "Inter",            weight: "400", style: "normal", size: "1rem",                  text: "Weekly insights for C-suite executives navigating AI transformation." },
-  { label: "Handwritten",family: "Caveat",           weight: "600", style: "normal", size: "1.5rem",               text: "No jargon. Just signal. Free forever." },
-  { label: "Mono",       family: "JetBrains Mono",  weight: "500", style: "normal", size: "0.875rem",             text: "ISSUE #052 · GOVERNANCE · 6 MIN" },
-];
-
-function ColorPalette() {
-  const [copied, setCopied] = useState<string | null>(null);
-  const copy = (hex: string) => { navigator.clipboard.writeText(hex); setCopied(hex); setTimeout(() => setCopied(null), 1500); };
-  return (
-    <div className="grid grid-cols-4 sm:grid-cols-8 gap-3">
-      {colorTokens.map(({ name, hex, role }) => (
-        <button key={hex} onClick={() => copy(hex)} className="group flex flex-col gap-2 text-left">
-          <div className="aspect-square rounded-2xl border border-black/5 group-hover:scale-105 transition-transform shadow-sm" style={{ backgroundColor: hex }} />
-          <div>
-            <p className="text-[9px] font-bold text-[#374151]">{name}</p>
-            <p className="text-[9px] text-[#9BA3B0]">{hex}</p>
-            <p className="text-[8px] text-[#CBD0D8]">{role}</p>
-            {copied === hex && <p className="text-[9px] text-green-500 font-bold">Copied!</p>}
-          </div>
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function TypographyScale() {
-  return (
-    <div className="space-y-5">
-      {typeSamples.map(({ label, family, weight, style, size, text }) => (
-        <div key={label} className="border-b border-[#F1F2F4] pb-5 last:border-0">
-          <div className="flex items-center gap-3 mb-1.5">
-            <span className="text-[9px] font-bold uppercase tracking-widest text-[#9BA3B0]">{label}</span>
-            <span className="text-[9px] text-[#CBD0D8]">{family} · {weight} · {style}</span>
-          </div>
-          <p style={{ fontFamily: `${family}, sans-serif`, fontWeight: weight, fontStyle: style, fontSize: size, color: "#1C2E5E", lineHeight: 1.15 }}>{text}</p>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 export function DesignSystemPage() {
-  const [active, setActive] = useState("logos");
+  const readSection = () => sections.some(s => s.id === location.hash.slice(1)) ? location.hash.slice(1) : "logos";
+  const [active, setActive] = useState(readSection);
+  useEffect(() => { const sync = () => setActive(readSection()); window.addEventListener('hashchange', sync); return () => window.removeEventListener('hashchange', sync); }, []);
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] pt-16">
-      <div className="bg-[#0D1829] border-b border-[#162244]">
-        <div className="max-w-7xl mx-auto px-6 py-10">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div>
-                <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#162244] text-[#8FA5C8] text-[10px] font-semibold uppercase tracking-widest mb-3">
-                  <Palette size={10} /> Design System v2.0
-                </span>
-                <div className="mb-1"><BFLogoSVG variant="wordmark" theme="white" width={170} /></div>
-                <h2 style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "clamp(1.5rem,3vw,2.2rem)", fontWeight: 600, color: "#4A66A0" }}>Brand &amp; Design System</h2>
-                <HandwrittenNote size="md" color="#F5A030" rotate={-1} className="mt-2 block">Complete. Consistent. Built for Leaders.</HandwrittenNote>
-              </div>
-              <div className="flex flex-wrap gap-3 text-xs text-[#4A66A0]">
-                {[["Logo System","12 variants + 12 holidays"],["Templates","8 categories, 4+ samples each"],["Components","5 interactive UI components"],["Platforms","HUD + App + Glasses"]].map(([label, sub]) => (
-                  <div key={label as string} className="bg-[#162244] rounded-xl px-3 py-2">
-                    <p className="font-bold text-[#EEF2F8] text-xs">{label}</p>
-                    <p className="text-[9px]">{sub}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="py-12 space-y-10 border-b border-[#E8E6E0]">
-          <div><p className="text-xs font-semibold uppercase tracking-widest text-[#9BA3B0] mb-4">Brand Colours</p><ColorPalette /></div>
-          <div><p className="text-xs font-semibold uppercase tracking-widest text-[#9BA3B0] mb-4">Type Scale</p><TypographyScale /></div>
-        </div>
-        <div className="py-6">
-          <div className="flex gap-2 overflow-x-auto pb-2">
-            {sections.map(({ id, label, icon: Icon, color }) => (
-              <button key={id} onClick={() => setActive(id)}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl whitespace-nowrap text-sm font-semibold transition-all duration-200 shrink-0 ${
-                  active === id ? "text-white shadow-md" : "bg-white border border-[#E8E6E0] text-[#6B7280] hover:text-[#374151]"
-                }`}
-                style={active === id ? { backgroundColor: color } : {}}>
-                <Icon size={15} />{label}{active === id && <ChevronRight size={12} />}
-              </button>
-            ))}
+    <div className="ds-hub min-h-screen bg-[#FAFAF8]">
+      <a className="ds-skip" href="#ds-content">Skip to design system content</a>
+      <header className="bg-[#0D1829] text-white">
+        <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
+          <div className="flex flex-wrap items-center justify-between gap-6 mb-10">
+            <BFLogoSVG variant="wordmark" theme="white" width={210} />
+            <a href="https://botsfired.com" className="text-sm text-[#D0DAE8] underline underline-offset-4">Visit BotsFired ↗</a>
           </div>
+          <p className="text-sm uppercase tracking-widest text-[#F5A030] mb-3">The BotsFired brand library</p>
+          <h1 className="max-w-3xl">Clarity, by design.</h1>
+          <p className="max-w-2xl text-[#D0DAE8] mt-5">Everything you need to build a consistent BotsFired experience. Explore our marks, type, colours, reusable components and editorial templates.</p>
+          <HandwrittenNote size="md" color="#F5A030" className="mt-5 block">No jargon. Just signal.</HandwrittenNote>
         </div>
-        <div className="pb-24">
-          <AnimatePresence mode="wait">
-            <motion.div key={active} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }} transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}>
-              {active === "logos"      && <LogoSection />}
-              {active === "typography" && <TypographySystem />}
-              {active === "color"      && <ColorSystem />}
-              {active === "templates"  && <TemplatesSection />}
-              {active === "components" && <ComponentsSection />}
-              {active === "platforms"  && <PlatformsSection />}
-              {active === "verify"     && <VerificationTests />}
-            </motion.div>
-          </AnimatePresence>
-        </div>
+      </header>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 grid lg:grid-cols-[220px_minmax(0,1fr)] gap-8">
+        <aside className="min-w-0 lg:sticky lg:top-6 self-start">
+          <p className="text-xs uppercase tracking-widest font-semibold text-[#4B5563] mb-3">Explore the system</p>
+          <nav aria-label="Design system sections" className="flex lg:flex-col gap-2 overflow-x-auto pb-3">
+            {sections.map(({id,label,icon:Icon}) => <a key={id} href={`#${id}`} aria-current={active === id ? 'page' : undefined} className={`flex items-center gap-3 px-4 py-3 rounded-xl shrink-0 text-sm font-semibold ${active === id ? 'bg-[#1C2E5E] text-white' : 'bg-white text-[#4B5563] border border-[#E8E6E0]'}`}><Icon size={18} aria-hidden="true"/>{label}</a>)}
+          </nav>
+          <div className="hidden lg:block mt-6 p-4 border border-[#E8E6E0] rounded-2xl text-sm text-[#4B5563]">One brand. Seven chapters. Use the foundations first, then adapt the templates to your channel.</div>
+        </aside>
+        <main id="ds-content" tabIndex={-1} className="min-w-0">
+          {active === "logos" && <>
+            <section className="p-6 bg-white border border-[#E8E6E0] rounded-2xl mb-8">
+              <h2 className="text-2xl mb-3">Brand foundations</h2>
+              <p className="text-[#4B5563]">Translate AI complexity into executive clarity. Write in plain language, lead with the decision, and support claims with evidence.</p>
+              <dl className="grid sm:grid-cols-2 gap-5 mt-5 text-sm">
+                <div><dt className="font-bold">Spacing</dt><dd>4px base grid · 8, 12, 16, 24, 32, 48, 64px. Use 24px between related cards and 48–64px between sections.</dd></div>
+                <div><dt className="font-bold">Shape &amp; layout</dt><dd>16px card radius · 24px feature radius. Keep reading text under 72 characters per line.</dd></div>
+                <div><dt className="font-bold">Motion</dt><dd>Subtle 200–350ms transitions. Honour reduced-motion preferences and keep content accessible without animation.</dd></div>
+                <div><dt className="font-bold">Accessibility</dt><dd>4.5:1 contrast for normal text, 3:1 for large text. Use navy or deep fire for button labels; Fire 500 with white is unsuitable for small text.</dd></div>
+              </dl>
+            </section><LogoSection /></>}
+          {active === "typography" && <TypographySystem />}
+          {active === "color" && <ColorSystem />}
+          {active === "templates" && <TemplatesSection />}
+          {active === "components" && <ComponentsSection />}
+          {active === "platforms" && <PlatformsSection />}
+          {active === "verify" && <VerificationTests />}
+          <section aria-labelledby="downloads-title" className="mt-12 p-6 bg-white border border-[#E8E6E0] rounded-2xl">
+            <h2 id="downloads-title" className="text-2xl mb-3">Take the system with you</h2>
+            <p className="text-sm text-[#4B5563] mb-5">Original source assets and the complete CSS token library. SVG variants can be exported from the logo gallery.</p>
+            <div className="flex flex-wrap gap-3">
+              <a className="ds-download" href="/assets/botsfired-primary.png" download>Primary logo · PNG</a>
+              <a className="ds-download" href="/assets/botsfired-alternate.png" download>Alternate logo · PNG</a>
+              <a className="ds-download" href="/assets/botsfired-tokens.css" download>Design tokens · CSS</a>
+              <a className="ds-download" href="/assets/botsfired-guidelines.md" download>Full guidelines · Markdown</a>
+            </div>
+          </section>
+        </main>
       </div>
+      <footer className="max-w-7xl mx-auto px-6 py-8 text-sm text-[#4B5563] border-t border-[#E8E6E0]">© 2026 BotsFired · AI clarity for the people who decide.</footer>
     </div>
   );
 }

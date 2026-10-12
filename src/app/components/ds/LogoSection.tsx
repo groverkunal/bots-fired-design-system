@@ -20,8 +20,18 @@ function SectionTitle({ label, title, note }: { label: string; title: string; no
 function LogoCard({ title, bg, children, dark = false, note }: {
   title: string; bg: string; children: React.ReactNode; dark?: boolean; note?: string;
 }) {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [downloaded, setDownloaded] = useState(false);
+  const exportSVG = () => {
+    const svg = ref.current?.querySelector('svg');
+    if (!svg) return;
+    const clone = svg.cloneNode(true) as SVGElement;
+    clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(clone)], {type: 'image/svg+xml'}));
+    const link = document.createElement('a'); link.href = url; link.download = `botsfired-${title.toLowerCase().replace(/[^a-z0-9]+/g,'-')}.svg`; link.click(); URL.revokeObjectURL(url); setDownloaded(true);
+  };
   return (
-    <div className="flex flex-col gap-2">
+    <div ref={ref} className="flex flex-col gap-2">
       <div
         className="rounded-2xl flex items-center justify-center p-8 min-h-[120px] border"
         style={{ backgroundColor: bg, borderColor: dark ? "#2A4080" : "#E8E6E0" }}
@@ -30,6 +40,7 @@ function LogoCard({ title, bg, children, dark = false, note }: {
       </div>
       <p className="text-xs font-semibold text-center" style={{ color: dark ? "#1C2E5E" : "#6B7280" }}>{title}</p>
       {note && <p className="text-[10px] text-center text-[#9BA3B0]">{note}</p>}
+      {!title.includes("Primary Logo") && !title.includes("Alt Mark") && !title.includes("Background") && <button onClick={exportSVG} className="text-xs text-[#1C2E5E] underline">{downloaded ? 'Downloaded' : `Download ${title} SVG`}</button>}
     </div>
   );
 }

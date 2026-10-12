@@ -12,9 +12,9 @@ import { DesignSystemPage } from "./pages/DesignSystemPage";
 function RootLayout() {
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
+      {!["design.botsfired.com", "botsfired-design.web.app", "botsfired-design.firebaseapp.com"].includes(window.location.hostname) && window.location.pathname !== "/design-system" && <Navbar />}
       <main className="flex-1"><Outlet /></main>
-      <Footer />
+      {!["design.botsfired.com", "botsfired-design.web.app", "botsfired-design.firebaseapp.com"].includes(window.location.hostname) && window.location.pathname !== "/design-system" && <Footer />}
     </div>
   );
 }
@@ -36,7 +36,7 @@ export const router = createBrowserRouter([
     path: "/",
     Component: RootLayout,
     children: [
-      { index: true, Component: HomePage },
+      { index: true, Component: ["design.botsfired.com", "botsfired-design.web.app", "botsfired-design.firebaseapp.com"].includes(window.location.hostname) ? DesignSystemPage : HomePage },
       { path: "newsletter", Component: NewsletterPage },
       { path: "podcast", Component: PodcastPage },
       { path: "training", Component: TrainingPage },

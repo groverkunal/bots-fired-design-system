@@ -1,3 +1,7 @@
+## Runnable design-system hub
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for the existing Firebase target and scoped publication. Run `npm ci`, then `npm run dev`; open `/design-system`. The design subdomain opens the hub at `/`. The hub includes original PNG downloads, SVG variant exports, CSS tokens and guidelines. It is excluded from search indexing and main navigation.
+
 # BOTS FIRED — Design System Hub
 
 > **AI Clarity for C-Suite Leaders** · Premium AI education platform for executives, board members, and senior leaders.
@@ -200,7 +204,7 @@ src/
 │   │   └── DesignSystemPage.tsx         # Design System Hub shell
 │   └── components/
 │       ├── layout/
-│       │   ├── Navbar.tsx               # Global nav with /design-system link
+│       │   ├── Navbar.tsx               # Global nav; design system stays unlinked
 │       │   └── Footer.tsx
 │       ├── shared/
 │       │   ├── HandwrittenNote.tsx      # Caveat font annotation component

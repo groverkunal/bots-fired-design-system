@@ -13,7 +13,6 @@ const links = [
   { to: "/podcast",      label: "Podcast" },
   { to: "/training",     label: "Training" },
   { to: "/about",        label: "About" },
-  { to: "/design-system",label: "Design System" },
 ];
 
 export function Navbar() {

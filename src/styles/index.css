@@ -1,3 +1,20 @@
 @import './fonts.css';
 @import './tailwind.css';
 @import './theme.css';
+.ds-hub { overflow-wrap: anywhere; }
+.ds-hub :is(button,a,input,select,textarea):focus-visible { outline: 3px solid #4A66A0; outline-offset: 4px; }
+.ds-hub :is(button,select,input) { min-height: 44px; }
+.ds-hub svg { max-width: 100%; }
+.ds-hub img { max-width: 100%; object-fit: contain; }
+.ds-hub [class*="text-[8px]"], .ds-hub [class*="text-[9px]"], .ds-hub [class*="text-[10px]"], .ds-hub [class*="text-[11px]"] { font-size: 12px; }
+.ds-hub [class*="text-[#9BA3B0]"], .ds-hub [class*="text-[#CBD0D8]"] { color: #6B7280; }
+.ds-download { display: inline-flex; align-items: center; min-height: 44px; padding: 10px 16px; background: #1C2E5E; color: white; border-radius: 12px; font-size: 14px; }
+.ds-skip { position: absolute; top: -80px; left: 16px; padding: 12px; background: white; color: #1C2E5E; z-index: 100; }
+.ds-skip:focus { top: 12px; }
+@media (max-width: 600px) { .ds-hub .grid-cols-2 { grid-template-columns: minmax(0,1fr); } }
+@media (prefers-reduced-motion: reduce) { .ds-hub *, .ds-hub *::before, .ds-hub *::after { animation: none !important; transition: none !important; } }
+.ds-hub .grid > * { min-width: 0; }
+.ds-hub #logos .grid > div { overflow-x: auto; }
+.ds-hub table { display: block; max-width: 100%; overflow-x: auto; }
+/* Reference documentation stays visible before intersection animations run. */
+.ds-hub main div[style*="opacity: 0"] { opacity: 1 !important; transform: none !important; }

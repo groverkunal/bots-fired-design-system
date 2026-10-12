@@ -1,6 +1,6 @@
 import React from "react";
-import logo1 from "figma:asset/Gemini_Generated_Image_8us1f28us1f28us1.png";
-import logo2 from "figma:asset/Gemini_Generated_Image_8w18gl8w18gl8w18.png";
+import logo1 from "../../../imports/Gemini_Generated_Image_8us1f28us1f28us1.png";
+import logo2 from "../../../imports/Gemini_Generated_Image_8w18gl8w18gl8w18.png";
 
 /* ─────────────────────────────────────────────
    Reusable BOTS FIRED Logo SVG — all variants

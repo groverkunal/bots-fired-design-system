@@ -5,7 +5,7 @@ import { HandwrittenNote } from "../shared/HandwrittenNote";
 import { AnimatedSection, StaggerContainer, StaggerItem } from "../shared/AnimatedSection";
 import { Linkedin, Twitter, Instagram, Mail, MapPin, Phone, Globe, Star, ArrowRight } from "lucide-react";
 
-const avatar = "https://images.unsplash.com/photo-1771898343647-bd979ad8cca5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBoZWFkc2hvdCUyMGV4ZWN1dGl2ZSUyMHBvcnRyYWl0fGVufDF8fHx8MTc3NjkwNjQwNnww&ixlib=rb-4.1.0&q=80&w=400";
+const avatar = "/assets/avatar-placeholder.svg";
 
 function SectionTitle({ label, title, note }: { label: string; title: string; note?: string }) {
   return (
