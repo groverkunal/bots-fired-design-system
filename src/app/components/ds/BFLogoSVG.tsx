@@ -167,7 +167,9 @@ export function BFPhotoLogo({ height = 40, white = false, className = "" }: { he
       alt="BOTS FIRED"
       style={{
         height,
-        filter: white ? "brightness(0) invert(1)" : undefined,
+        // Source PNGs have opaque backgrounds; filtering destroys the mark.
+        backgroundColor: white ? "#FFFFFF" : undefined,
+        borderRadius: white ? 4 : undefined,
       }}
       className={className}
     />
@@ -181,7 +183,9 @@ export function BFPhotoLogo2({ height = 40, white = false, className = "" }: { h
       alt="BOTS FIRED"
       style={{
         height,
-        filter: white ? "brightness(0) invert(1)" : undefined,
+        // Source PNGs have opaque backgrounds; filtering destroys the mark.
+        backgroundColor: white ? "#FFFFFF" : undefined,
+        borderRadius: white ? 4 : undefined,
       }}
       className={className}
     />
@@ -448,17 +452,20 @@ const holidayConfigs: Record<string, {
 export function HolidayLogo({ holiday, width = 340 }: HolidayLogoProps) {
   const config = holidayConfigs[holiday];
   if (!config) return null;
+  const rgb = config.bg.match(/^#([0-9a-f]{6})$/i)?.[1];
+  const darkSurface = rgb ? (0.2126 * parseInt(rgb.slice(0,2),16) + 0.7152 * parseInt(rgb.slice(2,4),16) + 0.0722 * parseInt(rgb.slice(4,6),16)) < 128 : false;
 
   return (
     <div className="flex flex-col items-center gap-2">
       <div
         className="rounded-2xl overflow-hidden relative"
-        style={{ background: config.bg, width, padding: "12px 12px 4px" }}
+        data-brand-preview="true"
+        style={{ background: config.bg, "--preview-bg": config.bg, width, padding: "12px 12px 4px" } as React.CSSProperties}
       >
         <svg width={width - 24} viewBox="0 0 340 96" fill="none" xmlns="http://www.w3.org/2000/svg">
           {/* Main logo */}
           <FlamePath theme="color" />
-          <text x="72" y="36" fontFamily="Barlow Condensed, sans-serif" fontWeight="800" fontStyle="italic" fontSize="38" fill={BF_NAVY} letterSpacing="2">BOTS</text>
+          <text x="72" y="36" fontFamily="Barlow Condensed, sans-serif" fontWeight="800" fontStyle="italic" fontSize="38" fill={darkSurface ? BF_WHITE : BF_NAVY} letterSpacing="2">BOTS</text>
           <circle cx="198" cy="26" r="3" fill={BF_AMBER} />
           <text x="208" y="36" fontFamily="Barlow Condensed, sans-serif" fontWeight="800" fontStyle="italic" fontSize="38" fill={BF_FIRE} letterSpacing="2">FIRED</text>
           <text x="72" y="56" fontFamily="Inter, sans-serif" fontWeight="400" fontSize="11" fill={BF_AMBER} letterSpacing="3">AI FOR LEADERS</text>

@@ -33,14 +33,15 @@ function LogoCard({ title, bg, children, dark = false, note }: {
   return (
     <div ref={ref} className="flex flex-col gap-2">
       <div
+        data-brand-preview="true"
         className="rounded-2xl flex items-center justify-center p-8 min-h-[120px] border"
-        style={{ backgroundColor: bg, borderColor: dark ? "#2A4080" : "#E8E6E0" }}
+        style={{ backgroundColor: bg, borderColor: dark ? "#2A4080" : "#E8E6E0", "--preview-bg": bg } as React.CSSProperties}
       >
         {children}
       </div>
       <p className="text-xs font-semibold text-center" style={{ color: dark ? "#1C2E5E" : "#6B7280" }}>{title}</p>
       {note && <p className="text-[10px] text-center text-[#9BA3B0]">{note}</p>}
-      {!title.includes("Primary Logo") && !title.includes("Alt Mark") && !title.includes("Background") && <button onClick={exportSVG} className="text-xs text-[#1C2E5E] underline">{downloaded ? 'Downloaded' : `Download ${title} SVG`}</button>}
+      {!title.includes("Primary Logo") && !title.includes("Alt Mark") && !title.startsWith("On ") && <button onClick={exportSVG} className="text-xs text-[#1C2E5E] underline">{downloaded ? 'Downloaded' : `Download ${title} SVG`}</button>}
     </div>
   );
 }
@@ -213,8 +214,8 @@ export function LogoSection() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <LogoCard title="Primary Logo" bg="#FFFFFF"><BFPhotoLogo height={50} /></LogoCard>
           <LogoCard title="Alt Mark" bg="#FFFFFF"><BFPhotoLogo2 height={50} /></LogoCard>
-          <LogoCard title="On Dark Background" bg="#0D1829" dark><BFPhotoLogo height={50} white /></LogoCard>
-          <LogoCard title="On Navy Background" bg="#1C2E5E" dark><BFPhotoLogo height={50} white /></LogoCard>
+          <LogoCard title="On Dark Background" bg="#0D1829" dark note="Original opaque PNG on its white plate"><BFPhotoLogo height={50} white /></LogoCard>
+          <LogoCard title="On Navy Background" bg="#1C2E5E" dark note="Original opaque PNG on its white plate"><BFPhotoLogo height={50} white /></LogoCard>
         </div>
       </AnimatedSection>
 

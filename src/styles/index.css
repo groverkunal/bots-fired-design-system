@@ -17,7 +17,7 @@
 .ds-hub #logos .grid > div { overflow-x: auto; }
 .ds-hub table { display: block; max-width: 100%; overflow-x: auto; }
 /* Reference documentation stays visible before intersection animations run. */
-.ds-hub main div[style*="opacity: 0"] { opacity: 1 !important; transform: none !important; }
+.ds-hub main div[style*="opacity"] { opacity: 1 !important; transform: none !important; }
 
 /* Reading mode: preserve image/SVG brand assets while making UI text explicit. */
 .ds-hub[data-high-contrast="true"],
@@ -27,3 +27,9 @@
 .ds-hub[data-high-contrast="true"] [aria-current="page"],
 .ds-hub[data-high-contrast="true"] [aria-pressed="true"] { outline: 3px solid #000000; outline-offset: 2px; font-weight: 800; }
 .ds-hub[data-high-contrast="true"] :is(button,a,input,select,textarea):focus-visible { outline: 4px solid #000000 !important; outline-offset: 5px; }
+
+/* Logo specimen surfaces retain their specified colours in reading mode. */
+.ds-hub[data-high-contrast="true"] [data-brand-preview="true"] { background-color: var(--preview-bg) !important; }
+/* Keep transparent layout wrappers transparent; opaque reading-mode wrappers
+   can cover neighbouring specimens while Motion creates stacking contexts. */
+.ds-hub[data-high-contrast="true"] div:not([class*="bg-"]):not([data-brand-preview]) { background-color: transparent !important; }

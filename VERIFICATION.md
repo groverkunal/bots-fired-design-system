@@ -10,3 +10,9 @@
 - Existing SVG logo export and previously supplied assets remain available.
 
 These are implementation checks, not a claim of full accessibility certification or production approval of the new starters. Parent coordinates live deployment and verification; this follow-up did not deploy or edit DNS.
+
+## Logo presentation correction
+
+Reproduced the white rectangles in screenshots. The whitening filter acted on opaque source PNG backgrounds; removed it and preserved the original PNG on its white plate. High-contrast layout wrappers now remain transparent and logo specimen surfaces retain their intended backgrounds, so both raster and white SVG marks remain visible. Dark holiday examples use the existing white foreground variant for the BOTS lettering. Original PNG files are unchanged.
+
+Reviewed full normal/high-contrast gallery screenshots and close-ups of the four asset cards. Tested all 12 SVG download controls in each mode (24 exports), parsed every exported SVG, and reran all 60 chapter/viewport/mode checks plus nine asset downloads: no failures or runtime errors. Production build passed. The dark full-logo SVG download is now enabled. Parent coordinates redeployment; no DNS changes.
