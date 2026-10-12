@@ -1,0 +1,8 @@
+# Upgrade findings checked against e157058 — 2026-10-12
+
+- Confirmed: flat CSS-variable JSON, missing aliases/tiers, Fire 600 documentation drift, unsafe normal-size Fire 500 action rules, misleading sample claims, audit font-floor implementation (10px despite its 12px label), empty SPA shell and asset fallback risk.
+- Stale/rejected: React Router is 7.18.4, stock image hotlinks were already removed, call assets are under /assets/ (root paths are not download links), opaque-logo visibility was already fixed. A missing root SVG does not prove the actual link is broken.
+- Corrected approach: preserve CSS Fire 600 #D03010; do not silently replace the original palette or author a new perceptual ramp. Existing hex colours remain source sRGB values. Generate and verify semantic contrast pairs from them. DTCG 2025.10 uses typed colour objects, not an untyped hex string. It is a Community Group specification, not a W3C Recommendation.
+- Rejected formula: fluid text need not be divisible by 4; several suggested clamp formulas do not reach their claimed endpoint at 1280px. Use tested minimum/maximum bounds, not an unsupported Major Third claim.
+- Newly implemented: primitive/semantic/component DTCG source and aliases, generated CSS/resolved JSON/types, 10 verified light/dark semantic pair checks; labelled sample content; corrected audit and colour documentation.
+- Approval boundaries: true vector brand originals must be supplied or verified. Existing raster masters stay unchanged. Redraw/tracing, perceptually changed ramps, certified Pantone matches, DNS, security policies, analytics and package publishing remain outside this implementation.

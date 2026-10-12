@@ -32,8 +32,8 @@ const FIRE_SCALE = [
   { step:"Ember 300",  hex:"#F8BF60", temperature:"Glowing ember top",     role:"Gradient midpoint, SVG flame inner",                    textOn:"#7C3500", note:"Gradient use only. Not standalone for text or solid UI elements.",                     usage:["Flame SVG gradient","Progress bar gradient end"] },
   { step:"Gold 400",   hex:"#F5A030", temperature:"Deep amber glow",       role:"Primary accent for AI/insight elements, hover states",   textOn:"#0D1829", note:"The 'intelligence' colour. Use to signal insight, expertise, and attention.",            usage:["Handwritten note accent","AI feature callout","Star ratings","Logo sparkle primary"] },
   { step:"Amber 500",  hex:"#D97706", temperature:"Amber combustion",      role:"Caveat font colour, annotation text, date/labels",       textOn:"#0D1829", note:"The handwritten-text token. Decorative on white: does not meet AA for normal text. Use navy for small annotations.",     usage:["Caveat handwritten text (PRIMARY)","Annotation labels","Date stamps in editorial"] },
-  { step:"Fire 500",   hex:"#E8541A", temperature:"THE FLAME · Core brand fire", role:"PRIMARY ACCENT: CTAs, overlines, kickers, icon fills", textOn:"#FFFFFF", note:"🔥 THE MOST IMPORTANT COLOUR. Every fire metaphor in the brand lives here. Max 1 Fire 500 element per 400px screen height.", usage:["All CTA buttons (primary)","Section kicker/overline text","Logo flame fill","Podcast play button"] },
-  { step:"Heat 600",   hex:"#C93E0E", temperature:"Deep fire core",        role:"Fire hover state, pressed states, error contexts",       textOn:"#FFFFFF", note:"Only used on interaction states or to deepen Fire 500 in gradient contexts.",            usage:["CTA button hover/pressed","Error state (not destructive red)","Dark fire badge bg"] },
+  { step:"Fire 500",   hex:"#E8541A", temperature:"THE FLAME · Core brand fire", role:"Brand accent: illustration and large text", textOn:"#FFFFFF", note:"🔥 THE MOST IMPORTANT COLOUR. Every fire metaphor in the brand lives here. Max 1 Fire 500 element per 400px screen height.", usage:["Large-text CTAs only","Decorative accents","Logo flame fill","Podcast play button"] },
+  { step:"Heat 600",   hex:"#D03010", temperature:"Deep fire core",        role:"Normal-size action labels, kickers and pressed states",       textOn:"#FFFFFF", note:"Use for normal-size foregrounds and white-label buttons; matches the source CSS Fire 600.",            usage:["CTA button hover/pressed","Error state (not destructive red)","Dark fire badge bg"] },
   { step:"Ember Dark 700", hex:"#A32E08", temperature:"Smoldering char",  role:"Fire on dark backgrounds — for contrast compliance",     textOn:"#FFFFFF", note:"Required when Fire 500 doesn't pass contrast on a background.",                          usage:["Dark fire text on light backgrounds","Gradient terminus (dark)"] },
   { step:"Char 800",   hex:"#7A1F03", temperature:"Charcoal fire",         role:"Deep ember — print/dark contexts only",                  textOn:"#FFFFFF", note:"Reserved for print and extreme dark contexts. Not used in digital UI.",                  usage:["Print version of fire accent","Dark mode fire text on light"] },
 ];
@@ -82,7 +82,7 @@ const APPROVED_PAIRS = [
 const FORBIDDEN_PAIRS = [
   { fg:"#F5A030", bg:"#FFFFFF", reason:"Gold on white: ~2.9:1 — FAILS AA for normal text. Gold is for dark surfaces only." },
   { fg:"#D97706", bg:"#FAFAF8", reason:"Amber on Warm 50: ~3.1:1 — marginal and FAILS AA for body text." },
-  { fg:"#E8541A", bg:"#FFF8EC", reason:"Fire 500 on Fire 50: ~2.8:1 — fails completely. Never use fire on a warm tint." },
+  { fg:"#E8541A", bg:"#FFF8EC", reason:"Fire 500 on Fire 50: below 4.5:1 — fails completely. Never use fire on a warm tint." },
   { fg:"#E8541A", bg:"#F5A030", reason:"Fire on Gold: related hues, nearly zero contrast. Adjacent analogous = illegible." },
   { fg:"#1C2E5E", bg:"#4A66A0", reason:"Navy 500 on Navy 300: ~2.1:1 — insufficient contrast." },
   { fg:"#8FA5C8", bg:"#EEF2F8", reason:"Navy 200 on Navy 50: ~1.8:1 — nearly invisible." },
@@ -95,26 +95,26 @@ const HARMONY_RULES = [
   { name:"Dark Prestige",               colors:["#0D1829","#162244","#E8541A","#F5A030","#D97706"],              description:"Full dark palette with fire accent. Premium sections, podcast hero, training.",                               rule:"Black navy dominates. Fire/Gold emerge like flame from darkness.",             gradient:undefined },
   { name:"Editorial Light",             colors:["#FAFAF8","#FFFFFF","#E8E6E0","#0D1829","#4B5563"],             description:"Clean reading surface. Fire only for overlines and links, not backgrounds.",                                rule:"Warm neutrals + ink. Fire appears only in text (overlines, kickers).",         gradient:undefined },
   { name:"Navy + Fire Gradient",        colors:["#1C2E5E","#E8541A","#F5A030"],                                  description:"The brand gradient. Used in progress fills, upload animations, logo fill effects.",                           rule:"Always left-to-right: Navy → Fire → Gold. Never reverse. Angle: 90° (linear) or 135° (diagonal).", gradient:"linear-gradient(90deg, #1C2E5E 0%, #E8541A 65%, #F5A030 100%)" },
-  { name:"Fire Temperature Gradient",   colors:["#7A1F03","#A32E08","#C93E0E","#E8541A","#F5A030","#F8BF60","#FFD166"], description:"The full flame scale — logo flame SVG, animation fill effects, progress indicators.",                      rule:"Dark char at bottom, bright spark at top. Mimics actual fire physics. Bottom-to-top always.", gradient:"linear-gradient(0deg, #7A1F03 0%, #E8541A 50%, #FFD166 100%)" },
+  { name:"Fire Temperature Gradient",   colors:["#7A1F03","#A32E08","#D03010","#E8541A","#F5A030","#F8BF60","#FFD166"], description:"The full flame scale — logo flame SVG, animation fill effects, progress indicators.",                      rule:"Dark char at bottom, bright spark at top. Mimics actual fire physics. Bottom-to-top always.", gradient:"linear-gradient(0deg, #7A1F03 0%, #E8541A 50%, #FFD166 100%)" },
 ];
 
 const COLOR_DOS = [
   "Use Navy 500 (#1C2E5E) as the primary brand anchor in every layout — never remove it entirely from a page.",
-  "Fire 500 (#E8541A) is the ONLY colour for primary CTAs and interactive overlines — keep it consistent.",
+  "Fire 500 is the original brand accent. Use Fire 600 (#D03010) for normal-size text and white-label buttons; Fire 500 requires large text or a decorative use.",
   "Always pair fire colours with navy or near-black backgrounds to maintain contrast and visual drama.",
   "Use the 60/30/10 ratio: Navy 60%, Fire 30%, Gold 10% in any brand-coloured layout.",
   "For dark surfaces, use Gold 400 (#F5A030) or Amber 500 (#D97706) for Caveat/handwritten text.",
   "Verify every text-on-background combination with WCAG calculation before shipping.",
   "Use Navy 50 (#EEF2F8) for chip/tag backgrounds on white — creates subtle hierarchy without Fire.",
   "The brand gradient (Navy → Fire → Gold) is only used for progress, fills, and dynamic UI.",
-  "On dark surfaces: use Navy 200 (#8FA5C8) for secondary text, Navy 300 (#4A66A0) for tertiary.",
-  "In print: substitute digital Fire 500 with Pantone 166 C and Navy 500 with Pantone 2768 C.",
-  "For error states, use Heat 600 (#C93E0E) — not red (#EF4444) which clashes with the fire palette.",
+  "On dark surfaces: use Navy 200 (#8FA5C8) for secondary text, Navy 300 (#4A66A0) for decorative elements; verify contrast before using it for text.",
+  "Print colour matching requires an approved physical proof; previous Pantone suggestions are not certified matches.",
+  "For error states, use Heat 600 (#D03010) — not red (#EF4444) which clashes with the fire palette.",
 ];
 
 const COLOR_DONTS = [
-  "NEVER place Gold 400 (#F5A030) on white backgrounds for text — it fails WCAG AA at 2.9:1.",
-  "NEVER use Fire 500 on Fire 50 background — same hue family, no contrast (~2.8:1).",
+  "NEVER place Gold 400 (#F5A030) on white backgrounds for text — it fails WCAG AA for normal text.",
+  "NEVER use Fire 500 on Fire 50 background — same hue family, no contrast (below 4.5:1).",
   "NEVER stack two fire-family colours as fill + text — adjacent analogous hues create zero contrast.",
   "NEVER use Amber (#D97706) for body copy on Warm 50 (#FAFAF8) — fails WCAG AA for normal text.",
   "NEVER use a pure #FF0000 red — it conflicts with Fire 500 and is not in the palette.",

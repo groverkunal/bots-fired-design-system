@@ -1,0 +1,82 @@
+[
+  {
+    "theme": "light",
+    "label": "Text",
+    "foreground": "#0D1829",
+    "background": "#FAFAF8",
+    "ratio": 17.032,
+    "minimum": 4.5
+  },
+  {
+    "theme": "light",
+    "label": "Muted",
+    "foreground": "#4B5563",
+    "background": "#FAFAF8",
+    "ratio": 7.232,
+    "minimum": 4.5
+  },
+  {
+    "theme": "light",
+    "label": "Kicker",
+    "foreground": "#D03010",
+    "background": "#FFFFFF",
+    "ratio": 5.107,
+    "minimum": 4.5
+  },
+  {
+    "theme": "light",
+    "label": "Primary button",
+    "foreground": "#FFFFFF",
+    "background": "#D03010",
+    "ratio": 5.107,
+    "minimum": 4.5
+  },
+  {
+    "theme": "light",
+    "label": "Link",
+    "foreground": "#1C2E5E",
+    "background": "#FAFAF8",
+    "ratio": 12.545,
+    "minimum": 4.5
+  },
+  {
+    "theme": "dark",
+    "label": "Text",
+    "foreground": "#FAFAF8",
+    "background": "#09101C",
+    "ratio": 18.226,
+    "minimum": 4.5
+  },
+  {
+    "theme": "dark",
+    "label": "Muted",
+    "foreground": "#8FA5C8",
+    "background": "#09101C",
+    "ratio": 7.605,
+    "minimum": 4.5
+  },
+  {
+    "theme": "dark",
+    "label": "Kicker",
+    "foreground": "#F5A030",
+    "background": "#0D1829",
+    "ratio": 8.437,
+    "minimum": 4.5
+  },
+  {
+    "theme": "dark",
+    "label": "Primary button",
+    "foreground": "#FFFFFF",
+    "background": "#D03010",
+    "ratio": 5.107,
+    "minimum": 4.5
+  },
+  {
+    "theme": "dark",
+    "label": "Link",
+    "foreground": "#8FA5C8",
+    "background": "#09101C",
+    "ratio": 7.605,
+    "minimum": 4.5
+  }
+]

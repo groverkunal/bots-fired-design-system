@@ -4,9 +4,10 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "build": "vite build",
+    "build": "npm run tokens && vite build",
     "dev": "vite",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "tokens": "node scripts/build-tokens.mjs"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",

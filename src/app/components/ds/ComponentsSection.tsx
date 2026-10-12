@@ -441,7 +441,7 @@ function PhonePopup() {
               >
                 <div className="flex flex-col items-center gap-2 text-center">
                   <BFLogoSVG variant="icon" theme="color" width={50} />
-                  <p className="text-[11px] font-bold text-[#0D1829]">Join 2,400+ Executives 🎓</p>
+                  <p className="text-[11px] font-bold text-[#0D1829]">Join [verified audience count] Executives 🎓</p>
                   <p className="text-[9px] text-[#6B7280]">Get AI clarity every Monday. Free.</p>
                   <input className="w-full text-[10px] px-2 py-1.5 rounded-xl border border-[#E8E6E0]" placeholder="email@company.com" />
                   <button onClick={() => setShow(false)} className="w-full py-1.5 rounded-xl bg-[#1C2E5E] text-white text-[10px] font-semibold">Subscribe Free</button>
@@ -560,6 +560,7 @@ function MacNotification() {
 export function ComponentsSection() {
   return (
     <div id="components" className="space-y-16">
+      <aside role="note" className="sample-notice">Illustrative samples only. Every persona, testimonial, metric, affiliation, award, date and event in these examples is placeholder content, not a verified BotsFired claim. Replace and review before production use.</aside>
       <div>
         <p className="text-xs font-semibold uppercase tracking-widest text-[#9BA3B0] mb-1">Interactive UI</p>
         <h3 style={{ fontFamily: "Barlow Condensed, sans-serif", color: "#1C2E5E", fontSize: "28px", fontWeight: 700 }}>

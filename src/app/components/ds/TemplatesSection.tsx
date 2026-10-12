@@ -635,7 +635,7 @@ function Announcements() {
         },
         {
           type: "Achievement",
-          headline: "2,400 Execs Trained 🎉",
+          headline: "[Verified training milestone]",
           sub: "Thank you to our extraordinary community",
           color: "#1C2E5E", textColor: "#EEF2F8", accent: "#F5A030", dark: true,
         },
@@ -741,6 +741,7 @@ export function TemplatesSection() {
 
   return (
     <div id="templates" className="space-y-8">
+      <aside role="note" className="sample-notice">Illustrative samples only. Every persona, testimonial, metric, affiliation, award, date and event in these examples is placeholder content, not a verified BotsFired claim. Replace and review before production use.</aside>
       <div>
         <p className="text-xs font-semibold uppercase tracking-widest text-[#9BA3B0] mb-1">Design Templates</p>
         <h3 style={{ fontFamily: "Barlow Condensed, sans-serif", color: "#1C2E5E", fontSize: "28px", fontWeight: 700 }}>

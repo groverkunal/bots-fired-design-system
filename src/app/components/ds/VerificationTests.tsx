@@ -85,9 +85,9 @@ const SPEC_TESTS: SpecTest[] = [
       const all = Array.from(document.querySelectorAll("p, span, a, li, td, th, label"));
       const offenders = all.filter(el => {
         const fs = parseFloat(getComputedStyle(el).fontSize);
-        return fs < 10 && (el as HTMLElement).innerText?.trim().length > 0;
+        return fs < 12 && (el as HTMLElement).innerText?.trim().length > 0;
       });
-      return { pass: offenders.length === 0, detail: offenders.length === 0 ? "All text ≥ 10px ✓" : `${offenders.length} element(s) below 10px found` };
+      return { pass: offenders.length === 0, detail: offenders.length === 0 ? "All text ≥ 12px ✓" : `${offenders.length} element(s) below 12px found` };
     },
   },
   {
@@ -115,12 +115,12 @@ const SPEC_TESTS: SpecTest[] = [
     },
   },
   {
-    id: "c02", category: "Colour", name: "Fire 500 on white = AA",
-    description: "Fire 500 (#E8541A) on white must achieve at least AA (≥4.5:1). Used for overlines, kickers.",
+    id: "c02", category: "Colour", name: "Fire 600 on white = AA",
+    description: "Fire 600 (#D03010) on white must achieve AA (≥4.5:1) for normal text.",
     run: () => {
-      const r = contrast("#E8541A", "#FFFFFF");
+      const r = contrast("#D03010", "#FFFFFF");
       const pass = r >= 4.5;
-      return { pass, detail: `#E8541A on #FFFFFF: ${r.toFixed(2)}:1 (need ≥4.5:1 for AA, or ≥3:1 for large text AA)` };
+      return { pass, detail: `#D03010 on #FFFFFF: ${r.toFixed(2)}:1 (need ≥4.5:1 for AA, or ≥3:1 for large text AA)` };
     },
   },
   {
@@ -413,7 +413,7 @@ function ContrastChecker() {
             {[
               { label: "Normal text (≤18px)", need: 4.5, pass: ratio >= 4.5, level: "AA" },
               { label: "Normal text AAA (≤18px)", need: 7, pass: ratio >= 7, level: "AAA" },
-              { label: "Large text/UI (≥18px or bold ≥14px)", need: 3, pass: ratio >= 3, level: "AA" },
+              { label: "Large text (≥24px regular or ≥18.67px bold) / UI graphics", need: 3, pass: ratio >= 3, level: "AA" },
               { label: "UI components & graphics", need: 3, pass: ratio >= 3, level: "AA" },
             ].map(({ label, need, pass, level }) => (
               <div key={label} className="flex items-center justify-between py-1.5 border-b border-[#F1F2F4] text-xs">
