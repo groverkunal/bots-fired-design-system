@@ -20,3 +20,11 @@
 
 - Dependency correction: Astro 5.18.2 had critical registry advisories at verification time. Upgraded to patched Astro 7.3.8 and React integration 7.0.1, requiring Node >=22.12. The build remains fully static; no server deployment is introduced.
 - Existing script-src self compatibility: executable inline Astro bootstraps are extracted into hashed local scripts during build. No CSP/header/account configuration is changed.
+
+## Next bounded increment: legacy accessibility and spec consistency
+
+Completed in source: native keyboard flashcards and named 44px navigation; native local modal forms and desktop dialog; persistent notifications and focus return; stable busy/progress upload controls; pauseable countdown; reactive reduced-motion hook; shared type registry and native disclosures; correct floor/line-height/spacing data; accurate large-text ratings and non-applicable/manual diagnostic reporting. Ordinary UI labels now use existing contrast-safe colours without changing palette definitions or source assets.
+
+Test scope expanded: the component gallery and its answer/notification/modal open states are scanned without gallery exclusions; all eight template categories are scanned in light/dark/high modes; type tabs and an expanded token row are scanned. The only selector exclusion in the new diagnostic-tool check is the explicitly labelled user-selected contrast sample, which deliberately permits invalid colour pairs.
+
+Remaining: comprehensive accessibility scans/remediation of logo size/brand-art specimens and platform concept artwork; other intentionally illustrative assets and downloads; manual VoiceOver/TalkBack review. No full-site WCAG certificate or completed 14-point plan is claimed. Brand redraws, consumer integration, security/DNS changes and recurring work remain outside this increment.

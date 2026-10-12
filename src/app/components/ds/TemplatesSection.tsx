@@ -1,3 +1,4 @@
+import { useReducedMotionPreference } from "../shared/useReducedMotionPreference";
 import React, { useState } from "react";
 import { motion } from "motion/react";
 import { BFLogoSVG, BFPhotoLogo } from "./BFLogoSVG";
@@ -36,7 +37,7 @@ function ProfileCards() {
           </div>
           <div className="mt-3">
             <p style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "22px", fontWeight: 700, color: "#0D1829" }}>Alexandra Chen</p>
-            <p className="text-xs font-semibold text-[#E8541A] uppercase tracking-wider">Chief AI Strategy Officer</p>
+            <p className="text-xs font-semibold text-[#D03010] uppercase tracking-wider">Chief AI Strategy Officer</p>
             <p className="text-xs text-[#9BA3B0] mt-0.5">Global Financial Holdings · London</p>
           </div>
           <p className="text-xs text-[#6B7280] mt-3 leading-relaxed">
@@ -60,7 +61,7 @@ function ProfileCards() {
           </div>
           <div className="flex-1">
             <p style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "20px", fontWeight: 700, color: "#0D1829" }}>David Okafor</p>
-            <p className="text-xs text-[#E8541A] font-semibold">CEO · BOTS FIRED</p>
+            <p className="text-xs text-[#D03010] font-semibold">CEO · BOTS FIRED</p>
             <p className="text-xs text-[#9BA3B0] mt-1">AI Educator for C-Suite | Newsletter Author | Podcast Host</p>
             <div className="mt-3 pt-3 border-t border-[#E8E6E0] flex items-center justify-between">
               <div className="flex gap-1.5">
@@ -81,7 +82,7 @@ function ProfileCards() {
             <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-[#E8541A]">
               <img src={avatar} alt="Profile" className="w-full h-full object-cover" />
             </div>
-            <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-[#E8541A] flex items-center justify-center">
+            <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-[#D03010] flex items-center justify-center">
               <span className="text-white text-[10px] font-bold">AI</span>
             </div>
           </div>
@@ -119,7 +120,7 @@ function ProfileCards() {
             <p className="text-xs font-semibold text-[#6B7280]">Chief Technology Officer</p>
           </div>
         </div>
-        <p style={{ fontFamily: "Caveat, cursive", fontSize: "17px", color: "#D97706", transform: "rotate(-1deg)", marginTop: "12px", display: "block" }}>
+        <p style={{ fontFamily: "Caveat, cursive", fontSize: "17px", color: "#1C2E5E", transform: "rotate(-1deg)", marginTop: "12px", display: "block" }}>
           "I read BOTS FIRED every Monday without fail"
         </p>
         <div className="mt-3 flex items-center gap-2 text-xs text-[#9BA3B0]">
@@ -189,7 +190,7 @@ function ResumeTemplates() {
               </div>
               <div>
                 <p style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "20px", fontWeight: 700, color: "#0D1829" }}>SARAH OKONKWO</p>
-                <p className="text-xs text-[#E8541A] font-semibold">Non-Executive Director</p>
+                <p className="text-xs text-[#D03010] font-semibold">Non-Executive Director</p>
               </div>
             </div>
           </div>
@@ -203,7 +204,7 @@ function ResumeTemplates() {
           ))}
         </div>
         <div className="mt-4 pt-3 border-t border-[#E8E6E0]">
-          <p style={{ fontFamily: "Caveat, cursive", fontSize: "15px", color: "#D97706" }}>
+          <p style={{ fontFamily: "Caveat, cursive", fontSize: "15px", color: "#1C2E5E" }}>
             BOTS FIRED AI Education Alumni · Cohort 12
           </p>
         </div>
@@ -218,7 +219,7 @@ function ResumeTemplates() {
         <div className="space-y-1">
           <p style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "26px", fontWeight: 800, color: "#1C2E5E" }}>MARCUS STEINBERG</p>
           <p className="text-xs font-semibold text-[#6B7280]">Group CEO · Technology Holdings PLC</p>
-          <p style={{ fontFamily: "Caveat, cursive", fontSize: "17px", color: "#D97706" }}>
+          <p style={{ fontFamily: "Caveat, cursive", fontSize: "17px", color: "#1C2E5E" }}>
             "Leading AI transformation at scale since 2019"
           </p>
           <div className="pt-3 text-xs text-[#9BA3B0] space-y-1">
@@ -277,7 +278,7 @@ function SocialTemplates() {
             <div className="bg-[#EEF2F8] rounded-xl p-4 mb-3">
               <p className="text-xs font-bold text-[#1C2E5E] mb-1">This week in the Executive AI Brief:</p>
               <p className="text-xs text-[#374151] leading-relaxed">"Your board isn't asking the wrong questions about AI. They're asking no questions at all. Here's how to change that." 🔥</p>
-              <p style={{ fontFamily: "Caveat, cursive", fontSize: "14px", color: "#D97706", marginTop: "8px" }}>— Issue #052</p>
+              <p style={{ fontFamily: "Caveat, cursive", fontSize: "14px", color: "#1C2E5E", marginTop: "8px" }}>— Issue #052</p>
             </div>
             <div className="flex items-center justify-between">
               <div className="flex gap-2 text-[10px] text-[#9BA3B0]">
@@ -331,7 +332,7 @@ function SocialTemplates() {
             — BOTS FIRED Newsletter
           </p>
           <div className="absolute bottom-4 left-0 right-0 flex justify-center">
-            <p className="text-[10px] text-[#4A66A0]">@botsfired · #AILeadership #CsuiteAI</p>
+            <p className="text-[10px] text-[#8FA5C8]">@botsfired · #AILeadership #CsuiteAI</p>
           </div>
         </div>
       ),
@@ -341,13 +342,13 @@ function SocialTemplates() {
       content: (
         <div className="rounded-2xl overflow-hidden bg-gradient-to-b from-[#0D1829] to-[#1C2E5E] flex flex-col p-5 gap-3" style={{ aspectRatio: "9/16", maxHeight: "320px" }}>
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-[#E8541A] flex items-center justify-center">
+            <div className="w-7 h-7 rounded-full bg-[#D03010] flex items-center justify-center">
               <span style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "10px", fontWeight: 800, color: "#fff" }}>BF</span>
             </div>
             <p className="text-[11px] text-[#8FA5C8] font-semibold">botsfired</p>
           </div>
           <div className="flex-1 flex flex-col justify-center gap-3">
-            <p className="text-[10px] font-bold text-[#4A66A0] uppercase tracking-widest">This Week's Insight</p>
+            <p className="text-[10px] font-bold text-[#8FA5C8] uppercase tracking-widest">This Week's Insight</p>
             <p style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "22px", fontWeight: 800, color: "#EEF2F8", lineHeight: 1.15 }}>
               The Board's AI Duty
             </p>
@@ -357,7 +358,7 @@ function SocialTemplates() {
             </div>
           </div>
           <div className="text-center">
-            <p className="text-[10px] text-[#4A66A0] mb-1">Swipe up to read</p>
+            <p className="text-[10px] text-[#8FA5C8] mb-1">Swipe up to read</p>
             <BFLogoSVG variant="full" theme="white" width={120} />
           </div>
         </div>
@@ -404,7 +405,7 @@ function NewsletterHeaders() {
             <span className="text-xs text-[#9BA3B0]">The Executive AI Brief</span>
           </div>
           <div className="border-l-4 border-[#E8541A] pl-4">
-            <p style={{ fontFamily: "Caveat, cursive", fontSize: "20px", color: "#D97706" }}>Hello, Leader 👋</p>
+            <p style={{ fontFamily: "Caveat, cursive", fontSize: "20px", color: "#1C2E5E" }}>Hello, Leader 👋</p>
             <p className="text-xs text-[#6B7280] mt-1">Welcome to this week's AI clarity. Let's get into it.</p>
           </div>
         </div>
@@ -414,8 +415,8 @@ function NewsletterHeaders() {
       <div className="rounded-2xl overflow-hidden">
         <div className="bg-[#0D1829] px-8 py-6 flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <p className="text-[10px] font-bold text-[#4A66A0] uppercase tracking-widest">BOTS FIRED · WEEKLY</p>
-            <p className="text-[10px] text-[#4A66A0]">Issue #052 · Apr 21</p>
+            <p className="text-[10px] font-bold text-[#8FA5C8] uppercase tracking-widest">BOTS FIRED · WEEKLY</p>
+            <p className="text-[10px] text-[#8FA5C8]">Issue #052 · Apr 21</p>
           </div>
           <p style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "30px", fontWeight: 800, color: "#EEF2F8", lineHeight: 1.1 }}>
             The Executive AI Brief
@@ -453,7 +454,7 @@ function BlogHeaders() {
       {/* Style 1 */}
       <div className="bg-white rounded-2xl border border-[#E8E6E0] overflow-hidden">
         <div className="h-24 bg-[#EEF2F8] flex items-center justify-center">
-          <p style={{ fontFamily: "Barlow Condensed, sans-serif", fontWeight: 800, fontStyle: "italic", fontSize: "18px", color: "#CBD0D8" }}>COVER IMAGE</p>
+          <p style={{ fontFamily: "Barlow Condensed, sans-serif", fontWeight: 800, fontStyle: "italic", fontSize: "18px", color: "#4B5563" }}>COVER IMAGE</p>
         </div>
         <div className="p-5">
           <div className="flex items-center gap-2 mb-2">
@@ -463,7 +464,7 @@ function BlogHeaders() {
           <h4 style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "20px", fontWeight: 700, color: "#0D1829" }}>The Board's AI Duty</h4>
           <div className="mt-3 flex items-center gap-2">
             <div className="w-6 h-6 rounded-full overflow-hidden"><img src={avatar} alt="" className="w-full h-full object-cover" /></div>
-            <p className="text-[10px] text-[#6B7280]">By BOTS FIRED · <span className="text-[#E8541A]">botsfired.com</span></p>
+            <p className="text-[10px] text-[#6B7280]">By BOTS FIRED · <span className="text-[#D03010]">botsfired.com</span></p>
           </div>
         </div>
       </div>
@@ -472,7 +473,7 @@ function BlogHeaders() {
       <div className="bg-[#0D1829] rounded-2xl p-6">
         <div className="flex items-center gap-2 mb-3">
           <BFLogoSVG variant="icon" theme="white" width={36} />
-          <p className="text-[10px] text-[#4A66A0] font-semibold uppercase tracking-widest">BOTS FIRED Blog</p>
+          <p className="text-[10px] text-[#8FA5C8] font-semibold uppercase tracking-widest">BOTS FIRED Blog</p>
         </div>
         <h4 style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "22px", fontWeight: 700, color: "#EEF2F8", lineHeight: 1.2 }}>
           ROI or Risk? How to Frame AI for Your CFO
@@ -486,7 +487,7 @@ function BlogHeaders() {
       <div className="bg-[#FFFEF5] rounded-2xl border border-[#F5A030]/20 p-5" style={{ backgroundImage: "repeating-linear-gradient(transparent, transparent 27px, #E8E6E0 28px)" }}>
         <BFPhotoLogo height={28} />
         <div className="mt-4">
-          <p style={{ fontFamily: "Caveat, cursive", fontSize: "13px", color: "#D97706" }}>From the desk of BOTS FIRED</p>
+          <p style={{ fontFamily: "Caveat, cursive", fontSize: "13px", color: "#1C2E5E" }}>From the desk of BOTS FIRED</p>
           <h4 style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "20px", fontWeight: 700, color: "#1C2E5E", marginTop: "4px" }}>
             AI Talent: Build, Buy, or Partner?
           </h4>
@@ -497,7 +498,7 @@ function BlogHeaders() {
       {/* Style 4 — Magazine */}
       <div className="bg-white rounded-2xl border border-[#E8E6E0] p-5">
         <div className="border-l-4 border-[#E8541A] pl-4 mb-3">
-          <p className="text-[10px] font-bold text-[#E8541A] uppercase tracking-widest">DEEP DIVE</p>
+          <p className="text-[10px] font-bold text-[#D03010] uppercase tracking-widest">DEEP DIVE</p>
           <h4 style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "20px", fontWeight: 700, color: "#0D1829" }}>
             When the Algorithm Decides
           </h4>
@@ -523,7 +524,7 @@ function InvitationCards() {
         <h4 style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "22px", fontWeight: 700, color: "#0D1829" }}>
           AI Leadership: Board Masterclass
         </h4>
-        <p style={{ fontFamily: "Caveat, cursive", fontSize: "17px", color: "#D97706", transform: "rotate(-1deg)", display: "block", marginTop: "8px" }}>
+        <p style={{ fontFamily: "Caveat, cursive", fontSize: "17px", color: "#1C2E5E", transform: "rotate(-1deg)", display: "block", marginTop: "8px" }}>
           An exclusive evening session
         </p>
         <div className="mt-4 grid grid-cols-2 gap-3 text-xs text-[#6B7280]">
@@ -544,7 +545,7 @@ function InvitationCards() {
         <BFLogoSVG variant="icon" theme="white" width={60} />
         <div className="my-3 flex items-center gap-2">
           <div className="flex-1 h-px bg-[#162244]" />
-          <p className="text-[10px] text-[#4A66A0] uppercase tracking-widest">You're Invited</p>
+          <p className="text-[10px] text-[#8FA5C8] uppercase tracking-widest">You're Invited</p>
           <div className="flex-1 h-px bg-[#162244]" />
         </div>
         <p style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "24px", fontWeight: 700, color: "#EEF2F8" }}>
@@ -563,7 +564,7 @@ function InvitationCards() {
       <div className="bg-[#FFF8EC] rounded-3xl border-2 border-[#F5A030]/40 p-6">
         <div className="flex items-center gap-3 mb-4">
           <BFPhotoLogo height={28} />
-          <p style={{ fontFamily: "Caveat, cursive", fontSize: "16px", color: "#D97706" }}>warmly invites you</p>
+          <p style={{ fontFamily: "Caveat, cursive", fontSize: "16px", color: "#1C2E5E" }}>warmly invites you</p>
         </div>
         <p style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "22px", fontWeight: 700, color: "#1C2E5E" }}>
           4-Week Executive AI Cohort
@@ -571,7 +572,7 @@ function InvitationCards() {
         <p className="text-xs text-[#6B7280] mt-2 leading-relaxed">
           A curated group of 20 senior leaders exploring AI strategy, governance, and leadership together.
         </p>
-        <p style={{ fontFamily: "Caveat, cursive", fontSize: "15px", color: "#D97706", marginTop: "12px" }}>
+        <p style={{ fontFamily: "Caveat, cursive", fontSize: "15px", color: "#1C2E5E", marginTop: "12px" }}>
           Starts May 19 — only 8 spots remain!
         </p>
         <div className="mt-4 flex gap-2">
@@ -604,7 +605,7 @@ function InvitationCards() {
             <p className="text-[#6B7280]">Business Formal</p>
           </div>
         </div>
-        <p style={{ fontFamily: "Caveat, cursive", fontSize: "13px", color: "#D97706", marginTop: "12px" }}>RSVP by September 15 · Space strictly limited</p>
+        <p style={{ fontFamily: "Caveat, cursive", fontSize: "13px", color: "#1C2E5E", marginTop: "12px" }}>RSVP by September 15 · Space strictly limited</p>
       </div>
     </div>
   );
@@ -625,13 +626,13 @@ function Announcements() {
           type: "Newsletter",
           headline: "Issue #052 Now Available",
           sub: "Why Your AI Pilot Failed — 6 min read",
-          color: "#EEF2F8", textColor: "#1C2E5E", accent: "#E8541A",
+          color: "#EEF2F8", textColor: "#1C2E5E", accent: "#1C2E5E",
         },
         {
           type: "New Programme",
           headline: "The 4-Week Cohort Opens!",
           sub: "June 23 intake — 12 spots available",
-          color: "#FFF8EC", textColor: "#92400E", accent: "#D97706",
+          color: "#FFF8EC", textColor: "#92400E", accent: "#92400E",
         },
         {
           type: "Achievement",
@@ -647,7 +648,7 @@ function Announcements() {
               <h4 style={{ fontFamily: "Barlow Condensed, sans-serif", fontSize: "20px", fontWeight: 700, color: textColor, lineHeight: 1.2, marginTop: "4px" }}>
                 {headline}
               </h4>
-              <p className="text-xs mt-1" style={{ color: dark ? "#8FA5C8" : "#6B7280" }}>{sub}</p>
+              <p className="text-xs mt-1" style={{ color: dark ? "#8FA5C8" : "#4B5563" }}>{sub}</p>
               <p style={{ fontFamily: "Caveat, cursive", fontSize: "14px", color: accent, marginTop: "6px" }}>
                 Read more →
               </p>
@@ -674,7 +675,7 @@ function PrintedNotes() {
           </div>
         </div>
         <div className="px-6 py-5" style={{ backgroundImage: "repeating-linear-gradient(transparent, transparent 27px, #F1F2F4 28px)", minHeight: "120px" }}>
-          <p style={{ fontFamily: "Caveat, cursive", fontSize: "16px", color: "#D97706" }}>Handwritten notes go here...</p>
+          <p style={{ fontFamily: "Caveat, cursive", fontSize: "16px", color: "#1C2E5E" }}>Handwritten notes go here...</p>
           <p style={{ fontFamily: "Caveat, cursive", fontSize: "14px", color: "#9BA3B0", marginTop: "28px" }}>Your personal message in brand context</p>
         </div>
         <div className="border-t border-[#E8E6E0] px-6 py-2 flex justify-between items-center">
@@ -696,7 +697,7 @@ function PrintedNotes() {
           </p>
         </div>
         <div className="border-t border-[#2A4080] px-6 py-2">
-          <p className="text-[9px] text-[#4A66A0]">© 2026 BOTS FIRED · Confidential</p>
+          <p className="text-[9px] text-[#8FA5C8]">© 2026 BOTS FIRED · Confidential</p>
         </div>
       </div>
 
@@ -704,7 +705,7 @@ function PrintedNotes() {
       <div className="bg-[#FFF8EC] rounded-2xl border-2 border-[#F5A030]/30 p-5 text-center">
         <BFLogoSVG variant="stacked" theme="color" width={80} />
         <div className="my-3 border-t border-b border-[#F5A030]/20 py-3">
-          <p style={{ fontFamily: "Caveat, cursive", fontSize: "22px", color: "#D97706", transform: "rotate(-1deg)", display: "inline-block" }}>
+          <p style={{ fontFamily: "Caveat, cursive", fontSize: "22px", color: "#1C2E5E", transform: "rotate(-1deg)", display: "inline-block" }}>
             Thank you for being part<br />of our leadership community!
           </p>
         </div>
@@ -715,18 +716,19 @@ function PrintedNotes() {
       <div className="relative rounded-2xl bg-[#FEF3C7] p-5" style={{ boxShadow: "3px 3px 10px rgba(0,0,0,0.1)" }}>
         <div className="flex items-center justify-between mb-3">
           <BFLogoSVG variant="icon" theme="color" width={35} />
-          <span style={{ fontFamily: "Caveat, cursive", fontSize: "12px", color: "#D97706" }}>Quick Note</span>
+          <span style={{ fontFamily: "Caveat, cursive", fontSize: "12px", color: "#1C2E5E" }}>Quick Note</span>
         </div>
         <p style={{ fontFamily: "Caveat, cursive", fontSize: "18px", color: "#1C2E5E", lineHeight: 1.6 }}>
           "Board meeting prep:<br />✓ Review AI brief #052<br />✓ Listen to Ep. 48<br />✓ Share with ExCo"
         </p>
-        <p className="absolute bottom-3 right-4 text-[9px] text-[#9BA3B0]">botsfired.com</p>
+        <p className="absolute bottom-3 right-4 text-[9px] text-[#4B5563]">botsfired.com</p>
       </div>
     </div>
   );
 }
 
 export function TemplatesSection() {
+  const reducedMotion = useReducedMotionPreference();
   const [activeTab, setActiveTab] = useState("profiles");
   const tabs = [
     { id: "profiles", label: "Profiles" },
@@ -768,7 +770,7 @@ export function TemplatesSection() {
         ))}
       </div>
 
-      <motion.div key={activeTab} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+      <motion.div key={activeTab} initial={reducedMotion ? false : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reducedMotion ? 0 : .3 }}>
         {activeTab === "profiles"      && <ProfileCards />}
         {activeTab === "resumes"       && <ResumeTemplates />}
         {activeTab === "social"        && <SocialTemplates />}

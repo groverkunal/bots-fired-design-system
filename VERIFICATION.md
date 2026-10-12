@@ -22,3 +22,17 @@ Screenshots were reviewed locally for the mobile overview and static documentati
 Parent coordinates the pinned platform artifact, preserves existing headers/access, removes only the design site's blanket SPA rewrite, and verifies live routes/download MIME types/404s. Node >=22.12 is required for rebuilding. No deployment, DNS/account/security-policy change, analytics, package publishing or scheduled job was performed.
 
 Approval-dependent vector-master redraw, perceptual palette changes and print certification remain deferred. Manual VoiceOver/TalkBack signoff and exhaustive legacy-illustration remediation are separate review work. Consumer sites must adopt the token export through their own reviewed changes.
+
+## Bounded legacy accessibility correction — 2026-10-12
+
+Production build passed, with seven token/type-registry tests and all 26 browser tests passing. Existing 108 route/viewport/mode checks remain. Added keyboard flashcard navigation, named 44px controls, hidden answer state, local modal validation, Escape/focus return, persistent notification dismissal, upload focus/busy/progress checks, pauseable countdown and reduced-motion preference changes after hydration.
+
+Accessibility checks now include the expanded legacy component gallery and answer/phone/modal/desktop states in light/dark/high modes without gallery exclusions. All eight template categories are checked in each mode, and all three type-reference tabs plus an expanded token disclosure are checked. Native disclosures also work before React hydration. The test suite no longer blanket-excludes `.legacy-example` or `astro-island` on its normative reference routes.
+
+The one new selector exclusion is `[data-intentional-contrast-preview]` in the diagnostic checker test, because users deliberately select failing colours there. That sample is explicitly labelled; its surrounding inputs, ratings and guidance are checked. No other controls or template gallery are excluded in those tests.
+
+Shared metadata values now agree across table/validator: label/overline/mono 14px, corrected line-height and letter-spacing units, and source paragraph spacing. Diagnostics measure identified cards, distinguish manual/not-applicable checks, and apply correct large-text thresholds rather than infer focus safety from markup.
+
+Mobile flashcard and modal screenshots reviewed. Original asset files and palette definitions are unchanged. No hosting, DNS, security, consumer-site or recurring-work changes were made. Parent coordinates publication.
+
+Remaining limits: comprehensive logo/size-art and platform-concept artwork accessibility, other illustrative asset/download review, and manual VoiceOver/TalkBack verification. These checks do not certify full-site WCAG conformance or complete the entire 14-point plan.

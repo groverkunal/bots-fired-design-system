@@ -9,7 +9,7 @@
     "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview",
     "tokens": "node scripts/build-tokens.mjs",
     "build:legacy": "npm run tokens && vite build",
-    "test:tokens": "node --test tests/tokens.test.mjs",
+    "test:tokens": "node --test tests/*.test.mjs",
     "test:browser": "playwright test"
   },
   "dependencies": {

@@ -10,3 +10,14 @@
 - Add meaningful token/browser/axe checks to CI and return static 404s locally.
 
 Migration: `botsfired-tokens.json` now uses typed DTCG tiers and brace aliases instead of CSS-key entries. Use `botsfired-tokens-resolved.json` for resolved consumer values. Legacy CSS variable aliases remain generated. Chapter paths replace hash-only navigation; legacy root hash URLs redirect to the matching static chapter through the external script. Parent coordinates the pinned platform artifact and Hosting rewrite/cache adjustments. This preview is not a published package or a certified accessible production component library.
+
+## Unreleased accessibility correction
+
+- Replace click-only rotating flashcards with native keyboard controls and disclosed answers; name navigation controls and provide 44px targets.
+- Give phone/desktop examples native modal semantics, local form validation, persistent dismissible notices and focus restoration. Simulated upload keeps its control and focus while exposing busy/progress state; countdown can pause.
+- Synchronize JavaScript reduced-motion preferences after hydration and on preference changes; suppress unnecessary motion.
+- Share type data between the table and validator; align metadata floors, line heights, letter spacing and paragraph spacing. Use native type-spec disclosures and remove unsupported geometric-scale assertions.
+- Scope diagnostics accurately: measure identified cards, report absent specimens/manual focus checks separately, distinguish large-text contrast ratings, and label checker samples that intentionally fail contrast.
+- Correct ordinary sample UI text contrast using existing palette values. Remove blanket gallery exclusions from tested components; add full template-category, type-tab and open-state checks.
+
+Original logo assets, palette definitions, hosting/security settings, DNS and consumer sites are unchanged. Manual assistive-technology review and comprehensive logo/platform-artwork accessibility remain outstanding.

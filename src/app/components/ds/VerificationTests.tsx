@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { motion } from "motion/react";
+import { TYPE_SCALE } from "./typeTokens";
 import { Check, X, AlertTriangle, RefreshCw, Eye } from "lucide-react";
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -20,6 +21,7 @@ function contrast(a: string, b: string) {
   return (Math.max(L1,L2)+0.05)/(Math.min(L1,L2)+0.05);
 }
 function wcag(ratio: number, isLarge=false): "AAA"|"AA"|"AA-large"|"FAIL" {
+  if(isLarge && ratio>=4.5) return "AAA";
   if(ratio>=7) return "AAA";
   if(ratio>=4.5) return "AA";
   if(ratio>=3 && isLarge) return "AA-large";
@@ -32,7 +34,7 @@ interface SpecTest {
   category: string;
   name: string;
   description: string;
-  run: () => { pass: boolean; detail: string };
+  run: () => { pass: boolean; detail: string; skip?: boolean };
 }
 
 const SPEC_TESTS: SpecTest[] = [
@@ -91,8 +93,8 @@ const SPEC_TESTS: SpecTest[] = [
     },
   },
   {
-    id: "t06", category: "Typography", name: "No more than 3 font families per view",
-    description: "Count unique font families in use. Max: Barlow Condensed + Inter + Caveat (+ JetBrains optional).",
+    id: "t06", category: "Typography", name: "No more than 4 documented font families per view",
+    description: "Count unique font families in use. Four documented families: Barlow Condensed, Inter, Caveat and optional JetBrains Mono.",
     run: () => {
       const all = Array.from(document.querySelectorAll("*"));
       const families = new Set<string>();
@@ -125,7 +127,7 @@ const SPEC_TESTS: SpecTest[] = [
   },
   {
     id: "c03", category: "Colour", name: "White on Fire 500 = AA (large text)",
-    description: "White text on Fire 500 CTA buttons — must pass AA for large text (≥3:1). Ideally ≥4.5.",
+    description: "Calculated pair only: white/Fire 500 meets 3:1 for large text (24px regular or 18.67px bold). This does not approve normal-size labels.",
     run: () => {
       const r = contrast("#FFFFFF", "#E8541A");
       return { pass: r >= 3, detail: `White on Fire 500: ${r.toFixed(2)}:1 (AA large text = 3:1 min, AA = 4.5:1)` };
@@ -145,7 +147,7 @@ const SPEC_TESTS: SpecTest[] = [
     run: () => {
       const r = contrast("#D97706", "#FFFFFF");
       const fails = r < 4.5;
-      return { pass: fails, detail: `Amber on white: ${r.toFixed(2)}:1 — ${fails ? "Correctly FAILS (dark bg only)" : "Unexpectedly passes — recheck spec"}` };
+      return { pass: fails, detail: `Amber on white: ${r.toFixed(2)}:1 — ${fails ? "Normal text is unsafe on white; decorative uses remain possible" : "Unexpectedly passes — recheck spec"}` };
     },
   },
   {
@@ -154,7 +156,7 @@ const SPEC_TESTS: SpecTest[] = [
     run: () => {
       const r = contrast("#F5A030", "#FFFFFF");
       const fails = r < 4.5;
-      return { pass: fails, detail: `Gold on white: ${r.toFixed(2)}:1 — ${fails ? "Correctly FAILS (dark bg only ✓)" : "Unexpectedly passes"}` };
+      return { pass: fails, detail: `Gold on white: ${r.toFixed(2)}:1 — ${fails ? "Normal text is unsafe on white; decorative uses remain possible" : "Unexpectedly passes"}` };
     },
   },
   {
@@ -188,9 +190,9 @@ const SPEC_TESTS: SpecTest[] = [
   },
   {
     id: "s02", category: "Spacing", name: "Touch targets ≥ 44px",
-    description: "All interactive elements (buttons, links with padding) must have min 44×44px touch area per WCAG 2.5.5.",
+    description: "Project policy: buttons and explicit control links should provide 44×44px. Inline text links are excluded; this diagnostic is not a WCAG conformance determination.",
     run: () => {
-      const buttons = Array.from(document.querySelectorAll("button, a[href], [role='button']"));
+      const buttons = Array.from(document.querySelectorAll("button, [data-control-link], [role='button']"));
       const small = buttons.filter(el => {
         const r = el.getBoundingClientRect();
         return (r.width < 44 || r.height < 44) && r.width > 0;
@@ -205,24 +207,27 @@ const SPEC_TESTS: SpecTest[] = [
     id: "s03", category: "Spacing", name: "Cards use rounded-2xl (16px) or larger",
     description: "Brand radius standard: 16px (rounded-2xl) minimum for card components.",
     run: () => {
-      const cards = Array.from(document.querySelectorAll("[class*='rounded-2xl'], [class*='rounded-3xl'], [class*='rounded-xl']"));
-      return { pass: cards.length > 0, detail: `Found ${cards.length} elements with correct brand radius (rounded-xl or larger)` };
+      const cards = Array.from(document.querySelectorAll("main .docs-card, [data-spec-card]"));
+      if (!cards.length) return { pass:false, skip:true, detail:"Not applicable: no identified card specimens in this chapter." };
+      const bad = cards.filter(el => { const css=getComputedStyle(el); return [css.borderTopLeftRadius,css.borderTopRightRadius,css.borderBottomLeftRadius,css.borderBottomRightRadius].some(value=>parseFloat(value)<16); });
+      return { pass:bad.length===0, detail:`Measured ${cards.length} identified cards; ${bad.length} below 16px radius.` };
     },
   },
 
   // LOGO / BRAND TESTS
   {
     id: "b01", category: "Brand", name: "Logo images load successfully",
-    description: "Both brand logo images must be present and loaded in the DOM.",
+    description: "Checks loaded raster-logo specimens when this chapter contains them.",
     run: () => {
       const imgs = Array.from(document.querySelectorAll("img[alt='BOTS FIRED']"));
+      if (!imgs.length) return {pass:false,skip:true,detail:"Not applicable: no raster logo specimens here. Check the Logo System chapter."};
       const allLoaded = imgs.every(img => (img as HTMLImageElement).complete && (img as HTMLImageElement).naturalWidth > 0);
       return { pass: imgs.length > 0 && allLoaded, detail: `Logo img elements: ${imgs.length}, all loaded: ${allLoaded}` };
     },
   },
   {
     id: "b02", category: "Brand", name: "Page has a single H1 (SEO)",
-    description: "Each page must have exactly one H1 element for SEO and document structure.",
+    description: "Checks this documentation convention of one H1 per chapter; not a standalone SEO or accessibility verdict.",
     run: () => {
       const h1s = document.querySelectorAll("h1");
       return { pass: h1s.length === 1, detail: `H1 elements found: ${h1s.length} (expected exactly 1)` };
@@ -230,14 +235,14 @@ const SPEC_TESTS: SpecTest[] = [
   },
   {
     id: "b03", category: "Brand", name: "Handwritten font used for annotations",
-    description: "Caveat font must be present somewhere on the page — the brand voice depends on it.",
+    description: "Caveat is optional for annotations; its absence is not a failure on a chapter without annotations.",
     run: () => {
       const all = Array.from(document.querySelectorAll("*"));
       const hasCaveat = all.some(el => {
         const ff = getComputedStyle(el).fontFamily.toLowerCase();
         return ff.includes("caveat");
       });
-      return { pass: hasCaveat, detail: hasCaveat ? "Caveat font detected in DOM ✓" : "Caveat not found — check handwritten annotations" };
+      return { pass: hasCaveat, skip:!hasCaveat, detail: hasCaveat ? "Caveat font detected in DOM" : "Not applicable: no Caveat annotation in this chapter." };
     },
   },
 
@@ -261,17 +266,13 @@ const SPEC_TESTS: SpecTest[] = [
     },
   },
   {
-    id: "a03", category: "Accessibility", name: "Focus indicators present",
-    description: "Interactive elements must have visible focus styles (outline/ring) for keyboard navigation.",
-    run: () => {
-      const style = document.querySelector("style, link[rel='stylesheet']");
-      const hasFocusStyle = document.body.innerHTML.includes("focus") || document.body.innerHTML.includes("ring");
-      return { pass: !!hasFocusStyle, detail: hasFocusStyle ? "Focus styles detected in page ✓" : "No focus styles found — add :focus-visible styles" };
-    },
+    id: "a03", category: "Accessibility", name: "Focus appearance requires interaction review",
+    description: "Markup searches cannot establish visible or unobscured keyboard focus. Use browser interaction tests and manual review.",
+    run: () => ({pass:false,skip:true,detail:"Not automatically scored: tab through controls and inspect focus appearance and obstruction."}),
   },
 ];
 
-type TestResult = { pass: boolean; detail: string };
+type TestResult = { pass: boolean; detail: string; skip?: boolean };
 
 function TestRow({ test, result, onRun }: {
   test: SpecTest;
@@ -280,20 +281,20 @@ function TestRow({ test, result, onRun }: {
 }) {
   const catColor: Record<string, string> = {
     Typography: "#1C2E5E",
-    Colour: "#E8541A",
-    Spacing: "#D97706",
+    Colour: "#D03010",
+    Spacing: "#D03010",
     Brand: "#4A66A0",
     Accessibility: "#166534",
   };
   return (
     <div className={`border-l-4 rounded-xl overflow-hidden border border-r-[#E8E6E0] border-t-[#E8E6E0] border-b-[#E8E6E0] ${
-      result === null ? "border-l-[#E8E6E0]" : result.pass ? "border-l-green-400" : "border-l-red-400"
+      result === null || result.skip ? "border-l-[#E8E6E0]" : result.pass ? "border-l-green-400" : "border-l-red-400"
     }`}>
       <div className="bg-white p-4">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: (catColor[test.category] || "#1C2E5E") + "18", color: catColor[test.category] || "#1C2E5E" }}>
+              <span className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: "#EEF2F8", color: "#1C2E5E" }}>
                 {test.category}
               </span>
               <span className="text-[9px] text-[#9BA3B0] font-mono">{test.id}</span>
@@ -302,17 +303,17 @@ function TestRow({ test, result, onRun }: {
             <p className="text-[10px] text-[#6B7280] mt-0.5">{test.description}</p>
           </div>
           <div className="flex items-center gap-2 shrink-0">
-            {result && (
+            {result && !result.skip && (
               <div className={`w-6 h-6 rounded-full flex items-center justify-center ${result.pass ? "bg-green-100" : "bg-red-100"}`}>
                 {result.pass ? <Check size={12} className="text-green-600" /> : <X size={12} className="text-red-600" />}
               </div>
             )}
-            <button onClick={onRun} className="px-3 py-1.5 rounded-lg bg-[#EEF2F8] text-[#1C2E5E] text-[10px] font-semibold hover:bg-[#1C2E5E] hover:text-white transition-colors">
+            <button aria-label={`Run ${test.name}`} onClick={onRun} className="px-3 py-1.5 rounded-lg bg-[#EEF2F8] text-[#1C2E5E] text-[10px] font-semibold hover:bg-[#1C2E5E] hover:text-white transition-colors">
               Run
             </button>
           </div>
         </div>
-        {result && (
+        {result && !result.skip && (
           <div className={`mt-2 px-3 py-2 rounded-lg text-[10px] font-mono ${result.pass ? "bg-green-50 text-green-800" : "bg-red-50 text-red-800"}`}>
             {result.detail}
           </div>
@@ -342,16 +343,16 @@ function ContrastChecker() {
           <div>
             <label className="text-xs font-semibold text-[#374151] block mb-1.5">Text (foreground) colour</label>
             <div className="flex items-center gap-3">
-              <input type="color" value={fg} onChange={e => setFg(e.target.value)} className="w-10 h-10 rounded-xl border border-[#E8E6E0] cursor-pointer" />
-              <input type="text" value={fg} onChange={e => { if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) setFg(e.target.value); }}
+              <input aria-label="Foreground colour picker" type="color" value={fg} onChange={e => setFg(e.target.value)} className="w-10 h-10 rounded-xl border border-[#E8E6E0] cursor-pointer" />
+              <input aria-label="Foreground hex value" type="text" value={fg} onChange={e => { if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) setFg(e.target.value); }}
                 className="flex-1 px-3 py-2 rounded-xl border border-[#E8E6E0] text-xs font-mono text-[#374151]" />
             </div>
           </div>
           <div>
             <label className="text-xs font-semibold text-[#374151] block mb-1.5">Background colour</label>
             <div className="flex items-center gap-3">
-              <input type="color" value={bg} onChange={e => setBg(e.target.value)} className="w-10 h-10 rounded-xl border border-[#E8E6E0] cursor-pointer" />
-              <input type="text" value={bg} onChange={e => { if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) setBg(e.target.value); }}
+              <input aria-label="Background colour picker" type="color" value={bg} onChange={e => setBg(e.target.value)} className="w-10 h-10 rounded-xl border border-[#E8E6E0] cursor-pointer" />
+              <input aria-label="Background hex value" type="text" value={bg} onChange={e => { if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) setBg(e.target.value); }}
                 className="flex-1 px-3 py-2 rounded-xl border border-[#E8E6E0] text-xs font-mono text-[#374151]" />
             </div>
           </div>
@@ -381,19 +382,20 @@ function ContrastChecker() {
         <div className="space-y-4">
           {/* Preview */}
           <div className="rounded-2xl overflow-hidden border border-[#E8E6E0]">
-            <div className="p-6 flex flex-col gap-3" style={{ backgroundColor: bg }}>
+            <div data-intentional-contrast-preview="true" aria-label="User-selected contrast sample" className="p-6 flex flex-col gap-3" style={{ backgroundColor: bg }}>
               <p style={{ fontFamily: "Barlow Condensed, sans-serif", fontWeight: 800, fontStyle: "italic", fontSize: "32px", color: fg, lineHeight: 1.1 }}>
                 Display Headline
               </p>
-              <p style={{ fontFamily: "Inter, sans-serif", fontWeight: 400, fontSize: "16px", color: fg, lineHeight: 1.7, opacity: 0.9 }}>
+              <p style={{ fontFamily: "Inter, sans-serif", fontWeight: 400, fontSize: "16px", color: fg, lineHeight: 1.7 }}>
                 Body text at 16px Inter Regular. This is the standard reading size for BOTS FIRED content.
               </p>
-              <p style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "11px", color: fg, letterSpacing: "2.5px", textTransform: "uppercase" }}>
+              <p style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "14px", color: fg, letterSpacing: "2.5px", textTransform: "uppercase" }}>
                 OVERLINE LABEL
               </p>
             </div>
           </div>
 
+          <p className="text-sm">The selected colour sample may intentionally fail contrast. Ratings below calculate the exact chosen foreground and background; reading-mode overrides can alter the visible sample.</p>
           {/* Results */}
           <div className="space-y-2">
             <div className="grid grid-cols-3 gap-2">
@@ -411,8 +413,8 @@ function ContrastChecker() {
               </div>
             </div>
             {[
-              { label: "Normal text (≤18px)", need: 4.5, pass: ratio >= 4.5, level: "AA" },
-              { label: "Normal text AAA (≤18px)", need: 7, pass: ratio >= 7, level: "AAA" },
+              { label: "Normal text (below large-text thresholds)", need: 4.5, pass: ratio >= 4.5, level: "AA" },
+              { label: "Normal text AAA", need: 7, pass: ratio >= 7, level: "AAA" },
               { label: "Large text (≥24px regular or ≥18.67px bold) / UI graphics", need: 3, pass: ratio >= 3, level: "AA" },
               { label: "UI components & graphics", need: 3, pass: ratio >= 3, level: "AA" },
             ].map(({ label, need, pass, level }) => (
@@ -435,31 +437,15 @@ function ContrastChecker() {
 
 // ── TYPE SPEC VALIDATOR ──
 function TypeSpecValidator() {
-  const tokenSpecs = [
-    { token: "display-2xl", family: "Barlow Condensed", weight: 800, sizePx: 80, lineH: 1.0, lsPx: -2 },
-    { token: "display-xl",  family: "Barlow Condensed", weight: 800, sizePx: 64, lineH: 1.0625, lsPx: -1 },
-    { token: "display-l",   family: "Barlow Condensed", weight: 800, sizePx: 48, lineH: 1.083, lsPx: -0.5 },
-    { token: "display-m",   family: "Barlow Condensed", weight: 700, sizePx: 40, lineH: 1.1, lsPx: 0 },
-    { token: "h1",          family: "Barlow Condensed", weight: 700, sizePx: 36, lineH: 1.222, lsPx: 0.25 },
-    { token: "h2",          family: "Barlow Condensed", weight: 700, sizePx: 28, lineH: 1.286, lsPx: 0.5 },
-    { token: "h3",          family: "Barlow Condensed", weight: 600, sizePx: 24, lineH: 1.333, lsPx: 0.5 },
-    { token: "h4",          family: "Inter",            weight: 700, sizePx: 20, lineH: 1.4, lsPx: 0 },
-    { token: "body",        family: "Inter",            weight: 400, sizePx: 16, lineH: 1.75, lsPx: 0 },
-    { token: "body-s",      family: "Inter",            weight: 400, sizePx: 14, lineH: 1.714, lsPx: 0 },
-    { token: "caption",     family: "Inter",            weight: 500, sizePx: 12, lineH: 1.667, lsPx: 0.25 },
-    { token: "overline",    family: "Inter",            weight: 700, sizePx: 11, lineH: 1.455, lsPx: 2.5 },
-    { token: "handwritten", family: "Caveat",           weight: 600, sizePx: 20, lineH: 1.4, lsPx: 0 },
-    { token: "mono",        family: "JetBrains Mono",   weight: 500, sizePx: 13, lineH: 1.538, lsPx: 0 },
-  ];
-
+  const tokenSpecs = TYPE_SCALE.map(t => ({ token:t.token, family:t.family, weight:t.weight, sizePx:t.sizePx, lineH:t.lineHeightPx/t.sizePx, lsPx:parseFloat(t.letterSpacingPx), paragraphSpacingPx:t.paragraphSpacingPx }));
   const [selectedToken, setSelectedToken] = useState(tokenSpecs[0]);
 
   return (
     <div className="bg-white rounded-2xl border border-[#E8E6E0] p-6">
       <p className="text-[10px] font-bold uppercase tracking-widest text-[#9BA3B0] mb-4">Type Token Spec Reference</p>
-      <div className="flex gap-2 flex-wrap mb-6">
+      <div role="group" aria-label="Type token" className="flex gap-2 flex-wrap mb-6">
         {tokenSpecs.map(t => (
-          <button key={t.token} onClick={() => setSelectedToken(t)}
+          <button key={t.token} aria-pressed={selectedToken.token===t.token} onClick={() => setSelectedToken(t)}
             className={`px-3 py-1.5 rounded-xl text-[10px] font-semibold transition-all ${selectedToken.token === t.token ? "bg-[#1C2E5E] text-white" : "border border-[#E8E6E0] text-[#6B7280]"}`}>
             {t.token}
           </button>
@@ -485,12 +471,11 @@ function TypeSpecValidator() {
 
           {/* Scale visualizer: major-third check */}
           <div className="mt-4 bg-[#FAFAF8] rounded-xl p-4">
-            <p className="text-[9px] font-bold uppercase tracking-widest text-[#9BA3B0] mb-3">Major Third scale check (1.25×)</p>
+            <p className="text-[9px] font-bold uppercase tracking-widest text-[#9BA3B0] mb-3">Relative token sizes (informational)</p>
             <div className="space-y-1">
               {tokenSpecs.slice(0, 9).map((t, i) => {
                 const prev = tokenSpecs[i - 1];
                 const ratio = prev ? (t.sizePx / prev.sizePx) : null;
-                const ok = ratio === null || ratio >= 0.75; // descending, so check ≥75% of prev
                 return (
                   <div key={t.token} className="flex items-center gap-3 text-[10px]">
                     <span className="w-20 font-mono text-[#9BA3B0]">{t.token}</span>
@@ -498,7 +483,7 @@ function TypeSpecValidator() {
                       <div className="h-full bg-[#1C2E5E] rounded-full" style={{ width: `${(t.sizePx / 80) * 100}%` }} />
                     </div>
                     <span className="w-8 font-mono font-bold text-[#374151]">{t.sizePx}</span>
-                    {ratio && <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold ${ok ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>{(ratio * 100).toFixed(0)}%</span>}
+                    {ratio && <span className="text-[9px] px-1.5 py-0.5 rounded-full font-bold bg-[#EEF2F8] text-[#1C2E5E]">{(ratio * 100).toFixed(0)}%</span>}
                   </div>
                 );
               })}
@@ -509,7 +494,7 @@ function TypeSpecValidator() {
         {/* Spec card */}
         <div>
           <div className="bg-[#0D1829] rounded-xl p-5">
-            <p className="text-[9px] font-bold uppercase tracking-widest text-[#4A66A0] mb-3">Spec: <span className="text-[#E8541A]">{selectedToken.token}</span></p>
+            <p className="text-[9px] font-bold uppercase tracking-widest text-[#8FA5C8] mb-3">Spec: <span className="text-[#E8541A]">{selectedToken.token}</span></p>
             <table className="w-full text-[11px]">
               <tbody>
                 {[
@@ -519,17 +504,17 @@ function TypeSpecValidator() {
                   ["Rem equiv.", `${(selectedToken.sizePx / 16).toFixed(4)}rem`],
                   ["Line height", `${selectedToken.lineH} (= ${Math.round(selectedToken.sizePx * selectedToken.lineH)}px)`],
                   ["Letter spacing", `${selectedToken.lsPx}px (= ${(selectedToken.lsPx / selectedToken.sizePx).toFixed(4)}em)`],
-                  ["Para spacing", `${Math.round(selectedToken.sizePx * 0.5)}px (0.5× font-size)`],
+                  ["Para spacing", `${selectedToken.paragraphSpacingPx}px`],
                 ].map(([k, v]) => (
                   <tr key={k} className="border-b border-[#162244]">
-                    <td className="py-2 pr-4 text-[#4A66A0] font-semibold">{k}</td>
+                    <td className="py-2 pr-4 text-[#8FA5C8] font-semibold">{k}</td>
                     <td className="py-2 text-[#EEF2F8] font-mono">{v}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
             <div className="mt-4 bg-[#162244] rounded-lg p-3">
-              <p className="text-[9px] text-[#4A66A0] mb-1">CSS</p>
+              <p className="text-[9px] text-[#8FA5C8] mb-1">CSS</p>
               <pre className="text-[10px] text-[#8FA5C8] whitespace-pre-wrap leading-relaxed">{`font-family: '${selectedToken.family}';
 font-size: ${(selectedToken.sizePx / 16).toFixed(4)}rem; /* ${selectedToken.sizePx}px */
 font-weight: ${selectedToken.weight};
@@ -566,20 +551,22 @@ export function VerificationTests() {
     setRunning(false);
   };
 
-  const passed = Object.values(results).filter(r => r.pass).length;
-  const failed = Object.values(results).filter(r => !r.pass).length;
+  const passed = Object.values(results).filter(r => r.pass && !r.skip).length;
+  const failed = Object.values(results).filter(r => !r.pass && !r.skip).length;
   const total = Object.keys(results).length;
+  const applicable = Object.values(results).filter(r => !r.skip).length;
+  const skipped = total - applicable;
 
   const categories = [...new Set(SPEC_TESTS.map(t => t.category))];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 legacy-spec-checks">
       <div>
         <p className="text-[10px] font-bold uppercase tracking-widest text-[#9BA3B0] mb-1">Quality Assurance</p>
         <h3 style={{ fontFamily: "Barlow Condensed, sans-serif", color: "#1C2E5E", fontSize: "28px", fontWeight: 700 }}>
           Design Spec Verification Tests
         </h3>
-        <p className="text-xs text-[#6B7280] mt-1">Run automated checks to verify the design system is implemented correctly.</p>
+        <p className="text-xs text-[#6B7280] mt-1">Run scoped diagnostics on this rendered chapter. Results do not certify the full site; not-applicable checks are reported separately.</p>
       </div>
 
       {/* Summary bar */}
@@ -589,14 +576,14 @@ export function VerificationTests() {
             <div className="flex gap-4 text-sm font-bold mb-2">
               <span className="text-green-600">{passed} passed</span>
               <span className="text-red-600">{failed} failed</span>
-              <span className="text-[#9BA3B0]">{SPEC_TESTS.length - total} untested</span>
+              <span className="text-[#9BA3B0]">{SPEC_TESTS.length - total} untested · {skipped} not applicable/manual</span>
             </div>
             <div className="h-2 bg-[#F1F2F4] rounded-full overflow-hidden flex">
               <div className="h-full bg-green-400 rounded-l-full transition-all" style={{ width: `${(passed / SPEC_TESTS.length) * 100}%` }} />
               <div className="h-full bg-red-400 transition-all" style={{ width: `${(failed / SPEC_TESTS.length) * 100}%` }} />
             </div>
           </div>
-          <span className="text-2xl font-bold text-[#1C2E5E]">{total > 0 ? Math.round((passed / total) * 100) : 0}%</span>
+          <span className="text-2xl font-bold text-[#1C2E5E]">{total > 0 ? Math.round((passed / Math.max(applicable,1)) * 100) : 0}%</span>
         </div>
       )}
 
